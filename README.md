@@ -1,0 +1,3 @@
+CanvasDiagram
+
+Canvas diagram editor.
