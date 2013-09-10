@@ -66,8 +66,38 @@
     <Compile Include="DiagramList.cs" />
     <Compile Include="DiagramListAdapter.cs" />
     <Compile Include="DiagramEditor.cs" />
-    <Compile Include="Core\Test.cs" />
     <Compile Include="Core\Editor.cs" />
+    <Compile Include="Test\Renderers\ArcRenderer.cs" />
+    <Compile Include="Test\Renderers\CircleRenderer.cs" />
+    <Compile Include="Test\Renderers\LineRenderer.cs" />
+    <Compile Include="Test\Renderers\PinRenderer.cs" />
+    <Compile Include="Test\Renderers\RectangleRenderer.cs" />
+    <Compile Include="Test\Renderers\RendererFactory.cs" />
+    <Compile Include="Test\Renderers\TextRenderer.cs" />
+    <Compile Include="Test\Core\Arc.cs" />
+    <Compile Include="Test\Core\BaseStyle.cs" />
+    <Compile Include="Test\Core\Circle.cs" />
+    <Compile Include="Test\Core\Constants.cs" />
+    <Compile Include="Test\Core\Context.cs" />
+    <Compile Include="Test\Core\Custom.cs" />
+    <Compile Include="Test\Core\Editor.cs" />
+    <Compile Include="Test\Core\Element.cs" />
+    <Compile Include="Test\Core\HorizontalAlignment.cs" />
+    <Compile Include="Test\Core\IRenderer.cs" />
+    <Compile Include="Test\Core\IRendererFactory.cs" />
+    <Compile Include="Test\Core\Line.cs" />
+    <Compile Include="Test\Core\LineStyle.cs" />
+    <Compile Include="Test\Core\Model.cs" />
+    <Compile Include="Test\Core\Pin.cs" />
+    <Compile Include="Test\Core\PinStyle.cs" />
+    <Compile Include="Test\Core\Rectangle.cs" />
+    <Compile Include="Test\Core\RectangleStyle.cs" />
+    <Compile Include="Test\Core\Reference.cs" />
+    <Compile Include="Test\Core\Text.cs" />
+    <Compile Include="Test\Core\TextStyle.cs" />
+    <Compile Include="Test\Core\VerticalAlignment.cs" />
+    <Compile Include="Test\Core\Styles\ArcStyle.cs" />
+    <Compile Include="Test\Core\Styles\CircleStyle.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -83,6 +113,8 @@
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Core\" />
+    <Folder Include="Test\Core\" />
+    <Folder Include="Test\Core\Styles\" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="sqlite-net">
