@@ -74,30 +74,30 @@
     <Compile Include="Test\Renderers\RectangleRenderer.cs" />
     <Compile Include="Test\Renderers\RendererFactory.cs" />
     <Compile Include="Test\Renderers\TextRenderer.cs" />
-    <Compile Include="Test\Core\Arc.cs" />
-    <Compile Include="Test\Core\BaseStyle.cs" />
-    <Compile Include="Test\Core\Circle.cs" />
-    <Compile Include="Test\Core\Constants.cs" />
-    <Compile Include="Test\Core\Context.cs" />
-    <Compile Include="Test\Core\Custom.cs" />
-    <Compile Include="Test\Core\Editor.cs" />
-    <Compile Include="Test\Core\Element.cs" />
-    <Compile Include="Test\Core\HorizontalAlignment.cs" />
-    <Compile Include="Test\Core\IRenderer.cs" />
-    <Compile Include="Test\Core\IRendererFactory.cs" />
-    <Compile Include="Test\Core\Line.cs" />
-    <Compile Include="Test\Core\LineStyle.cs" />
-    <Compile Include="Test\Core\Model.cs" />
-    <Compile Include="Test\Core\Pin.cs" />
-    <Compile Include="Test\Core\PinStyle.cs" />
-    <Compile Include="Test\Core\Rectangle.cs" />
-    <Compile Include="Test\Core\RectangleStyle.cs" />
-    <Compile Include="Test\Core\Reference.cs" />
-    <Compile Include="Test\Core\Text.cs" />
-    <Compile Include="Test\Core\TextStyle.cs" />
-    <Compile Include="Test\Core\VerticalAlignment.cs" />
     <Compile Include="Test\Core\Styles\ArcStyle.cs" />
     <Compile Include="Test\Core\Styles\CircleStyle.cs" />
+    <Compile Include="Test\Core\Styles\LineStyle.cs" />
+    <Compile Include="Test\Core\Styles\PinStyle.cs" />
+    <Compile Include="Test\Core\Styles\RectangleStyle.cs" />
+    <Compile Include="Test\Core\Styles\TextStyle.cs" />
+    <Compile Include="Test\Core\Styles\Core\BaseStyle.cs" />
+    <Compile Include="Test\Core\Styles\Core\HorizontalAlignment.cs" />
+    <Compile Include="Test\Core\Styles\Core\VerticalAlignment.cs" />
+    <Compile Include="Test\Core\Elements\Arc.cs" />
+    <Compile Include="Test\Core\Elements\Circle.cs" />
+    <Compile Include="Test\Core\Elements\Line.cs" />
+    <Compile Include="Test\Core\Elements\Rectangle.cs" />
+    <Compile Include="Test\Core\Elements\Text.cs" />
+    <Compile Include="Test\Core\Elements\Pin.cs" />
+    <Compile Include="Test\Core\Elements\Custom.cs" />
+    <Compile Include="Test\Core\Elements\Reference.cs" />
+    <Compile Include="Test\Core\Elements\Core\Element.cs" />
+    <Compile Include="Test\Core\Rendering\IRenderer.cs" />
+    <Compile Include="Test\Core\Rendering\IRendererFactory.cs" />
+    <Compile Include="Test\Core\Editor\Context.cs" />
+    <Compile Include="Test\Core\Editor\Editor.cs" />
+    <Compile Include="Test\Core\Editor\Model.cs" />
+    <Compile Include="Test\Core\Editor\Constants.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -115,6 +115,11 @@
     <Folder Include="Core\" />
     <Folder Include="Test\Core\" />
     <Folder Include="Test\Core\Styles\" />
+    <Folder Include="Test\Core\Styles\Core\" />
+    <Folder Include="Test\Core\Elements\" />
+    <Folder Include="Test\Core\Elements\Core\" />
+    <Folder Include="Test\Core\Rendering\" />
+    <Folder Include="Test\Core\Editor\" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="sqlite-net">
