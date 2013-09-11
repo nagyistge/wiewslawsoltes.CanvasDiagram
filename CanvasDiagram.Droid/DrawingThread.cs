@@ -24,17 +24,18 @@ namespace CanvasDiagram.Droid
 		#region Fields
 
 		public ConditionVariable Sync;
-		private DrawingCanvas drawingCanvas;
+
+		private DrawingService drawingService;
 		private ISurfaceHolder surfaceHolder;
 		private bool invalidateFlag = false;
 		private bool isRunning = false;
 
 		#endregion
 
-		public DrawingThread (ISurfaceHolder surfaceHolder, DrawingCanvas drawingCanvas)
+		public DrawingThread (ISurfaceHolder surfaceHolder, DrawingService drawingService)
 		{
 			this.surfaceHolder = surfaceHolder;
-			this.drawingCanvas = drawingCanvas;
+			this.drawingService = drawingService;
 
 			Sync = new ConditionVariable (true);
 		}
@@ -62,7 +63,7 @@ namespace CanvasDiagram.Droid
 					try 
 					{
 						canvas = surfaceHolder.LockCanvas (null);
-						drawingCanvas.DrawDiagram (canvas);
+						drawingService.DrawDiagram (canvas);
 					} 
 					catch(Java.Lang.Exception ex) 
 					{ 

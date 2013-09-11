@@ -19,10 +19,6 @@ using CanvasDiagram.Droid.Core;
 
 namespace CanvasDiagram.Droid
 {
-	#region DrawingView
-
-	#endregion
-
 	#region DrawingService
 
 	public class DrawingService
@@ -31,15 +27,15 @@ namespace CanvasDiagram.Droid
 
 		public ConcurrentDictionary<int, Element> Elements { get; set; }
 		public string CurrentModel { get; set; }
-
-		public DrawingThread Thread { get; set; }
-
-		public int surfaceWidth { get; set; }
-		public int surfaceHeight { get; set; }
+		
+		public int SurfaceWidth { get; set; }
+		public int SurfaceHeight { get; set; }
 
 		#endregion
 
 		#region Fields
+
+		private DrawingThread Thread;
 
 		private ConcurrentStack<string> undoStack = new ConcurrentStack<string>();
 		private ConcurrentStack<string> redoStack = new ConcurrentStack<string>();
@@ -1183,7 +1179,7 @@ namespace CanvasDiagram.Droid
 		{
 			float ox = -(translate.X / zoom);
 			float oy = -(translate.Y / zoom);
-			widgetBounds.Set (ox, oy, ((float)this.surfaceWidth / zoom) + ox, ((float)this.surfaceHeight / zoom) + oy);
+			widgetBounds.Set (ox, oy, ((float)this.SurfaceWidth / zoom) + ox, ((float)this.SurfaceHeight / zoom) + oy);
 
 			test.StrokeWidth = 4f / zoom;
 			canvas.DrawRect (widgetBounds, test);
@@ -1205,13 +1201,13 @@ namespace CanvasDiagram.Droid
 			// grid size and origin
 			float sx = 30f;
 			float sy = 30f;
-			float ox = (surfaceWidth % sx) / 2f;
-			float oy = (surfaceHeight % sy) / 2f;
+			float ox = (SurfaceWidth % sx) / 2f;
+			float oy = (SurfaceHeight % sy) / 2f;
 
 			DrawGrid (canvas, gridPaint, 
 			          ox, oy, 
-			          surfaceWidth - (ox + ox), 
-			          surfaceHeight - (oy + oy), 
+			          SurfaceWidth - (ox + ox), 
+			          SurfaceHeight - (oy + oy), 
 			          sx, sy);
 
 			DrawElements (canvas);
@@ -1286,7 +1282,7 @@ namespace CanvasDiagram.Droid
 		{
 			float ox = -(translate.X / zoom);
 			float oy = -(translate.Y / zoom);
-			var rect = new RectF (ox, oy, ((float)this.surfaceWidth / zoom) + ox, ((float)this.surfaceHeight / zoom) + oy);
+			var rect = new RectF (ox, oy, ((float)this.SurfaceWidth / zoom) + ox, ((float)this.SurfaceHeight / zoom) + oy);
 
 			x = rect.CenterX();
 			y = rect.CenterY();

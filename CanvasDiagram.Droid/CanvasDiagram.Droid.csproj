@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DrawingCanvas.cs" />
     <Compile Include="DrawingThread.cs" />
     <Compile Include="Core\Element.cs" />
     <Compile Include="Core\Pin.cs" />
@@ -98,6 +97,8 @@
     <Compile Include="Test\Core\Editor\Editor.cs" />
     <Compile Include="Test\Core\Editor\Model.cs" />
     <Compile Include="Test\Core\Editor\Constants.cs" />
+    <Compile Include="DrawingView.cs" />
+    <Compile Include="DrawingService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

@@ -24,7 +24,7 @@ namespace CanvasDiagram.Droid
 	{
 		#region Fields
 
-		private DrawingCanvas drawingCanvas;
+		private DrawingView drawingView;
 		private DiagramRepository repository;
 		private Diagram currentDiagram;
 
@@ -40,9 +40,9 @@ namespace CanvasDiagram.Droid
 			repository = new DiagramRepository ();
 
 			// create drawing canvas
-			drawingCanvas = new DrawingCanvas (this);
+			drawingView = new DrawingView (this);
 
-			RegisterForContextMenu (drawingCanvas);
+			RegisterForContextMenu (drawingView);
 
 			// get diagram from repository
 			int diagramId = Intent.GetIntExtra ("DiagramId", 0);
@@ -52,12 +52,12 @@ namespace CanvasDiagram.Droid
 				currentDiagram = new Diagram ();
 
 			// create diagram
-			Editor.Parse (currentDiagram.Model, drawingCanvas.Elements);
-			drawingCanvas.UpdateNextId ();
-			drawingCanvas.CurrentModel = Editor.Generate (drawingCanvas.Elements);
+			Editor.Parse (currentDiagram.Model, drawingView.Service.Elements);
+			drawingView.Service.UpdateNextId ();
+			drawingView.Service.CurrentModel = Editor.Generate (drawingView.Service.Elements);
 
 			// set content view to drawing canvas
-			SetContentView (drawingCanvas);
+			SetContentView (drawingView);
 
 			//ActivityCompat.InvalidateOptionsMenu (this);
 
@@ -69,7 +69,7 @@ namespace CanvasDiagram.Droid
 			base.OnStop ();
 
 			// store diagram model
-			currentDiagram.Model = Editor.Generate(drawingCanvas.Elements);
+			currentDiagram.Model = Editor.Generate(drawingView.Service.Elements);
 			currentDiagram.Id = repository.Save(currentDiagram);
 
 			Console.WriteLine ("DiagramEditor OnStop");
@@ -82,7 +82,7 @@ namespace CanvasDiagram.Droid
 			Console.WriteLine ("DiagramEditor OnPause");
 
 			// stop drawing thread
-			drawingCanvas.Stop ();
+			drawingView.Service.Stop ();
 		}
 
 		protected override void OnResume ()
@@ -92,7 +92,7 @@ namespace CanvasDiagram.Droid
 			Console.WriteLine ("DiagramEditor OnResume");
 
 			// start drawing thread
-			drawingCanvas.Start ();
+			drawingView.Service.Start (drawingView.Holder);
 		}
 		
 		#endregion
@@ -116,32 +116,32 @@ namespace CanvasDiagram.Droid
 			{
 			case ItemInsertAndGate:
 				{
-					drawingCanvas.Snapshot ();
 					float x, y;
-					drawingCanvas.GetCenterPoint (out x, out y);
-					drawingCanvas.InsertAndGate (x - 15f, y - 15f, true);
+					drawingView.Service.Snapshot ();
+					drawingView.Service.GetCenterPoint (out x, out y);
+					drawingView.Service.InsertAndGate (x - 15f, y - 15f, true);
 				}
 				return true;
 			case ItemInsertOrGate:
 				{
-					drawingCanvas.Snapshot ();
 					float x, y;
-					drawingCanvas.GetCenterPoint (out x, out y);
-					drawingCanvas.InsertOrGate (x - 15f, y - 15f, true);
+					drawingView.Service.Snapshot ();
+					drawingView.Service.GetCenterPoint (out x, out y);
+					drawingView.Service.InsertOrGate (x - 15f, y - 15f, true);
 				}
 				return true;
 			case ItemResetDiagram:
-				drawingCanvas.Snapshot ();
-				drawingCanvas.Reset ();
+				drawingView.Service.Snapshot ();
+				drawingView.Service.Reset ();
 				return true;
 			case ItemResetZoom:
-				drawingCanvas.ResetZoom ();
+				drawingView.Service.ResetZoom ();
 				return true;
 			case ItemEditUndo:
-				drawingCanvas.Undo ();
+				drawingView.Service.Undo ();
 				return true;
 			case ItemEditRedo:
-				drawingCanvas.Redo ();
+				drawingView.Service.Redo ();
 				return true;
 			default:
 				return base.OnContextItemSelected (item);
