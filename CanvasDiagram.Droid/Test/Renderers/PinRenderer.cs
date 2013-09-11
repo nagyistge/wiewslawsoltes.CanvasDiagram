@@ -37,7 +37,7 @@ namespace CanvasDiagram.Droid.Renderers
 		public void Render (object canvas, Pin element)
 		{
 			var _canvas = canvas as Canvas;
-			//
+			_canvas.DrawCircle (element.X, element.Y, style.Radius, paint);
 		}
 
 		#endregion
