@@ -6,7 +6,6 @@
       <File FileName="CanvasDiagram.Droid\DrawingCanvas.cs" Line="1" Column="1" />
       <File FileName="CanvasDiagram.Droid\Test\Renderers\LineRenderer.cs" Line="1" Column="1" />
       <File FileName="CanvasDiagram.Droid\Test\Core\Editor\Editor.cs" Line="757" Column="11" />
-      <File FileName="CanvasDiagram.Droid\Test\Core\Editor\Context.cs" Line="28" Column="26" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
