@@ -44,8 +44,4 @@ namespace CanvasDiagram.Droid.Renderers
 	}
 
 	#endregion
-
-	#region Android RendererFactory
-
-	#endregion
 }
