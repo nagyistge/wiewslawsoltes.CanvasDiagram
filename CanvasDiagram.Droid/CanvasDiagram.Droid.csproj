@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DrawingThread.cs" />
     <Compile Include="Core\Element.cs" />
     <Compile Include="Core\Pin.cs" />
     <Compile Include="Core\Wire.cs" />
@@ -99,6 +98,8 @@
     <Compile Include="Test\Core\Editor\Constants.cs" />
     <Compile Include="DrawingView.cs" />
     <Compile Include="DrawingService.cs" />
+    <Compile Include="ThreadSync\BackgroundService.cs" />
+    <Compile Include="ThreadSync\DataHolder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -121,6 +122,7 @@
     <Folder Include="Test\Core\Elements\Core\" />
     <Folder Include="Test\Core\Rendering\" />
     <Folder Include="Test\Core\Editor\" />
+    <Folder Include="ThreadSync\" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="sqlite-net">

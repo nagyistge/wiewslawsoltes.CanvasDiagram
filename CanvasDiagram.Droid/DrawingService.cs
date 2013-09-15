@@ -14,6 +14,7 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using CanvasDiagram.Droid.Core;
+using ThreadSync;
 
 #endregion
 
@@ -34,8 +35,10 @@ namespace CanvasDiagram.Droid
 		#endregion
 
 		#region Fields
-
-		private DrawingThread Thread;
+		
+		private BackgroundService<InputArgs> service;
+		private int FrameCount = 0;
+		private InputArgs EmptyArgs = new InputArgs() { Action = InputActions.None };
 
 		private ConcurrentStack<string> undoStack = new ConcurrentStack<string>();
 		private ConcurrentStack<string> redoStack = new ConcurrentStack<string>();
@@ -97,16 +100,35 @@ namespace CanvasDiagram.Droid
 		{
 			try
 			{
-				if (Thread == null)
+				if (service == null)
+					service = new BackgroundService<InputArgs> ();
+
+				ISurfaceHolder holder = surfaceHolder;
+				Canvas canvas = null;
+
+				service.Start((data) =>
 				{
-					Thread = new DrawingThread (surfaceHolder, this);
-					Thread.SetRunning (true);
-					Thread.Invalidate ();
-					Thread.Sync.Open ();
-					Thread.Start ();
-				}
+					canvas = null;
+
+					try 
+					{
+						HandleInput(data);
+						canvas = holder.LockCanvas (null);
+						this.DrawDiagram (canvas);
+					} 
+					catch(Exception ex) 
+					{ 
+						Console.WriteLine ("{0}\n{1}", ex.Message, ex.StackTrace);
+					}
+					finally 
+					{
+						if (canvas != null) 
+							holder.UnlockCanvasAndPost (canvas);
+					}
+				},
+				new InputArgs());
 			}
-			catch(Java.Lang.Exception ex) 
+			catch(Exception ex) 
 			{ 
 				Console.WriteLine ("{0}\n{1}", ex.Message, ex.StackTrace);
 			}
@@ -116,15 +138,10 @@ namespace CanvasDiagram.Droid
 		{
 			try
 			{
-				if (Thread != null)
-				{
-					Thread.SetRunning (false);
-					Thread.Sync.Open ();
-					Thread.Join ();
-					Thread = null;
-				}
+				if (service != null)
+					service.Stop ();
 			}
-			catch(Java.Lang.InterruptedException ex) 
+			catch(Exception ex) 
 			{ 
 				Console.WriteLine ("{0}\n{1}", ex.Message, ex.StackTrace);
 			}
@@ -982,6 +999,41 @@ namespace CanvasDiagram.Droid
 
 		#endregion
 
+		#region Input
+
+		public void HandleInput(InputArgs args)
+		{
+			int action = args.Action;
+
+			if (action == InputActions.Hitest) 
+			{
+				HandleOneInputDown (args.X, args.Y);
+			}
+			else if (action == InputActions.Move)
+			{
+				HandleOneInputMove (args.X, args.Y);
+			}
+			else if (action == InputActions.StartZoom) 
+			{
+				StartPinchToZoom (args.X0, args.Y0, args.X1, args.Y1);
+			}
+			else if (action == InputActions.Zoom) 
+			{
+				PinchToZoom (args.X0, args.Y0, args.X1, args.Y1);
+			}
+			else if (action == InputActions.Merge)
+			{
+				FinishCurrentElement (args.X, args.Y);
+			}
+			else if (action == InputActions.StartPan)
+			{
+				SetPanStart (args.Index == 0 ? args.X0 : args.X1, 
+				             args.Index == 0 ? args.Y0 : args.Y1);
+			}
+		}
+
+		#endregion
+
 		#region Draw Elements
 
 		private void DrawPolygon(Canvas canvas, Paint paint, PolygonF poly)
@@ -1218,17 +1270,44 @@ namespace CanvasDiagram.Droid
 
 		#endregion
 
-		#region OnDraw
+		#region Redraw
+		
+		private static Action<InputArgs, InputArgs> CopyInputArgs = (src, dst) =>
+		{
+			if (src != null && dst != null)
+			{
+				dst.Action = src.Action;
+				dst.X = src.X;
+				dst.Y = src.Y;
+				dst.Index = src.Index;
+				dst.X0 = src.X0;
+				dst.Y0 = src.Y0;
+				dst.X1 = src.X1;
+				dst.Y1 = src.Y1;
+			}
+		};
 
 		public void RedrawCanvas()
 		{
-			//Console.WriteLine ("RedrawCanvas");
-			//this.PostInvalidate ();
-
-			if (Thread != null)
+			if (service != null) 
 			{
-				Thread.Invalidate ();
-				Thread.Sync.Open ();
+				var result = service.HandleEvent(EmptyArgs, CopyInputArgs, 16);
+				//if (result == false)
+				//	Console.WriteLine("Skip: " + FrameCount);
+
+				FrameCount++;
+			}
+		}
+
+		public void RedrawCanvas(InputArgs args)
+		{
+			if (service != null) 
+			{
+				var result = service.HandleEvent(args, CopyInputArgs, 16);
+				//if (result == false)
+				//	Console.WriteLine("Skip: " + FrameCount);
+
+				FrameCount++;
 			}
 		}
 		

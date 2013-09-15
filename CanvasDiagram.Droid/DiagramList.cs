@@ -38,9 +38,7 @@ namespace CanvasDiagram.Droid
 			base.OnCreate (bundle);
 			SetContentView (Resource.Layout.DiagramList);
 
-
-
-
+			/*
 
 			//
 			// Begin: new Core.Test
@@ -48,12 +46,8 @@ namespace CanvasDiagram.Droid
 
 			try
 			{
-
-
 				var sb = new StringBuilder ();
 				var nl = CanvasDiagram.Core.Test.Constants.NewLine;
-
-
 
 				sb.Append ("PS;0;255;255;0;0;1;1.0;4.0"); sb.Append (nl);
 				sb.Append ("LS;1;255;255;0;0;0;1.0"); sb.Append (nl);
@@ -62,19 +56,9 @@ namespace CanvasDiagram.Droid
 				sb.Append ("AS;4;255;255;0;0;0;1.0"); sb.Append (nl);
 				sb.Append ("TS;5;255;255;0;0;0;1.0;1;1;14.0"); sb.Append (nl);
 
-
-
-
 				var data = sb.ToString ();
-
 				var factory = new CanvasDiagram.Droid.Renderers.RendererFactory ("Renderer", "CanvasDiagram.Droid.Renderers");
-
-
-
 				var model = CanvasDiagram.Core.Test.Editor.Parse (data, factory);
-
-
-
 			}
 			catch (Exception ex)
 			{
@@ -86,11 +70,7 @@ namespace CanvasDiagram.Droid
 			// End: new Core.Test
 			//
 
-
-
-
-
-
+			*/
 
 			repository = new DiagramRepository ();
 

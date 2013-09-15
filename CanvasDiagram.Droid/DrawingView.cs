@@ -17,6 +17,37 @@ using Android.Widget;
 
 namespace CanvasDiagram.Droid
 {
+	#region InputActions
+
+	public static class InputActions
+	{
+		public const int None = 0;
+		public const int Hitest = 2;
+		public const int Move = 4;
+		public const int StartZoom = 8;
+		public const int Zoom = 16;
+		public const int Merge = 32;
+		public const int StartPan = 64;
+	}
+
+	#endregion
+
+	#region InputArgs
+
+	public class InputArgs
+	{
+		public int Action;
+		public float X;
+		public float Y;
+		public int Index;
+		public float X0;
+		public float Y0;
+		public float X1;
+		public float Y1;
+	}
+
+	#endregion
+
 	#region DrawingView
 
 	public class DrawingView : SurfaceView, ISurfaceHolderCallback
@@ -24,6 +55,12 @@ namespace CanvasDiagram.Droid
 		#region Properties
 
 		public DrawingService Service { get; set; }
+
+		#endregion
+
+		#region Fields
+
+		public InputArgs Args = new InputArgs ();
 
 		#endregion
 		
@@ -49,10 +86,8 @@ namespace CanvasDiagram.Droid
 		{
 			Holder.AddCallback (this);
 			SetWillNotDraw (true);
-			//SetLayerType (LayerType.Hardware, null);
-			
+
 			this.Touch += (sender, e) => HandleTouch (sender, e);
-			//this.LongClick += (sender, e) => this.ShowContextMenu();
 
 			Service = new DrawingService ();
 			Service.Initialize ();
@@ -101,50 +136,31 @@ namespace CanvasDiagram.Droid
 		{
 			var action = e.Event.Action & MotionEventActions.Mask;
 			int count = e.Event.PointerCount;
-			var index = GetPointerIndex (e);
-			float x = e.Event.GetX ();
-			float y = e.Event.GetY ();
-			float x0 = e.Event.GetX (0);
-			float y0 = e.Event.GetY (0);
-			float x1 = count == 2 ? e.Event.GetX (1) : 0f;
-			float y1 = count == 2 ? e.Event.GetY (1) : 0f;
+
+			Args.X = e.Event.GetX ();
+			Args.Y = e.Event.GetY ();
+			Args.Index = GetPointerIndex (e);
+			Args.X0 = e.Event.GetX (0);
+			Args.Y0 = e.Event.GetY (0);
+			Args.X1 = count == 2 ? e.Event.GetX (1) : 0f;
+			Args.Y1 = count == 2 ? e.Event.GetY (1) : 0f;
 
 			if (count == 1 && action == MotionEventActions.Down) 
-			{
-				Service.HandleOneInputDown (x, y);
-				e.Handled = true;
-			}
+				Args.Action = InputActions.Hitest;
 			else if (count == 1 && action == MotionEventActions.Move)
-			{
-				Service.HandleOneInputMove (x, y);
-				e.Handled = true;
-			}
+				Args.Action = InputActions.Move;
 			else if (count == 2 && action == MotionEventActions.PointerDown) 
-			{
-				Service.StartPinchToZoom (x0, y0, x1, y1);
-				e.Handled = true;
-			}
+				Args.Action = InputActions.StartZoom;
 			else if (count == 2 && action == MotionEventActions.Move) 
-			{
-				Service.PinchToZoom (x0, y0, x1, y1);
-				e.Handled = true;
-			}
+				Args.Action = InputActions.Zoom;
 			else if (action == MotionEventActions.Up)
-			{
-				Service.FinishCurrentElement (x, y);
-				e.Handled = true;
-			}
+				Args.Action = InputActions.Merge;
 			else if (action == MotionEventActions.PointerUp)
-			{
-				Service.SetPanStart (index == 0 ? x0 : x1, index == 0 ? y0 : y1);
-				e.Handled = true;
-			}
+				Args.Action = InputActions.StartPan;
 			else
-			{
-				e.Handled = false;
-			}
+				Args.Action = InputActions.None;
 
-			Service.RedrawCanvas ();
+			Service.RedrawCanvas (Args);
 		}
 
 		#endregion
