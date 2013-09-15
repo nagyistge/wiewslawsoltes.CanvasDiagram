@@ -136,6 +136,7 @@ namespace CanvasDiagram.Droid
 				return true;
 			case ItemResetZoom:
 				drawingView.Service.ResetZoom ();
+				drawingView.Service.RedrawCanvas ();
 				return true;
 			case ItemEditUndo:
 				drawingView.Service.Undo ();
