@@ -100,6 +100,10 @@
     <Compile Include="DrawingService.cs" />
     <Compile Include="ThreadSync\BackgroundService.cs" />
     <Compile Include="ThreadSync\DataHolder.cs" />
+    <Compile Include="Test\Core\Editor\Util.cs" />
+    <Compile Include="Test\Core\Editor\EditorFindExtensions.cs" />
+    <Compile Include="Test\Core\Editor\EditorAddExtensions.cs" />
+    <Compile Include="Test\Core\Editor\EditorParseExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
