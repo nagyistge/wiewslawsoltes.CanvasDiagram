@@ -1,18 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="CanvasDiagram.Droid\DrawingService.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="CanvasDiagram.Droid\DrawingView.cs">
     <Files>
-      <File FileName="CanvasDiagram.Droid\DrawingView.cs" Line="1" Column="1" />
-      <File FileName="CanvasDiagram.Droid\DrawingService.cs" Line="96" Column="15" />
-      <File FileName="CanvasDiagram.Droid\DrawingThread.cs" Line="1" Column="1" />
-      <File FileName="CanvasDiagram.Droid\DiagramList.cs" Line="1" Column="1" />
-      <File FileName="CanvasDiagram.Droid\DiagramEditor.cs" Line="1" Column="1" />
-      <File FileName="CanvasDiagram.Droid\Test\Core\Editor\Editor.cs" Line="1" Column="1" />
-      <File FileName="CanvasDiagram.Droid\Test\Renderers\PinRenderer.cs" Line="1" Column="1" />
-      <File FileName="CanvasDiagram.Droid\Test\Renderers\LineRenderer.cs" Line="1" Column="1" />
-      <File FileName="CanvasDiagram.Droid\Test\Renderers\CircleRenderer.cs" Line="1" Column="1" />
-      <File FileName="CanvasDiagram.Droid\Test\Renderers\RectangleRenderer.cs" Line="1" Column="1" />
-      <File FileName="CanvasDiagram.Droid\Test\Renderers\TextRenderer.cs" Line="1" Column="1" />
+      <File FileName="CanvasDiagram.Droid\DrawingView.cs" Line="168" Column="3" />
+      <File FileName="CanvasDiagram.Droid\DrawingService.cs" Line="1273" Column="17" />
+      <File FileName="CanvasDiagram.Droid\DiagramList.cs" Line="74" Column="1" />
+      <File FileName="CanvasDiagram.Droid\Test\Core\Editor\Editor.cs" Line="849" Column="6" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
