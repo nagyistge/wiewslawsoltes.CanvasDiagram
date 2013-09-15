@@ -36,7 +36,7 @@ namespace CanvasDiagram.Droid
 
 		#region Fields
 		
-		private BackgroundService<InputArgs> service;
+		private BackgroundService<InputArgs> Service;
 		private int FrameCount = 0;
 		private InputArgs EmptyArgs = new InputArgs() { Action = InputActions.None };
 
@@ -100,13 +100,13 @@ namespace CanvasDiagram.Droid
 		{
 			try
 			{
-				if (service == null)
-					service = new BackgroundService<InputArgs> ();
+				if (Service == null)
+					Service = new BackgroundService<InputArgs> ();
 
 				ISurfaceHolder holder = surfaceHolder;
 				Canvas canvas = null;
 
-				service.Start((data) =>
+				Service.Start((data) =>
 				{
 					canvas = null;
 
@@ -138,8 +138,8 @@ namespace CanvasDiagram.Droid
 		{
 			try
 			{
-				if (service != null)
-					service.Stop ();
+				if (Service != null)
+					Service.Stop ();
 			}
 			catch(Exception ex) 
 			{ 
@@ -177,9 +177,10 @@ namespace CanvasDiagram.Droid
 
 			Elements = new ConcurrentDictionary<int, Element> ();
 
-			zoom = 1f;
 			translate = new PointF (0f, 0f);
 			middle = new PointF (0f, 0f);
+
+			ResetZoom ();
 		}
 
 		private void CreatePaints ()
@@ -1289,9 +1290,9 @@ namespace CanvasDiagram.Droid
 
 		public void RedrawCanvas()
 		{
-			if (service != null) 
+			if (Service != null) 
 			{
-				var result = service.HandleEvent(EmptyArgs, CopyInputArgs, 16);
+				var result = Service.HandleEvent(EmptyArgs, CopyInputArgs, 16);
 				//if (result == false)
 				//	Console.WriteLine("Skip: " + FrameCount);
 
@@ -1301,9 +1302,9 @@ namespace CanvasDiagram.Droid
 
 		public void RedrawCanvas(InputArgs args)
 		{
-			if (service != null) 
+			if (Service != null) 
 			{
-				var result = service.HandleEvent(args, CopyInputArgs, 16);
+				var result = Service.HandleEvent(args, CopyInputArgs, 16);
 				//if (result == false)
 				//	Console.WriteLine("Skip: " + FrameCount);
 
@@ -1349,8 +1350,6 @@ namespace CanvasDiagram.Droid
 			middle.Set (0f, 0f);
 			matrix.Reset ();
 			savedMatrix.Reset ();
-
-			RedrawCanvas ();
 		}
 
 		#endregion
