@@ -1,4 +1,5 @@
 #region References
+
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -6,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using SQLite;
 using Android.App;
 using Android.Content;
 using Android.Graphics;
@@ -16,6 +16,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+//using SQLite;
 
 #endregion
 
@@ -471,6 +472,11 @@ namespace CanvasDiagram.Droid
 
         public static void Parse(string model, ConcurrentDictionary<int, Element> elements)
         {
+            if (string.IsNullOrEmpty(model))
+            {
+                return;
+            }
+
             string type = null;
             var lines = model.Split(ModelLineSeparators, StringSplitOptions.RemoveEmptyEntries);
 
@@ -702,7 +708,7 @@ namespace CanvasDiagram.Droid
         {
         }
 
-        [PrimaryKey, AutoIncrement]
+        //[PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
         public string Title { get; set; }
@@ -712,48 +718,61 @@ namespace CanvasDiagram.Droid
 
     public class DiagramRepository
     {
-        private SQLiteConnection conn;
+        //private SQLiteConnection conn;
+
+        private static List<Diagram> diagrams;
 
         public DiagramRepository()
         {
-            string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-            conn = new SQLiteConnection(System.IO.Path.Combine(folder, "diagrams.db"));
-            conn.CreateTable<Diagram>();
+            //string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+            //conn = new SQLiteConnection(System.IO.Path.Combine(folder, "diagrams.db"));
+            //conn.CreateTable<Diagram>();
+
+            if (diagrams == null)
+            diagrams = new List<Diagram>();
         }
 
         public List<Diagram> GetAll()
         {
-            return conn.Table<Diagram>().OrderBy(x => x.Id).ToList();
+            //return conn.Table<Diagram>().OrderBy(x => x.Id).ToList();
+            return diagrams;
         }
 
         public void RemoveAll()
         {
-            foreach (var diagram in conn.Table<Diagram> ())
-                conn.Delete(diagram);
+            //foreach (var diagram in conn.Table<Diagram> ())
+            //    conn.Delete(diagram);
+            diagrams.Clear();
         }
 
         public Diagram Get(int id)
         {
-            return conn.Table<Diagram>().FirstOrDefault(x => x.Id == id);
+            //return conn.Table<Diagram>().FirstOrDefault(x => x.Id == id);
+            return diagrams[id];
         }
 
         public int Save(Diagram diagram)
         {
             if (diagram.Id != 0)
             {
-                conn.Update(diagram);
+                    //conn.Update(diagram);
+                    //return diagram.Id;
+                diagrams[diagram.Id] = diagram;
                 return diagram.Id;
             }
             else
             {
-                return conn.Insert(diagram);
+                    //return conn.Insert(diagram);
+                diagrams.Add(diagram);
+                return diagrams.Count - 1;
             }
         }
 
         public void Delete(Diagram diagram)
         {
-            if (diagram.Id != 0)
-                conn.Delete(diagram);
+            //if (diagram.Id != 0)
+            //    conn.Delete(diagram);
+            diagrams.Remove(diagram);
         }
     }
 
