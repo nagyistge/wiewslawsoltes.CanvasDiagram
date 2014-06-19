@@ -16,6 +16,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+
 #endregion
 
 namespace CanvasDiagram.Droid
@@ -24,24 +25,24 @@ namespace CanvasDiagram.Droid
 
     public static class MathUtil
     {
-        public static float LineDistance (float x1, float y1, float x2, float y2)
+        public static float LineDistance(float x1, float y1, float x2, float y2)
         {
             float dx = x1 - x2;
             float dy = y1 - y2;
-            return (float)Math.Sqrt (dx * dx + dy * dy);
+            return (float)Math.Sqrt(dx * dx + dy * dy);
         }
 
-        public static void LineMiddle (ref PointF point, float x1, float y1, float x2, float y2)
+        public static void LineMiddle(ref PointF point, float x1, float y1, float x2, float y2)
         {
             float x = x1 + x2;
             float y = y1 + y2;
-            point.Set (x / 2f, y / 2f);
+            point.Set(x / 2f, y / 2f);
         }
 
         public static PointF ClosestPointOnLine(PointF a, PointF b, PointF p)
         {
             // en.wikipedia.org/wiki/Vector_projection
-            return VectorAdd (VectorProject (VectorSubstract (p, a), VectorSubstract (b, a)), a);
+            return VectorAdd(VectorProject(VectorSubstract(p, a), VectorSubstract(b, a)), a);
         }
 
         public static float VectorDot(PointF a, PointF b)
@@ -56,7 +57,7 @@ namespace CanvasDiagram.Droid
 
         public static PointF VectorProject(PointF a, PointF b)
         {
-            return VectorMultiply (b, VectorDot (a, b) / VectorDot (b, b));
+            return VectorMultiply(b, VectorDot(a, b) / VectorDot(b, b));
         }
 
         public static PointF VectorSubstract(PointF a, PointF b)
@@ -91,26 +92,26 @@ namespace CanvasDiagram.Droid
         public void SetX(int index, float x)
         {
             if (polyX != null && index >= 0 && index < polySides)
-                polyX [index] = x;
+                polyX[index] = x;
         }
 
         public void SetY(int index, float y)
         {
             if (polyY != null && index >= 0 && index < polySides)
-                polyY [index] = y;
+                polyY[index] = y;
         }
 
         public float GetX(int index)
         {
             if (polyX != null && index >= 0 && index < polySides)
-                return polyX [index];
+                return polyX[index];
             return float.NaN;
         }
 
         public float GetY(int index)
         {
             if (polyY != null && index >= 0 && index < polySides)
-                return polyY [index];
+                return polyY[index];
             return float.NaN;
         }
 
@@ -122,17 +123,17 @@ namespace CanvasDiagram.Droid
             bool c = false;
             int i, j = 0;
 
-            for (i = 0, j = polySides - 1; i < polySides; j = i++) 
-                {
-                    if (((polyY[i] > y) != (polyY[j] > y))
+            for (i = 0, j = polySides - 1; i < polySides; j = i++)
+            {
+                if (((polyY[i] > y) != (polyY[j] > y))
                         && (x < (polyX[j] - polyX[i]) * (y - polyY[i]) / (polyY[j] - polyY[i]) + polyX[i]))
-                        {
-                            c = !c;
-                        }
+                {
+                    c = !c;
                 }
+            }
 
             return c;
-        }  
+        }
     }
 
     public abstract class Element
@@ -140,33 +141,42 @@ namespace CanvasDiagram.Droid
         #region Properties
 
         public int Id { get; set; }
+
         public float Width { get; set; }
+
         public float Height { get; set; }
+
         public float X { get; set; }
+
         public float Y { get; set; }
+
         public RectF Bounds { get; set; }
+
         public bool ShowPins { get; set; }
+
         public List<Pin> Pins { get; set; }
+
         public bool IsSelected { get; set; }
+
         public Element Parent { get; set; }
 
         #endregion
 
         #region Update
 
-        public virtual void Update (float dx, float dy)
+        public virtual void Update(float dx, float dy)
         {
             float x = X + dx;
             float y = Y + dy;
             X = x; 
             Y = y;
-            Bounds.Set (x, y, x + Width, y + Height);
+            Bounds.Set(x, y, x + Width, y + Height);
 
-            if (Pins != null) 
-                {
-                    for(int i = 0; i < Pins.Count; i++)
-                        Pins[i].Update (dx, dy);
-                }
+            if (Pins != null)
+            {
+                for (int i = 0; i < Pins.Count; i++)
+                    Pins[i].Update(dx, dy);
+            }
         }
 
         #endregion
@@ -177,72 +187,82 @@ namespace CanvasDiagram.Droid
         #region Properties
 
         public float Radius { get; set; }
+
         public float HitOffset { get; set; }
+
         public List<Wire> Wires { get; set; }
 
         #endregion
 
         #region Constructor
 
-        public Pin (int id, Element parent, float x, float y, float radius, float offset)
+        public Pin(int id, Element parent, float x, float y, float radius, float offset)
             : base()
         {
-            Initialize (id, parent, x, y, radius, offset);
+            Initialize(id, parent, x, y, radius, offset);
         }
 
         #endregion
 
-        private void Initialize (int id, Element parent, float x, float y, float radius, float offset)
+        private void Initialize(int id, Element parent, float x, float y, float radius, float offset)
         {
             Id = id;
             X = x;
             Y = y;
             Radius = radius;
             HitOffset = offset;
-            Bounds = new RectF (x - radius - offset, 
+            Bounds = new RectF(x - radius - offset, 
                 y - radius - offset, 
                 x + radius + offset, 
                 y + radius + offset);
             Parent = parent;
-            Wires = new List<Wire> ();
+            Wires = new List<Wire>();
         }
 
-        public override void Update (float dx, float dy)
+        public override void Update(float dx, float dy)
         {
             float x = X + dx;
             float y = Y + dy;
             X = x; 
             Y = y;
-            Bounds.Set (x - Radius - HitOffset, 
+            Bounds.Set(x - Radius - HitOffset, 
                 y - Radius - HitOffset, 
                 x + Radius + HitOffset, 
                 y + Radius + HitOffset);
-        } 
+        }
     }
 
     public class Wire : Element
-    { 
+    {
         #region Properties
 
         public int StartParentId { get; set; }
+
         public int StartId { get; set; }
+
         public int EndParentId { get; set; }
+
         public int EndId { get; set; }
 
         public Pin Start { get; set; }
+
         public Pin End { get; set; }
 
         public float Radius { get; set; }
+
         public float HitOffset { get; set; }
+
         public RectF StartBounds { get; set; }
+
         public RectF EndBounds { get; set; }
+
         public PolygonF WireBounds { get; set; }
 
         #endregion
 
         #region Constructor
 
-        public Wire (int id, Pin start, Pin end, float radius, float offset)
+        public Wire(int id, Pin start, Pin end, float radius, float offset)
             : base()
         {
             Id = id;
@@ -254,10 +274,10 @@ namespace CanvasDiagram.Droid
             EndParentId = -1;
             EndId = -1;
 
-            Initialize (radius, offset);
+            Initialize(radius, offset);
         }
 
-        public Wire (int id, int startParentId, int startId, int endParentId, int endId)
+        public Wire(int id, int startParentId, int startId, int endParentId, int endId)
             : base()
         {
             Id = id;
@@ -280,13 +300,13 @@ namespace CanvasDiagram.Droid
             float ey = End.Y;
 
             // start point bounds
-            StartBounds = new RectF (sx - radius - offset, 
+            StartBounds = new RectF(sx - radius - offset, 
                 sy - radius - offset, 
                 sx + radius + offset, 
                 sy + radius + offset);
 
             // end point bounds
-            EndBounds = new RectF (ex - radius - offset, 
+            EndBounds = new RectF(ex - radius - offset, 
                 ey - radius - offset, 
                 ex + radius + offset, 
                 ey + radius + offset);
@@ -295,11 +315,11 @@ namespace CanvasDiagram.Droid
             int ps = 4;
             float[] px = new float[ps];
             float[] py = new float[ps];
-            WireBounds = new PolygonF (px, py, ps);
-            UpdateWireBounds (sx, sy, ex, ey);
+            WireBounds = new PolygonF(px, py, ps);
+            UpdateWireBounds(sx, sy, ex, ey);
         }
 
-        public override void Update (float dx, float dy)
+        public override void Update(float dx, float dy)
         {
             float radius = Radius;
             float offset = HitOffset;
@@ -319,51 +339,51 @@ namespace CanvasDiagram.Droid
                 ex + radius + offset, 
                 ey + radius + offset);
 
-            UpdateWireBounds (sx, sy, ex, ey);
+            UpdateWireBounds(sx, sy, ex, ey);
         }
 
         private void UpdateWireBounds(float sx, float sy, float ex, float ey)
         {
             if ((ex > sx && ey < sy) || (ex < sx && ey > sy))
-                {
-                    WireBounds.SetX (0, StartBounds.Left);
-                    WireBounds.SetX (1, StartBounds.Right);
-                    WireBounds.SetX (2, EndBounds.Right);
-                    WireBounds.SetX (3, EndBounds.Left);
+            {
+                WireBounds.SetX(0, StartBounds.Left);
+                WireBounds.SetX(1, StartBounds.Right);
+                WireBounds.SetX(2, EndBounds.Right);
+                WireBounds.SetX(3, EndBounds.Left);
 
-                    WireBounds.SetY (0, StartBounds.Top);
-                    WireBounds.SetY (1, StartBounds.Bottom);
-                    WireBounds.SetY (2, EndBounds.Bottom);
-                    WireBounds.SetY (3, EndBounds.Top);
-                }
+                WireBounds.SetY(0, StartBounds.Top);
+                WireBounds.SetY(1, StartBounds.Bottom);
+                WireBounds.SetY(2, EndBounds.Bottom);
+                WireBounds.SetY(3, EndBounds.Top);
+            }
             else
-                {
-                    WireBounds.SetX (0, StartBounds.Left);
-                    WireBounds.SetX (1, StartBounds.Right);
-                    WireBounds.SetX (2, EndBounds.Right);
-                    WireBounds.SetX (3, EndBounds.Left);
+            {
+                WireBounds.SetX(0, StartBounds.Left);
+                WireBounds.SetX(1, StartBounds.Right);
+                WireBounds.SetX(2, EndBounds.Right);
+                WireBounds.SetX(3, EndBounds.Left);
 
-                    WireBounds.SetY (0, StartBounds.Bottom);
-                    WireBounds.SetY (1, StartBounds.Top);
-                    WireBounds.SetY (2, EndBounds.Top);
-                    WireBounds.SetY (3, EndBounds.Bottom);
-                }
+                WireBounds.SetY(0, StartBounds.Bottom);
+                WireBounds.SetY(1, StartBounds.Top);
+                WireBounds.SetY(2, EndBounds.Top);
+                WireBounds.SetY(3, EndBounds.Bottom);
+            }
         }
     }
 
     public class AndGate : Element
-    { 
+    {
         #region Constructor
 
-        public AndGate (int id, float x, float y)
+        public AndGate(int id, float x, float y)
             : base()
         {
-            Initialize (id, x, y);
+            Initialize(id, x, y);
         }
 
         #endregion
 
-        private void Initialize (int id, float x, float y)
+        private void Initialize(int id, float x, float y)
         {
             float width = 30f;
             float height = 30f;
@@ -375,19 +395,19 @@ namespace CanvasDiagram.Droid
             Height = height;
             X = x;
             Y = y;
-            Bounds = new RectF (x, y, x + width, y + height);
+            Bounds = new RectF(x, y, x + width, y + height);
             ShowPins = false;
-            Pins = new List<Pin> ();
+            Pins = new List<Pin>();
 
-            Pins.Add (new Pin (0, this, x + 0f, y + (height / 2f), radius, hitOffset)); // left
-            Pins.Add (new Pin (1, this, x + width, y + (height / 2f), radius, hitOffset)); // right
-            Pins.Add (new Pin (2, this, x + (width / 2f), y + 0f, radius, hitOffset)); // top
-            Pins.Add (new Pin (3, this, x + (width / 2f), y + height, radius, hitOffset)); // bottom
+            Pins.Add(new Pin(0, this, x + 0f, y + (height / 2f), radius, hitOffset)); // left
+            Pins.Add(new Pin(1, this, x + width, y + (height / 2f), radius, hitOffset)); // right
+            Pins.Add(new Pin(2, this, x + (width / 2f), y + 0f, radius, hitOffset)); // top
+            Pins.Add(new Pin(3, this, x + (width / 2f), y + height, radius, hitOffset)); // bottom
         }
     }
 
     public class OrGate : Element
-    { 
+    {
         #region Properties
 
         public int Counter { get; set; }
@@ -396,15 +416,15 @@ namespace CanvasDiagram.Droid
 
         #region Constructor
 
-        public OrGate (int id, float x, float y, int counter) 
+        public OrGate(int id, float x, float y, int counter)
             : base()
         {
-            Initialize (id, x, y, counter);
+            Initialize(id, x, y, counter);
         }
 
         #endregion
 
-        private void Initialize (int id, float x, float y, int counter)
+        private void Initialize(int id, float x, float y, int counter)
         {
             float width = 30f;
             float height = 30f;
@@ -416,14 +436,14 @@ namespace CanvasDiagram.Droid
             Height = height;
             X = x;
             Y = y;
-            Bounds = new RectF (x, y, x + width, y + height);
+            Bounds = new RectF(x, y, x + width, y + height);
             ShowPins = false;
-            Pins = new List<Pin> ();
+            Pins = new List<Pin>();
 
-            Pins.Add (new Pin (0, this, x + 0f, y + (height / 2f), radius, hitOffset)); // left
-            Pins.Add (new Pin (1, this, x + width, y + (height / 2f), radius, hitOffset)); // right
-            Pins.Add (new Pin (2, this, x + (width / 2f), y + 0f, radius, hitOffset)); // top
-            Pins.Add (new Pin (3, this, x + (width / 2f), y + height, radius, hitOffset)); // bottom
+            Pins.Add(new Pin(0, this, x + 0f, y + (height / 2f), radius, hitOffset)); // left
+            Pins.Add(new Pin(1, this, x + width, y + (height / 2f), radius, hitOffset)); // right
+            Pins.Add(new Pin(2, this, x + (width / 2f), y + 0f, radius, hitOffset)); // top
+            Pins.Add(new Pin(3, this, x + (width / 2f), y + height, radius, hitOffset)); // bottom
 
             Counter = counter;
         }
@@ -452,113 +472,113 @@ namespace CanvasDiagram.Droid
         public static void Parse(string model, ConcurrentDictionary<int, Element> elements)
         {
             string type = null;
-            var lines = model.Split (ModelLineSeparators, StringSplitOptions.RemoveEmptyEntries);
+            var lines = model.Split(ModelLineSeparators, StringSplitOptions.RemoveEmptyEntries);
 
-            foreach(var element in lines)
+            foreach (var element in lines)
+            {
+                var args = element.Split(ModelArgSeparators, StringSplitOptions.RemoveEmptyEntries);
+
+                int length = args.Length;
+                if (length < 2)
+                    continue;
+
+                type = args[0];
+
+                if (string.Compare(type, "Pin", StringComparison.InvariantCultureIgnoreCase) == 0 && length == 4)
                 {
-                    var args = element.Split (ModelArgSeparators, StringSplitOptions.RemoveEmptyEntries);
+                    int id = int.Parse(args[1]);
+                    float x = float.Parse(args[2]);
+                    float y = float.Parse(args[3]);
 
-                    int length = args.Length;
-                    if (length < 2)
-                        continue;
-
-                    type = args [0];
-
-                    if (string.Compare (type, "Pin", StringComparison.InvariantCultureIgnoreCase) == 0 && length == 4) 
-                        {
-                            int id = int.Parse (args [1]);
-                            float x = float.Parse (args [2]);
-                            float y = float.Parse (args [3]);
-
-                            var pin = new Pin (id, null, x, y, 4f, 3f);
-                            elements.TryAdd (id, pin);
-                        }
-                    else if (string.Compare (type, "Wire", StringComparison.InvariantCultureIgnoreCase) == 0 && length == 6) 
-                        {
-                            int id = int.Parse (args [1]);
-                            int startParentId = int.Parse (args [2]);
-                            int startId = int.Parse (args [3]);
-                            int endParentId = int.Parse (args [4]);
-                            int endtId = int.Parse (args [5]);
-
-                            var wire = new Wire (id, startParentId, startId, endParentId, endtId);
-                            elements.TryAdd (id, wire);
-                        }
-                    else if (string.Compare (type, "AndGate", StringComparison.InvariantCultureIgnoreCase) == 0 && length == 4) 
-                        {
-                            int id = int.Parse (args [1]);
-                            float x = float.Parse (args [2]);
-                            float y = float.Parse (args [3]);
-
-                            var andGate = new AndGate (id, x, y);
-                            elements.TryAdd (id, andGate);
-                        }
-                    else if (string.Compare (type, "OrGate", StringComparison.InvariantCultureIgnoreCase) == 0 && length == 4) 
-                        {
-                            int id = int.Parse (args [1]);
-                            float x = float.Parse (args [2]);
-                            float y = float.Parse (args [3]);
-
-                            var orGate = new OrGate (id, x, y, 1);
-                            elements.TryAdd (id, orGate);
-                        }
+                    var pin = new Pin(id, null, x, y, 4f, 3f);
+                    elements.TryAdd(id, pin);
                 }
+                else if (string.Compare(type, "Wire", StringComparison.InvariantCultureIgnoreCase) == 0 && length == 6)
+                {
+                    int id = int.Parse(args[1]);
+                    int startParentId = int.Parse(args[2]);
+                    int startId = int.Parse(args[3]);
+                    int endParentId = int.Parse(args[4]);
+                    int endtId = int.Parse(args[5]);
 
-            UpdateWireConnections (elements);
+                    var wire = new Wire(id, startParentId, startId, endParentId, endtId);
+                    elements.TryAdd(id, wire);
+                }
+                else if (string.Compare(type, "AndGate", StringComparison.InvariantCultureIgnoreCase) == 0 && length == 4)
+                {
+                    int id = int.Parse(args[1]);
+                    float x = float.Parse(args[2]);
+                    float y = float.Parse(args[3]);
+
+                    var andGate = new AndGate(id, x, y);
+                    elements.TryAdd(id, andGate);
+                }
+                else if (string.Compare(type, "OrGate", StringComparison.InvariantCultureIgnoreCase) == 0 && length == 4)
+                {
+                    int id = int.Parse(args[1]);
+                    float x = float.Parse(args[2]);
+                    float y = float.Parse(args[3]);
+
+                    var orGate = new OrGate(id, x, y, 1);
+                    elements.TryAdd(id, orGate);
+                }
+            }
+
+            UpdateWireConnections(elements);
         }
 
-        public static void UpdateWireConnections (ConcurrentDictionary<int, Element> elements)
+        public static void UpdateWireConnections(ConcurrentDictionary<int, Element> elements)
         {
-            var wires = elements.Where (x => x.Value is Wire);
+            var wires = elements.Where(x => x.Value is Wire);
 
-            foreach (var pair in wires) 
+            foreach (var pair in wires)
+            {
+                var wire = pair.Value as Wire;
+
+                if (wire.StartParentId == StandalonePinId)
                 {
-                    var wire = pair.Value as Wire;
-
-                    if (wire.StartParentId == StandalonePinId)
-                        {
-                            Element start;
-                            if (elements.TryGetValue (wire.StartId, out start))
-                                {
-                                    var pin = start as Pin;
-                                    wire.Start = pin;
-                                    pin.Wires.Add (wire);
-                                }
-                        }
-                    else
-                        {
-                            Element parent;
-                            if (elements.TryGetValue (wire.StartParentId, out parent))
-                                {
-                                    var pin = parent.Pins.FirstOrDefault (x => x.Id == wire.StartId);
-                                    wire.Start = pin;
-                                    pin.Wires.Add (wire);
-                                }
-                        }
-
-                    if (wire.EndParentId == StandalonePinId)
-                        {
-                            Element end;
-                            if (elements.TryGetValue (wire.EndId, out end))
-                                {
-                                    var pin = end as Pin;
-                                    wire.End = pin;
-                                    pin.Wires.Add (wire);
-                                }
-                        }
-                    else
-                        {
-                            Element parent;
-                            if (elements.TryGetValue (wire.EndParentId, out parent))
-                                {
-                                    var pin = parent.Pins.FirstOrDefault (x => x.Id == wire.EndId);
-                                    wire.End = pin;
-                                    pin.Wires.Add (wire);
-                                }
-                        }
-
-                    wire.Initialize (4f, 3f);
+                    Element start;
+                    if (elements.TryGetValue(wire.StartId, out start))
+                    {
+                        var pin = start as Pin;
+                        wire.Start = pin;
+                        pin.Wires.Add(wire);
+                    }
                 }
+                else
+                {
+                    Element parent;
+                    if (elements.TryGetValue(wire.StartParentId, out parent))
+                    {
+                        var pin = parent.Pins.FirstOrDefault(x => x.Id == wire.StartId);
+                        wire.Start = pin;
+                        pin.Wires.Add(wire);
+                    }
+                }
+
+                if (wire.EndParentId == StandalonePinId)
+                {
+                    Element end;
+                    if (elements.TryGetValue(wire.EndId, out end))
+                    {
+                        var pin = end as Pin;
+                        wire.End = pin;
+                        pin.Wires.Add(wire);
+                    }
+                }
+                else
+                {
+                    Element parent;
+                    if (elements.TryGetValue(wire.EndParentId, out parent))
+                    {
+                        var pin = parent.Pins.FirstOrDefault(x => x.Id == wire.EndId);
+                        wire.End = pin;
+                        pin.Wires.Add(wire);
+                    }
+                }
+
+                wire.Initialize(4f, 3f);
+            }
         }
 
         #endregion
@@ -574,94 +594,94 @@ namespace CanvasDiagram.Droid
 
             //var sw = System.Diagnostics.Stopwatch.StartNew ();
 
-            foreach (var pair in elements) 
+            foreach (var pair in elements)
+            {
+                var element = pair.Value;
+
+                if (element is Pin)
                 {
-                    var element = pair.Value;
+                    var pin = element as Pin;
+                    //string str = string.Format ("Pin;{0};{1};{2}", pin.Id, pin.X, pin.Y);
+                    //sb.AppendLine (str);
 
-                    if (element is Pin)
-                        {
-                            var pin = element as Pin;
-                            //string str = string.Format ("Pin;{0};{1};{2}", pin.Id, pin.X, pin.Y);
-                            //sb.AppendLine (str);
+                    sb.Append(TagPin); 
+                    sb.Append(ModelSeparator);
 
-                            sb.Append (TagPin); 
-                            sb.Append (ModelSeparator);
+                    sb.Append(pin.Id);
+                    sb.Append(ModelSeparator);
 
-                            sb.Append (pin.Id);
-                            sb.Append (ModelSeparator);
+                    sb.Append(pin.X);
+                    sb.Append(ModelSeparator);
 
-                            sb.Append (pin.X);
-                            sb.Append (ModelSeparator);
-
-                            sb.Append (pin.Y);
-                            sb.Append (ModelNewLine);
-                        }
-                    else if (element is Wire) 
-                        {
-                            var wire = element as Wire;
-                            //string str = string.Format ("Wire;{0};{1};{2};{3};{4}", 
-                            //                            wire.Id, 
-                            //                            wire.Start.Parent != null ? wire.Start.Parent.Id : StandalonePinId, 
-                            //                            wire.Start.Id, 
-                            //                            wire.End.Parent != null ? wire.End.Parent.Id : StandalonePinId, 
-                            //                            wire.End.Id);
-                            //sb.AppendLine (str);
-
-                            sb.Append (TagWire); 
-                            sb.Append (ModelSeparator);
-
-                            sb.Append (wire.Id);
-                            sb.Append (ModelSeparator);
-
-                            sb.Append (wire.Start.Parent != null ? wire.Start.Parent.Id : StandalonePinId);
-                            sb.Append (ModelSeparator);
-
-                            sb.Append (wire.Start.Id);
-                            sb.Append (ModelSeparator);
-
-                            sb.Append (wire.End.Parent != null ? wire.End.Parent.Id : StandalonePinId);
-                            sb.Append (ModelSeparator);
-
-                            sb.Append (wire.End.Id);
-                            sb.Append (ModelNewLine);
-                        }
-                    else if (element is AndGate) 
-                        {
-                            var andGate = element as AndGate;
-                            //string str = string.Format ("AndGate;{0};{1};{2}", andGate.Id, andGate.X, andGate.Y);
-                            //sb.AppendLine (str);
-
-                            sb.Append (TagAndGate); 
-                            sb.Append (ModelSeparator);
-
-                            sb.Append (andGate.Id);
-                            sb.Append (ModelSeparator);
-
-                            sb.Append (andGate.X);
-                            sb.Append (ModelSeparator);
-
-                            sb.Append (andGate.Y);
-                            sb.Append (ModelNewLine);
-                        }
-                    else if (element is OrGate) 
-                        {
-                            var orGate = element as OrGate;
-                            //string str = string.Format ("OrGate;{0};{1};{2}", orGate.Id, orGate.X, orGate.Y);
-                            //sb.AppendLine (str);
-
-                            sb.Append (TagOrGate); 
-                            sb.Append (ModelSeparator);
-
-                            sb.Append (orGate.Id);
-                            sb.Append (ModelSeparator);
-
-                            sb.Append (orGate.X);
-                            sb.Append (ModelSeparator);
-
-                            sb.Append (orGate.Y);
-                            sb.Append (ModelNewLine);
-                        }
+                    sb.Append(pin.Y);
+                    sb.Append(ModelNewLine);
                 }
+                else if (element is Wire)
+                {
+                    var wire = element as Wire;
+                    //string str = string.Format ("Wire;{0};{1};{2};{3};{4}", 
+                    //                            wire.Id, 
+                    //                            wire.Start.Parent != null ? wire.Start.Parent.Id : StandalonePinId, 
+                    //                            wire.Start.Id, 
+                    //                            wire.End.Parent != null ? wire.End.Parent.Id : StandalonePinId, 
+                    //                            wire.End.Id);
+                    //sb.AppendLine (str);
+
+                    sb.Append(TagWire); 
+                    sb.Append(ModelSeparator);
+
+                    sb.Append(wire.Id);
+                    sb.Append(ModelSeparator);
+
+                    sb.Append(wire.Start.Parent != null ? wire.Start.Parent.Id : StandalonePinId);
+                    sb.Append(ModelSeparator);
+
+                    sb.Append(wire.Start.Id);
+                    sb.Append(ModelSeparator);
+
+                    sb.Append(wire.End.Parent != null ? wire.End.Parent.Id : StandalonePinId);
+                    sb.Append(ModelSeparator);
+
+                    sb.Append(wire.End.Id);
+                    sb.Append(ModelNewLine);
+                }
+                else if (element is AndGate)
+                {
+                    var andGate = element as AndGate;
+                    //string str = string.Format ("AndGate;{0};{1};{2}", andGate.Id, andGate.X, andGate.Y);
+                    //sb.AppendLine (str);
+
+                    sb.Append(TagAndGate); 
+                    sb.Append(ModelSeparator);
+
+                    sb.Append(andGate.Id);
+                    sb.Append(ModelSeparator);
+
+                    sb.Append(andGate.X);
+                    sb.Append(ModelSeparator);
+
+                    sb.Append(andGate.Y);
+                    sb.Append(ModelNewLine);
+                }
+                else if (element is OrGate)
+                {
+                    var orGate = element as OrGate;
+                    //string str = string.Format ("OrGate;{0};{1};{2}", orGate.Id, orGate.X, orGate.Y);
+                    //sb.AppendLine (str);
+
+                    sb.Append(TagOrGate); 
+                    sb.Append(ModelSeparator);
+
+                    sb.Append(orGate.Id);
+                    sb.Append(ModelSeparator);
+
+                    sb.Append(orGate.X);
+                    sb.Append(ModelSeparator);
+
+                    sb.Append(orGate.Y);
+                    sb.Append(ModelNewLine);
+                }
+            }
 
             //sw.Stop ();
             //Console.WriteLine ("Generate: {0}ms", sw.Elapsed.TotalMilliseconds);
@@ -678,13 +698,15 @@ namespace CanvasDiagram.Droid
 
     public class Diagram
     {
-        public Diagram ()
+        public Diagram()
         {
         }
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
+
         public string Title { get; set; }
+
         public string Model { get; set; }
     }
 
@@ -692,46 +714,46 @@ namespace CanvasDiagram.Droid
     {
         private SQLiteConnection conn;
 
-        public DiagramRepository ()
+        public DiagramRepository()
         {
-            string folder = System.Environment.GetFolderPath (System.Environment.SpecialFolder.Personal);
-            conn = new SQLiteConnection (System.IO.Path.Combine (folder, "diagrams.db"));
+            string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+            conn = new SQLiteConnection(System.IO.Path.Combine(folder, "diagrams.db"));
             conn.CreateTable<Diagram>();
         }
 
         public List<Diagram> GetAll()
         {
-            return conn.Table<Diagram> ().OrderBy(x => x.Id).ToList();
+            return conn.Table<Diagram>().OrderBy(x => x.Id).ToList();
         }
 
         public void RemoveAll()
         {
             foreach (var diagram in conn.Table<Diagram> ())
-                conn.Delete (diagram);
+                conn.Delete(diagram);
         }
 
         public Diagram Get(int id)
         {
-            return conn.Table<Diagram> ().FirstOrDefault (x => x.Id == id);
+            return conn.Table<Diagram>().FirstOrDefault(x => x.Id == id);
         }
 
         public int Save(Diagram diagram)
         {
-            if (diagram.Id != 0) 
-                {
-                    conn.Update (diagram);
-                    return diagram.Id;
-                } 
-            else 
-                {
-                    return conn.Insert (diagram);
-                }
+            if (diagram.Id != 0)
+            {
+                conn.Update(diagram);
+                return diagram.Id;
+            }
+            else
+            {
+                return conn.Insert(diagram);
+            }
         }
 
         public void Delete(Diagram diagram)
         {
             if (diagram.Id != 0)
-                conn.Delete (diagram);
+                conn.Delete(diagram);
         }
     }
 
@@ -744,10 +766,12 @@ namespace CanvasDiagram.Droid
         #region Properties
 
         public readonly object Sync = new object();
+
         public bool IsRunning { get; private set; }
 
         public T Data { get; private set; }
-        public Action<T> Action { get; private set; } 
+
+        public Action<T> Action { get; private set; }
 
         #endregion
 
@@ -758,7 +782,7 @@ namespace CanvasDiagram.Droid
             Data = data;
             Action = action;
             IsRunning = isRunning;
-        } 
+        }
 
         #endregion
 
@@ -766,7 +790,7 @@ namespace CanvasDiagram.Droid
 
         public void SetAction(Action<T> action)
         {
-            lock(Sync)
+            lock (Sync)
                 Action = action;
         }
 
@@ -780,7 +804,7 @@ namespace CanvasDiagram.Droid
             if (Monitor.TryEnter(Sync, timeout) == false)
                 return false;
 
-            copy (data, Data);
+            copy(data, Data);
 
             Monitor.Pulse(Sync);
             Monitor.Exit(Sync);
@@ -795,16 +819,16 @@ namespace CanvasDiagram.Droid
         public void Loop()
         {
             while (IsRunning)
+            {
+                lock (Sync)
                 {
-                    lock (Sync)
-                        {
-                            if (Action != null)
-                                Action(Data);
+                    if (Action != null)
+                        Action(Data);
 
-                            Monitor.Wait(Sync);
-                        }
+                    Monitor.Wait(Sync);
                 }
-        } 
+            }
+        }
 
         #endregion
     }
@@ -844,7 +868,7 @@ namespace CanvasDiagram.Droid
 
             thread = null;
             holder = null;
-        } 
+        }
 
         #endregion
 
@@ -853,7 +877,7 @@ namespace CanvasDiagram.Droid
         public bool HandleEvent(T data, Action<T, T> copy, int timeout)
         {
             return holder != null ? holder.SetData(data, copy, timeout) : false;
-        } 
+        }
 
         #endregion
     }
@@ -895,75 +919,75 @@ namespace CanvasDiagram.Droid
 
         #region Fields
 
-        public InputArgs Args = new InputArgs ();
+        public InputArgs Args = new InputArgs();
 
         #endregion
 
         #region Constructor
 
-        public DrawingView (Context context)
+        public DrawingView(Context context)
             : base(context)
         {
-            Initialize (context);
+            Initialize(context);
         }
 
-        public DrawingView (Context context, IAttributeSet attrs)
+        public DrawingView(Context context, IAttributeSet attrs)
             : base(context, attrs)
         {
-            Initialize (context);
+            Initialize(context);
         }
 
         #endregion
 
         #region Initialize
 
-        private void Initialize (Context context)
+        private void Initialize(Context context)
         {
-            Holder.AddCallback (this);
-            SetWillNotDraw (true);
+            Holder.AddCallback(this);
+            SetWillNotDraw(true);
 
-            this.Touch += (sender, e) => HandleTouch (sender, e);
+            this.Touch += (sender, e) => HandleTouch(sender, e);
 
-            Service = new DrawingService ();
-            Service.Initialize ();
+            Service = new DrawingService();
+            Service.Initialize();
         }
 
         #endregion
 
         #region ISurfaceHolderCallback
 
-        public void SurfaceChanged (ISurfaceHolder holder, Format format, int width, int height)
+        public void SurfaceChanged(ISurfaceHolder holder, Format format, int width, int height)
         {
-            Console.WriteLine ("SurfaceChanged");
+            Console.WriteLine("SurfaceChanged");
 
             Service.SurfaceWidth = width;
             Service.SurfaceHeight = height;
 
-            Service.RedrawCanvas ();
+            Service.RedrawCanvas();
         }
 
-        public void SurfaceCreated (ISurfaceHolder holder)
+        public void SurfaceCreated(ISurfaceHolder holder)
         {
-            Console.WriteLine ("SurfaceCreated");
+            Console.WriteLine("SurfaceCreated");
 
-            Service.Start (this.Holder);
+            Service.Start(this.Holder);
         }
 
-        public void SurfaceDestroyed (ISurfaceHolder holder)
+        public void SurfaceDestroyed(ISurfaceHolder holder)
         {
-            Console.WriteLine ("SurfaceDestroyed");
+            Console.WriteLine("SurfaceDestroyed");
 
-            Service.Stop ();
+            Service.Stop();
         }
 
         #endregion
 
         #region Input Touch
 
-        private static int GetPointerIndex (TouchEventArgs e)
+        private static int GetPointerIndex(TouchEventArgs e)
         {
-            int index = ((int)(e.Event.Action & MotionEventActions.PointerIndexMask) 
-                >> (int)MotionEventActions.PointerIndexShift) == 0 ? 1 : 0;
+            int index = ((int)(e.Event.Action & MotionEventActions.PointerIndexMask)
+                        >> (int)MotionEventActions.PointerIndexShift) == 0 ? 1 : 0;
             return index;
         }
 
@@ -972,21 +996,21 @@ namespace CanvasDiagram.Droid
             var action = e.Event.Action & MotionEventActions.Mask;
             int count = e.Event.PointerCount;
 
-            Args.X = e.Event.GetX ();
-            Args.Y = e.Event.GetY ();
-            Args.Index = GetPointerIndex (e);
-            Args.X0 = e.Event.GetX (0);
-            Args.Y0 = e.Event.GetY (0);
-            Args.X1 = count == 2 ? e.Event.GetX (1) : 0f;
-            Args.Y1 = count == 2 ? e.Event.GetY (1) : 0f;
+            Args.X = e.Event.GetX();
+            Args.Y = e.Event.GetY();
+            Args.Index = GetPointerIndex(e);
+            Args.X0 = e.Event.GetX(0);
+            Args.Y0 = e.Event.GetY(0);
+            Args.X1 = count == 2 ? e.Event.GetX(1) : 0f;
+            Args.Y1 = count == 2 ? e.Event.GetY(1) : 0f;
 
-            if (count == 1 && action == MotionEventActions.Down) 
+            if (count == 1 && action == MotionEventActions.Down)
                 Args.Action = InputActions.Hitest;
             else if (count == 1 && action == MotionEventActions.Move)
                 Args.Action = InputActions.Move;
-            else if (count == 2 && action == MotionEventActions.PointerDown) 
+            else if (count == 2 && action == MotionEventActions.PointerDown)
                 Args.Action = InputActions.StartZoom;
-            else if (count == 2 && action == MotionEventActions.Move) 
+            else if (count == 2 && action == MotionEventActions.Move)
                 Args.Action = InputActions.Zoom;
             else if (action == MotionEventActions.Up)
                 Args.Action = InputActions.Merge;
@@ -995,14 +1019,14 @@ namespace CanvasDiagram.Droid
             else
                 Args.Action = InputActions.None;
 
-            Service.RedrawCanvas (Args);
+            Service.RedrawCanvas(Args);
         }
 
         #endregion
 
         #region OnDraw
 
-        protected override void OnDraw (Canvas canvas)
+        protected override void OnDraw(Canvas canvas)
         {
         }
 
@@ -1014,9 +1038,11 @@ namespace CanvasDiagram.Droid
         #region Properties
 
         public ConcurrentDictionary<int, Element> Elements { get; set; }
+
         public string CurrentModel { get; set; }
 
         public int SurfaceWidth { get; set; }
+
         public int SurfaceHeight { get; set; }
 
         #endregion
@@ -1040,12 +1066,18 @@ namespace CanvasDiagram.Droid
         //private Paint textIOPaint;
         private Paint test;
 
-        private Color colorBackground = Color.Argb (255, 221, 221, 221); // #FFDDDDDD
-        private Color coloPage = Color.Argb (255, 116, 116, 116); // #FF747474
-        private Color colorGrid = Color.Argb (255, 180, 180, 180); // #FFB4B4B4
-        private Color colorElement = Color.Argb (255, 0, 0, 0); // Black, #FF000000
-        private Color colorSelected = Color.Argb (255, 255, 20, 147); // DeepPink, #FFFF1493
-        private Color colorBounds = Color.Argb (128, 255, 255, 0); // transparent Yellow
+        private Color colorBackground = Color.Argb(255, 221, 221, 221);
+        // #FFDDDDDD
+        private Color coloPage = Color.Argb(255, 116, 116, 116);
+        // #FF747474
+        private Color colorGrid = Color.Argb(255, 180, 180, 180);
+        // #FFB4B4B4
+        private Color colorElement = Color.Argb(255, 0, 0, 0);
+        // Black, #FF000000
+        private Color colorSelected = Color.Argb(255, 255, 20, 147);
+        // DeepPink, #FFFF1493
+        private Color colorBounds = Color.Argb(128, 255, 255, 0);
+        // transparent Yellow
 
         private float wireStrokeWidth = 2f;
         private float elementStrokeWidth = 2f;
@@ -1083,12 +1115,12 @@ namespace CanvasDiagram.Droid
 
         #region Lifecycle
 
-        public void Start (ISurfaceHolder surfaceHolder)
+        public void Start(ISurfaceHolder surfaceHolder)
         {
             try
             {
                 if (Service == null)
-                    Service = new BackgroundService<InputArgs> ();
+                    Service = new BackgroundService<InputArgs>();
 
                 ISurfaceHolder holder = surfaceHolder;
                 Canvas canvas = null;
@@ -1097,40 +1129,40 @@ namespace CanvasDiagram.Droid
                     {
                         canvas = null;
 
-                        try 
+                        try
                         {
                             HandleInput(data);
-                            canvas = holder.LockCanvas (null);
-                            this.DrawDiagram (canvas);
-                        } 
-                        catch(Exception ex) 
-                        {
-                            Console.WriteLine ("{0}\n{1}", ex.Message, ex.StackTrace);
+                            canvas = holder.LockCanvas(null);
+                            this.DrawDiagram(canvas);
                         }
-                        finally 
+                        catch (Exception ex)
                         {
-                            if (canvas != null) 
-                                holder.UnlockCanvasAndPost (canvas);
+                            Console.WriteLine("{0}\n{1}", ex.Message, ex.StackTrace);
+                        }
+                        finally
+                        {
+                            if (canvas != null)
+                                holder.UnlockCanvasAndPost(canvas);
                         }
                     },
                     new InputArgs());
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             { 
-                Console.WriteLine ("{0}\n{1}", ex.Message, ex.StackTrace);
+                Console.WriteLine("{0}\n{1}", ex.Message, ex.StackTrace);
             }
         }
 
-        public void Stop ()
+        public void Stop()
         {
             try
             {
                 if (Service != null)
-                    Service.Stop ();
+                    Service.Stop();
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             { 
-                Console.WriteLine ("{0}\n{1}", ex.Message, ex.StackTrace);
+                Console.WriteLine("{0}\n{1}", ex.Message, ex.StackTrace);
             }
         }
 
@@ -1138,116 +1170,116 @@ namespace CanvasDiagram.Droid
 
         #region Id
 
-        public int GetNextId () 
+        public int GetNextId()
         { 
             return nextId++; 
         }
 
-        public void SetNextId (int id)
+        public void SetNextId(int id)
         {
             nextId = id;
         }
 
-        public void UpdateNextId ()
+        public void UpdateNextId()
         {
-            var nextId = this.Elements.Count == 0 ? 0 : this.Elements.Max (x => x.Value.Id) + 1;
-            this.SetNextId (nextId);
+            var nextId = this.Elements.Count == 0 ? 0 : this.Elements.Max(x => x.Value.Id) + 1;
+            this.SetNextId(nextId);
         }
 
         #endregion
 
         #region Initialize
 
-        public void Initialize ()
+        public void Initialize()
         {
-            CreatePaints ();
-            Elements = new ConcurrentDictionary<int, Element> ();
-            translate = new PointF (0f, 0f);
-            middle = new PointF (0f, 0f);
-            ResetZoom ();
+            CreatePaints();
+            Elements = new ConcurrentDictionary<int, Element>();
+            translate = new PointF(0f, 0f);
+            middle = new PointF(0f, 0f);
+            ResetZoom();
         }
 
-        private void CreatePaints ()
+        private void CreatePaints()
         {
-            wirePaint = new Paint () 
-                {
-                    Color = colorElement,
-                    AntiAlias = true,
-                    StrokeWidth = wireStrokeWidth,
-                    StrokeCap = Paint.Cap.Square
-                };
+            wirePaint = new Paint()
+            {
+                Color = colorElement,
+                AntiAlias = true,
+                StrokeWidth = wireStrokeWidth,
+                StrokeCap = Paint.Cap.Square
+            };
 
-            elementPaint = new Paint () 
-                {
-                    Color = colorElement,
-                    AntiAlias = true,
-                    StrokeWidth = elementStrokeWidth,
-                    StrokeCap = Paint.Cap.Square
-                };
+            elementPaint = new Paint()
+            {
+                Color = colorElement,
+                AntiAlias = true,
+                StrokeWidth = elementStrokeWidth,
+                StrokeCap = Paint.Cap.Square
+            };
 
-            pinPaint = new Paint () 
-                {
-                    Color = colorElement,
-                    AntiAlias = true,
-                    StrokeWidth = pinStrokeWidth,
-                    StrokeCap = Paint.Cap.Butt
-                };
+            pinPaint = new Paint()
+            {
+                Color = colorElement,
+                AntiAlias = true,
+                StrokeWidth = pinStrokeWidth,
+                StrokeCap = Paint.Cap.Butt
+            };
 
-            textElementPaint = new Paint () 
-                {
-                    Color = colorElement,
-                    AntiAlias = true,
-                    StrokeWidth = 1f,
-                    TextAlign = Paint.Align.Center,
-                    TextSize = 14f,
-                    SubpixelText = true
-                };
+            textElementPaint = new Paint()
+            {
+                Color = colorElement,
+                AntiAlias = true,
+                StrokeWidth = 1f,
+                TextAlign = Paint.Align.Center,
+                TextSize = 14f,
+                SubpixelText = true
+            };
 
-            gridPaint = new Paint () 
-                {
-                    Color = colorGrid,
-                    AntiAlias = true,
-                    StrokeWidth = gridStrokeWidth,
-                    StrokeCap = Paint.Cap.Butt
-                };
-            gridPaint.SetStyle (Paint.Style.Stroke);
+            gridPaint = new Paint()
+            {
+                Color = colorGrid,
+                AntiAlias = true,
+                StrokeWidth = gridStrokeWidth,
+                StrokeCap = Paint.Cap.Butt
+            };
+            gridPaint.SetStyle(Paint.Style.Stroke);
 
-            boundsPaint = new Paint () 
-                {
-                    Color = colorBounds,
-                    AntiAlias = true,
-                    StrokeWidth = pinStrokeWidth,
-                    StrokeCap = Paint.Cap.Butt
-                };
-            boundsPaint.SetStyle (Paint.Style.Stroke);
+            boundsPaint = new Paint()
+            {
+                Color = colorBounds,
+                AntiAlias = true,
+                StrokeWidth = pinStrokeWidth,
+                StrokeCap = Paint.Cap.Butt
+            };
+            boundsPaint.SetStyle(Paint.Style.Stroke);
 
-            test = new Paint () 
-                {
-                    Color = Color.Argb(255, 255, 0, 0),
-                    AntiAlias = true,
-                    StrokeWidth = 1f,
-                    StrokeCap = Paint.Cap.Butt
-                };
-            test.SetStyle (Paint.Style.Stroke);
+            test = new Paint()
+            {
+                Color = Color.Argb(255, 255, 0, 0),
+                AntiAlias = true,
+                StrokeWidth = 1f,
+                StrokeCap = Paint.Cap.Butt
+            };
+            test.SetStyle(Paint.Style.Stroke);
         }
 
         #endregion
 
         #region Input HitTest
 
-        private void ResetStartAndEndPin ()
+        private void ResetStartAndEndPin()
         {
-            if (startPin != null) 
-                {
-                    startPin.IsSelected = false;
-                    startPin = null;
-                }
+            if (startPin != null)
+            {
+                startPin.IsSelected = false;
+                startPin = null;
+            }
 
-            if (endPin != null) 
-                {
-                    endPin.IsSelected = false;
-                    endPin = null;
-                }
+            if (endPin != null)
+            {
+                endPin.IsSelected = false;
+                endPin = null;
+            }
         }
 
         private void SetWireSelection(Wire wire, bool selected, Wire found)
@@ -1279,36 +1311,36 @@ namespace CanvasDiagram.Droid
             bool haveWire = false;
 
             // find wire that contains touch point
-            foreach (var pair in Elements.Where(_ => _.Value is Wire)) 
+            foreach (var pair in Elements.Where(_ => _.Value is Wire))
+            {
+                var wire = pair.Value as Wire;
+
+                bool startBounds = wire.StartBounds.Contains(x, y) == true;
+                bool endBounds = wire.EndBounds.Contains(x, y) == true;
+                bool wireBounds = wire.WireBounds.Contains(x, y) == true;
+
+                if (found == null && (wireBounds == true && !startBounds && !endBounds))
                 {
-                    var wire = pair.Value as Wire;
-
-                    bool startBounds = wire.StartBounds.Contains (x, y) == true;
-                    bool endBounds = wire.EndBounds.Contains (x, y) == true;
-                    bool wireBounds = wire.WireBounds.Contains (x, y) == true;
-
-                    if (found == null && (wireBounds == true && !startBounds && !endBounds))
-                        {
-                            if (wire.IsSelected == false)
-                                {
-                                    haveWire = true;
-                                    found = wire;
-                                    // select wire
-                                    SetWireSelection (wire, true, null);
-                                }
-                            else
-                                {
-                                    currentWire = null;
-                                    SetWireSelection (wire, false, null);
-                                }
-                        } 
-                    else 
-                        {
-                            // deselect wire
-                            if (deselect == true)
-                                SetWireSelection (wire, false, found);
-                        }
+                    if (wire.IsSelected == false)
+                    {
+                        haveWire = true;
+                        found = wire;
+                        // select wire
+                        SetWireSelection(wire, true, null);
+                    }
+                    else
+                    {
+                        currentWire = null;
+                        SetWireSelection(wire, false, null);
+                    }
                 }
+                else
+                {
+                    // deselect wire
+                    if (deselect == true)
+                        SetWireSelection(wire, false, found);
+                }
+            }
 
             if (found != null)
                 currentWire = found;
@@ -1316,50 +1348,50 @@ namespace CanvasDiagram.Droid
             return haveWire;
         }
 
-        private bool HitTestPin (float x, float y)
+        private bool HitTestPin(float x, float y)
         {
             bool havePin = false;
 
-            foreach (var pin in currentElement.Pins) 
+            foreach (var pin in currentElement.Pins)
+            {
+                if (pin.Bounds.Contains(x, y) == true)
                 {
-                    if (pin.Bounds.Contains (x, y) == true) 
+                    if (startPin == null)
+                    {
+                        // select as start pin
+                        startPin = pin;
+                        startPin.IsSelected = true;
+                        havePin = true;
+                        break;
+                    }
+                    else if (endPin == null)
+                    {
+                        // check if can be connected as end pin
+                        if (pin != startPin && pin.Parent != startPin.Parent)
                         {
-                            if (startPin == null) 
-                                {
-                                    // select as start pin
-                                    startPin = pin;
-                                    startPin.IsSelected = true;
-                                    havePin = true;
-                                    break;
-                                }
-                            else if (endPin == null) 
-                                {
-                                    // check if can be connected as end pin
-                                    if (pin != startPin && pin.Parent != startPin.Parent) 
-                                        {
-                                            endPin = pin;
-                                            endPin.IsSelected = true;
-                                        }
-
-                                    // reset start pin
-                                    if (pin == startPin) 
-                                        {
-                                            startPin.IsSelected = false;
-                                            startPin = null;
-                                        }
-
-                                    havePin = true;
-                                    break;
-                                }
-                            else 
-                                {
-                                    ResetStartAndEndPin ();
-
-                                    havePin = true;
-                                    break;
-                                }
+                            endPin = pin;
+                            endPin.IsSelected = true;
                         }
+
+                        // reset start pin
+                        if (pin == startPin)
+                        {
+                            startPin.IsSelected = false;
+                            startPin = null;
+                        }
+
+                        havePin = true;
+                        break;
+                    }
+                    else
+                    {
+                        ResetStartAndEndPin();
+
+                        havePin = true;
+                        break;
+                    }
                 }
+            }
 
             return havePin;
         }
@@ -1370,24 +1402,24 @@ namespace CanvasDiagram.Droid
             bool haveElement = false;
 
             // find element that contains touch point
-            foreach (var pair in Elements.Where(_ => !(_.Value is Wire))) 
-                {
-                    var element = pair.Value;
+            foreach (var pair in Elements.Where(_ => !(_.Value is Wire)))
+            {
+                var element = pair.Value;
 
-                    if (rect == null && element.Bounds.Contains (x, y) == true) 
-                        {
-                            haveElement = true;
-                            currentElement = element;
-                            element.ShowPins = true;
-                            rect = element.Bounds;
-                        } 
-                    else 
-                        {
-                            // hide element pins except for parent of start pin
-                            if (!(startPin != null && endPin == null && startPin.Parent == element))
-                                element.ShowPins = false;
-                        }
+                if (rect == null && element.Bounds.Contains(x, y) == true)
+                {
+                    haveElement = true;
+                    currentElement = element;
+                    element.ShowPins = true;
+                    rect = element.Bounds;
                 }
+                else
+                {
+                    // hide element pins except for parent of start pin
+                    if (!(startPin != null && endPin == null && startPin.Parent == element))
+                        element.ShowPins = false;
+                }
+            }
 
             return haveElement;
         }
@@ -1396,7 +1428,7 @@ namespace CanvasDiagram.Droid
 
         #region Input Move
 
-        private void MoveCurrentElement (float x, float y)
+        private void MoveCurrentElement(float x, float y)
         {
             float scaledX = (x - translate.X) / zoom;
             float scaledY = (y - translate.Y) / zoom;
@@ -1405,7 +1437,7 @@ namespace CanvasDiagram.Droid
             float dx = scaledX - previousX;
             float dy = scaledY - previousY;
 
-            currentElement.Update (dx, dy);
+            currentElement.Update(dx, dy);
 
             // update previous position
             previousX = scaledX;
@@ -1414,23 +1446,23 @@ namespace CanvasDiagram.Droid
             // update wire bounds
             var pins = currentElement.Pins;
             if (pins != null)
-                UpdatePinWires (pins, dx, dy);
+                UpdatePinWires(pins, dx, dy);
             else if (currentElement is Pin)
-                UpdateWires ((currentElement as Pin).Wires, dx, dy);
+                UpdateWires((currentElement as Pin).Wires, dx, dy);
         }
 
-        public void FinishCurrentElement (float x, float y)
+        public void FinishCurrentElement(float x, float y)
         {
             // try to merge wire to current pin
             if (currentElement is Pin)
-                {
-                    bool mergedWires = TryToMergeWire (x, y, currentElement as Pin);
+            {
+                bool mergedWires = TryToMergeWire(x, y, currentElement as Pin);
 
-                    if (mergedWires == false)
-                        {
-                            // TODO:
-                        }
+                if (mergedWires == false)
+                {
+                    // TODO:
                 }
+            }
 
             moveCurrentElementStarted = false;
         }
@@ -1439,108 +1471,108 @@ namespace CanvasDiagram.Droid
 
         #region Input Pan
 
-        public void SetPanStart (float x, float y)
+        public void SetPanStart(float x, float y)
         {
-            savedMatrix.Set (matrix);
-            start.Set (x, y);
+            savedMatrix.Set(matrix);
+            start.Set(x, y);
         }
 
-        private void PanCanvas (float x, float y)
+        private void PanCanvas(float x, float y)
         {
             matrix.Set(savedMatrix);
             matrix.PostTranslate(x - start.X, y - start.Y);
-            matrix.GetValues (matrixValues);
+            matrix.GetValues(matrixValues);
 
-            translate.Set (matrixValues[Matrix.MtransX], matrixValues[Matrix.MtransY]);
+            translate.Set(matrixValues[Matrix.MtransX], matrixValues[Matrix.MtransY]);
         }
 
         #endregion
 
         #region Input Zoom
 
-        public void PinchToZoom (float x0, float y0, float x1, float y1)
+        public void PinchToZoom(float x0, float y0, float x1, float y1)
         {
-            float currentDist = MathUtil.LineDistance (x0, y0, x1, y1);
+            float currentDist = MathUtil.LineDistance(x0, y0, x1, y1);
 
-            if (currentDist > minPinchToZoomDistance) 
-                {
-                    float scale = currentDist / previousDist;
+            if (currentDist > minPinchToZoomDistance)
+            {
+                float scale = currentDist / previousDist;
 
-                    matrix.Set(savedMatrix);
-                    matrix.PostScale(scale, scale, middle.X, middle.Y);
-                    matrix.GetValues (matrixValues);
+                matrix.Set(savedMatrix);
+                matrix.PostScale(scale, scale, middle.X, middle.Y);
+                matrix.GetValues(matrixValues);
 
-                    zoom = matrixValues [Matrix.MscaleX];
-                    translate.Set (matrixValues[Matrix.MtransX], matrixValues[Matrix.MtransY]);
-                }
+                zoom = matrixValues[Matrix.MscaleX];
+                translate.Set(matrixValues[Matrix.MtransX], matrixValues[Matrix.MtransY]);
+            }
         }
 
-        public void StartPinchToZoom (float x0, float y0, float x1, float y1)
+        public void StartPinchToZoom(float x0, float y0, float x1, float y1)
         {
             // update previous distance
-            previousDist = MathUtil.LineDistance (x0, y0, x1, y1);
+            previousDist = MathUtil.LineDistance(x0, y0, x1, y1);
 
-            if (previousDist > minPinchToZoomDistance) 
-                {
-                    savedMatrix.Set (matrix);
+            if (previousDist > minPinchToZoomDistance)
+            {
+                savedMatrix.Set(matrix);
 
-                    MathUtil.LineMiddle (ref middle, x0, y0, x1, y1);
-                }
+                MathUtil.LineMiddle(ref middle, x0, y0, x1, y1);
+            }
         }
 
         #endregion
 
         #region Wires
 
-        public static void UpdatePinWires (List<Pin> pins, float dx, float dy)
+        public static void UpdatePinWires(List<Pin> pins, float dx, float dy)
         {
-            for (int i = 0; i < pins.Count; i++) 
-                UpdateWires (pins [i].Wires, dx, dy);
+            for (int i = 0; i < pins.Count; i++)
+                UpdateWires(pins[i].Wires, dx, dy);
         }
 
         public static void UpdateWires(List<Wire> wires, float dx, float dy)
         {
             for (int j = 0; j < wires.Count; j++)
-                wires [j].Update (dx, dy);
+                wires[j].Update(dx, dy);
         }
 
-        public static void SwapWireStart (Wire wire, Pin start, Pin pin)
+        public static void SwapWireStart(Wire wire, Pin start, Pin pin)
         {
-            start.Wires.Remove (wire);
-            pin.Wires.Add (wire);
+            start.Wires.Remove(wire);
+            pin.Wires.Add(wire);
             wire.Start = pin;
-            wire.Update (0f, 0f);
+            wire.Update(0f, 0f);
         }
 
-        public static void SwapWireEnd (Wire wire, Pin end, Pin pin)
+        public static void SwapWireEnd(Wire wire, Pin end, Pin pin)
         {
-            end.Wires.Remove (wire);
-            pin.Wires.Add (wire);
+            end.Wires.Remove(wire);
+            pin.Wires.Add(wire);
             wire.End = pin;
-            wire.Update (0f, 0f);
+            wire.Update(0f, 0f);
         }
 
-        private void SplitWire (Wire wire, float x, float y, bool findClosest)
+        private void SplitWire(Wire wire, float x, float y, bool findClosest)
         {
             // find closest point on line
             var start = wire.Start;
             var end = wire.End;
-            var a = new PointF (start.X, start.Y);
-            var b = new PointF (end.X, end.Y);
-            var p = new PointF (x, y);
-            var insert = findClosest ? MathUtil.ClosestPointOnLine (a, b, p) : p;
+            var a = new PointF(start.X, start.Y);
+            var b = new PointF(end.X, end.Y);
+            var p = new PointF(x, y);
+            var insert = findClosest ? MathUtil.ClosestPointOnLine(a, b, p) : p;
 
             // create standalone pin
-            var pin = InsertPin (insert.X, insert.Y, false);
+            var pin = InsertPin(insert.X, insert.Y, false);
 
             // set current wire end to standalone pin
-            SwapWireEnd (wire, end, pin);
+            SwapWireEnd(wire, end, pin);
 
             // connect start pin to standalone pin
-            InsertWire (startPin, pin, false);
+            InsertWire(startPin, pin, false);
 
             // connect current wire old end to standalone pin
-            InsertWire (pin, end, false);
+            InsertWire(pin, end, false);
 
             // reset start pin
             startPin.IsSelected = false;
@@ -1551,7 +1583,7 @@ namespace CanvasDiagram.Droid
             currentElement.ShowPins = true;
         }
 
-        private bool TryToDetachWire (float x, float y)
+        private bool TryToDetachWire(float x, float y)
         {
             float scaledX = (x - translate.X) / zoom;
             float scaledY = (y - translate.Y) / zoom;
@@ -1562,169 +1594,169 @@ namespace CanvasDiagram.Droid
             Pin endToDetach = null;
 
             // try to detach wire Pin from current element
-            foreach (var pair in Elements.Where (_ => _.Value is Wire)) 
+            foreach (var pair in Elements.Where (_ => _.Value is Wire))
+            {
+                var wire = pair.Value as Wire;
+                bool startBounds = wire.StartBounds.Contains(scaledX, scaledY) == true;
+                bool endBounds = wire.EndBounds.Contains(scaledX, scaledY) == true;
+                bool wireBounds = wire.WireBounds.Contains(scaledX, scaledY) == true;
+
+                // check for wire start pin
+                if (startBounds == true)
                 {
-                    var wire = pair.Value as Wire;
-                    bool startBounds = wire.StartBounds.Contains (scaledX, scaledY) == true;
-                    bool endBounds = wire.EndBounds.Contains (scaledX, scaledY) == true;
-                    bool wireBounds = wire.WireBounds.Contains (scaledX, scaledY) == true;
-
-                    // check for wire start pin
-                    if (startBounds == true) 
-                        {
-                            wireToDetach = wire;
-                            startToDetach = wire.Start;
-                            break;
-                        }
-
-                    // check for wire end pin
-                    if (endBounds == true) 
-                        {
-                            wireToDetach = wire;
-                            endToDetach = wire.End;
-                            break;
-                        }
+                    wireToDetach = wire;
+                    startToDetach = wire.Start;
+                    break;
                 }
+
+                // check for wire end pin
+                if (endBounds == true)
+                {
+                    wireToDetach = wire;
+                    endToDetach = wire.End;
+                    break;
+                }
+            }
 
             // detach wire start
-            if (wireToDetach != null && startToDetach != null && startToDetach.Parent != null) 
-                {
-                    // create standalone pin
-                    var pin = InsertPin (scaledX, scaledY, false);
+            if (wireToDetach != null && startToDetach != null && startToDetach.Parent != null)
+            {
+                // create standalone pin
+                var pin = InsertPin(scaledX, scaledY, false);
 
-                    // set detached wire start to standalone pin
-                    SwapWireStart (wireToDetach, startToDetach, pin);
+                // set detached wire start to standalone pin
+                SwapWireStart(wireToDetach, startToDetach, pin);
 
-                    // reset start pin
-                    startToDetach.IsSelected = false;
+                // reset start pin
+                startToDetach.IsSelected = false;
 
-                    // set standalone pin as current element
-                    currentElement = pin;
-                    currentElement.ShowPins = true;
+                // set standalone pin as current element
+                currentElement = pin;
+                currentElement.ShowPins = true;
 
-                    UpdateWires (pin.Wires, 0f, 0f);
+                UpdateWires(pin.Wires, 0f, 0f);
 
-                    ResetStartAndEndPin ();
+                ResetStartAndEndPin();
 
-                    return true;
-                }
+                return true;
+            }
 
             // detach wire end
-            if (wireToDetach != null && endToDetach != null && endToDetach.Parent != null) 
-                {
-                    // create standalone pin
-                    var pin = InsertPin (scaledX, scaledY, false);
+            if (wireToDetach != null && endToDetach != null && endToDetach.Parent != null)
+            {
+                // create standalone pin
+                var pin = InsertPin(scaledX, scaledY, false);
 
-                    // set detached wire end to standalone pin
-                    SwapWireEnd (wireToDetach, endToDetach, pin);
+                // set detached wire end to standalone pin
+                SwapWireEnd(wireToDetach, endToDetach, pin);
 
-                    // reset start pin
-                    endToDetach.IsSelected = false;
+                // reset start pin
+                endToDetach.IsSelected = false;
 
-                    // set standalone pin as current element
-                    currentElement = pin;
-                    currentElement.ShowPins = true;
+                // set standalone pin as current element
+                currentElement = pin;
+                currentElement.ShowPins = true;
 
-                    UpdateWires (pin.Wires, 0f, 0f);
+                UpdateWires(pin.Wires, 0f, 0f);
 
-                    ResetStartAndEndPin ();
+                ResetStartAndEndPin();
 
-                    return true;
-                }
+                return true;
+            }
 
             return false;
         }
 
-        private void MergeWireStart (Wire wire, Pin start, Pin pin)
+        private void MergeWireStart(Wire wire, Pin start, Pin pin)
         {
             // set merged wire start to pin
-            SwapWireStart (wire, start, pin);
+            SwapWireStart(wire, start, pin);
 
             // reset start pin
             start.IsSelected = false;
 
             // remove start from Elements
             Element value;
-            Elements.TryRemove (start.Id, out value);
+            Elements.TryRemove(start.Id, out value);
 
             //Console.WriteLine ("MergeWireStart: Remove Start.Id {0}", start.Id);
         }
 
-        private void MergeWireEnd (Wire wire, Pin end, Pin pin)
+        private void MergeWireEnd(Wire wire, Pin end, Pin pin)
         {
             // set merged wire end to pin
-            SwapWireEnd (wire, end, pin);
+            SwapWireEnd(wire, end, pin);
 
             // reset start pin
             end.IsSelected = false;
 
             // remove end from Elements
             Element value;
-            Elements.TryRemove (end.Id, out value);
+            Elements.TryRemove(end.Id, out value);
 
             //Console.WriteLine ("MergeWireEnd: Remove End.Id {0}", end.Id);
         }
 
-        private void UpdateMergedPinWires (Pin pin, Wire original, Pin old)
+        private void UpdateMergedPinWires(Pin pin, Wire original, Pin old)
         {
-            var wires = old.Wires.ToList ();
+            var wires = old.Wires.ToList();
 
             for (int i = 0; i < wires.Count; i++)
+            {
+                var wire = wires[i];
+                if (wire == original)
                 {
-                    var wire = wires [i];
-                    if (wire == original)
-                        {
-                            //Console.WriteLine ("UpdateMergedPinWires: wire == original");
-                            continue;
-                        }
-
-                    if (wire.Start == old)
-                        {
-                            MergeWireStart (wire, old, pin);
-
-                            // if pin is wire end than wire is removed
-                            if (pin == wire.End)
-                                {
-                                    if (pin.Wires.Count == 1)
-                                        {
-                                            pin.Wires.Remove (wire);
-                                        }
-
-                                    Element value;
-                                    Elements.TryRemove (wire.Id, out value);
-
-                                    wire.Start.Wires.Remove (wire);
-                                    wire.End.Wires.Remove (wire);
-
-                                    //Console.WriteLine ("UpdateMergedPinWires: wire.Start==old, Pin.Id {0} OriginalWire.Id {1} Remove Wire.Id {2}", pin.Id, original.Id, wire.Id);
-                                }
-                        }
-
-                    if (wire.End == old)
-                        {
-                            MergeWireEnd (wire, old, pin);
-
-                            // if pin is wire start than wire is removed
-                            if (pin == wire.Start)
-                                {
-                                    if (pin.Wires.Count == 1)
-                                        {
-                                            pin.Wires.Remove (wire);
-                                        }
-
-                                    Element value;
-                                    Elements.TryRemove (wire.Id, out value);
-
-                                    wire.Start.Wires.Remove (wire);
-                                    wire.End.Wires.Remove (wire);
-
-                                    //Console.WriteLine ("UpdateMergedPinWires: wire.End==old, Pin.Id {0} OriginalWire.Id {1} Remove Wire.Id {2}", pin.Id, original.Id, wire.Id);
-                                }
-                        }
+                    //Console.WriteLine ("UpdateMergedPinWires: wire == original");
+                    continue;
                 }
+
+                if (wire.Start == old)
+                {
+                    MergeWireStart(wire, old, pin);
+
+                    // if pin is wire end than wire is removed
+                    if (pin == wire.End)
+                    {
+                        if (pin.Wires.Count == 1)
+                        {
+                            pin.Wires.Remove(wire);
+                        }
+
+                        Element value;
+                        Elements.TryRemove(wire.Id, out value);
+
+                        wire.Start.Wires.Remove(wire);
+                        wire.End.Wires.Remove(wire);
+
+                        //Console.WriteLine ("UpdateMergedPinWires: wire.Start==old, Pin.Id {0} OriginalWire.Id {1} Remove Wire.Id {2}", pin.Id, original.Id, wire.Id);
+                    }
+                }
+
+                if (wire.End == old)
+                {
+                    MergeWireEnd(wire, old, pin);
+
+                    // if pin is wire start than wire is removed
+                    if (pin == wire.Start)
+                    {
+                        if (pin.Wires.Count == 1)
+                        {
+                            pin.Wires.Remove(wire);
+                        }
+
+                        Element value;
+                        Elements.TryRemove(wire.Id, out value);
+
+                        wire.Start.Wires.Remove(wire);
+                        wire.End.Wires.Remove(wire);
+
+                        //Console.WriteLine ("UpdateMergedPinWires: wire.End==old, Pin.Id {0} OriginalWire.Id {1} Remove Wire.Id {2}", pin.Id, original.Id, wire.Id);
+                    }
+                }
+            }
         }
 
-        private bool TryToMergeWire (float x, float y, Pin pin)
+        private bool TryToMergeWire(float x, float y, Pin pin)
         {
             float scaledX = (x - translate.X) / zoom;
             float scaledY = (y - translate.Y) / zoom;
@@ -1735,123 +1767,123 @@ namespace CanvasDiagram.Droid
             Pin endToMerge = null;
 
             // try to merge wire Pin to current element Pin
-            foreach (var pair in Elements.Where (_ => _.Value is Wire)) 
+            foreach (var pair in Elements.Where (_ => _.Value is Wire))
+            {
+                var wire = pair.Value as Wire;
+                bool startBounds = wire.StartBounds.Contains(scaledX, scaledY) == true;
+                bool endBounds = wire.EndBounds.Contains(scaledX, scaledY) == true;
+                bool wireBounds = wire.WireBounds.Contains(scaledX, scaledY) == true;
+
+                // check for wire start pin
+                // exlude if wire start is same as pin to merge
+                if (startBounds == true && wire.Start != pin)
                 {
-                    var wire = pair.Value as Wire;
-                    bool startBounds = wire.StartBounds.Contains (scaledX, scaledY) == true;
-                    bool endBounds = wire.EndBounds.Contains (scaledX, scaledY) == true;
-                    bool wireBounds = wire.WireBounds.Contains (scaledX, scaledY) == true;
-
-                    // check for wire start pin
-                    // exlude if wire start is same as pin to merge
-                    if (startBounds == true && wire.Start != pin) 
-                        {
-                            wireToMerge = wire;
-                            startToMerge = wire.Start;
-                            break;
-                        }
-
-                    // check for wire end pin
-                    // exlude if wire end is same as pin to merge
-                    if (endBounds == true && wire.End != pin) 
-                        {
-                            wireToMerge = wire;
-                            endToMerge = wire.End;
-                            break;
-                        }
+                    wireToMerge = wire;
+                    startToMerge = wire.Start;
+                    break;
                 }
+
+                // check for wire end pin
+                // exlude if wire end is same as pin to merge
+                if (endBounds == true && wire.End != pin)
+                {
+                    wireToMerge = wire;
+                    endToMerge = wire.End;
+                    break;
+                }
+            }
 
             // merge wire start
-            if (wireToMerge != null && startToMerge != null && startToMerge.Parent == null) 
+            if (wireToMerge != null && startToMerge != null && startToMerge.Parent == null)
+            {
+                MergeWireStart(wireToMerge, startToMerge, pin);
+
+                // if pin is wire end than wire is removed
+                if (pin == wireToMerge.End)
                 {
-                    MergeWireStart(wireToMerge, startToMerge, pin);
+                    Element value;
+                    Elements.TryRemove(wireToMerge.Id, out value);
 
-                    // if pin is wire end than wire is removed
-                    if (pin == wireToMerge.End)
-                        {
-                            Element value;
-                            Elements.TryRemove (wireToMerge.Id, out value);
+                    wireToMerge.Start.Wires.Remove(wireToMerge);
+                    wireToMerge.End.Wires.Remove(wireToMerge);
 
-                            wireToMerge.Start.Wires.Remove (wireToMerge);
-                            wireToMerge.End.Wires.Remove (wireToMerge);
+                    //Console.WriteLine ("TryToMergeWire: pin==wireToMerge.End, Pin.Id {0} Remove wireToMerge.Id", pin.Id, wireToMerge.Id);
+                }
 
-                            //Console.WriteLine ("TryToMergeWire: pin==wireToMerge.End, Pin.Id {0} Remove wireToMerge.Id", pin.Id, wireToMerge.Id);
-                        }
+                // check for other end Wires connections to be merged
+                UpdateMergedPinWires(pin, wireToMerge, startToMerge);
 
-                    // check for other end Wires connections to be merged
-                    UpdateMergedPinWires (pin, wireToMerge, startToMerge);
+                // if merged start does not have any connected wires than need to be removed
+                if (startToMerge.Wires.Count == 0)
+                {
+                    Element value;
+                    Elements.TryRemove(startToMerge.Id, out value);
 
-                    // if merged start does not have any connected wires than need to be removed
-                    if (startToMerge.Wires.Count == 0)
-                        {
-                            Element value;
-                            Elements.TryRemove (startToMerge.Id, out value);
+                    //Console.WriteLine ("TryToMergeWire: startToMerge.Wires.Count==0, Pin.Id {0} Remove startToMerge.Id", pin.Id, startToMerge.Id);
+                }
 
-                            //Console.WriteLine ("TryToMergeWire: startToMerge.Wires.Count==0, Pin.Id {0} Remove startToMerge.Id", pin.Id, startToMerge.Id);
-                        }
+                // if pin does not have any connected wires than need to be removed
+                if (pin.Wires.Count == 0)
+                {
+                    Element value;
+                    Elements.TryRemove(pin.Id, out value);
 
-                    // if pin does not have any connected wires than need to be removed
-                    if (pin.Wires.Count == 0)
-                        {
-                            Element value;
-                            Elements.TryRemove (pin.Id, out value);
-
-                            //Console.WriteLine ("TryToMergeWire: pin.Wires.Count==0, Pin.Id {0} Remove pin.Id", pin.Id);
-                        }
+                    //Console.WriteLine ("TryToMergeWire: pin.Wires.Count==0, Pin.Id {0} Remove pin.Id", pin.Id);
+                }
                     // otherwise update all wires connected to pin
                     else
-                        UpdateWires (pin.Wires, 0f, 0f);
+                    UpdateWires(pin.Wires, 0f, 0f);
 
-                    ResetStartAndEndPin ();
+                ResetStartAndEndPin();
 
-                    return true;
-                }
+                return true;
+            }
 
             // merge wire end
-            if (wireToMerge != null && endToMerge != null && endToMerge.Parent == null) 
+            if (wireToMerge != null && endToMerge != null && endToMerge.Parent == null)
+            {
+                MergeWireEnd(wireToMerge, endToMerge, pin);
+
+                // if pin is wire start than wire is removed
+                if (pin == wireToMerge.Start)
                 {
-                    MergeWireEnd(wireToMerge, endToMerge, pin);
+                    Element value;
+                    Elements.TryRemove(wireToMerge.Id, out value);
 
-                    // if pin is wire start than wire is removed
-                    if (pin == wireToMerge.Start)
-                        {
-                            Element value;
-                            Elements.TryRemove (wireToMerge.Id, out value);
+                    wireToMerge.Start.Wires.Remove(wireToMerge);
+                    wireToMerge.End.Wires.Remove(wireToMerge);
 
-                            wireToMerge.Start.Wires.Remove (wireToMerge);
-                            wireToMerge.End.Wires.Remove (wireToMerge);
+                    //Console.WriteLine ("TryToMergeWire: pin==wireToMerge.Start, Pin.Id {0} Remove wireToMerge.Id", pin.Id, wireToMerge.Id);
+                }
 
-                            //Console.WriteLine ("TryToMergeWire: pin==wireToMerge.Start, Pin.Id {0} Remove wireToMerge.Id", pin.Id, wireToMerge.Id);
-                        }
+                // check for other end Wires connections to be merged
+                UpdateMergedPinWires(pin, wireToMerge, endToMerge);
 
-                    // check for other end Wires connections to be merged
-                    UpdateMergedPinWires (pin, wireToMerge, endToMerge);
+                // if merged end does not have any connected wires than need to be removed
+                if (endToMerge.Wires.Count == 0)
+                {
+                    Element value;
+                    Elements.TryRemove(endToMerge.Id, out value);
 
-                    // if merged end does not have any connected wires than need to be removed
-                    if (endToMerge.Wires.Count == 0)
-                        {
-                            Element value;
-                            Elements.TryRemove (endToMerge.Id, out value);
+                    //Console.WriteLine ("TryToMergeWire: endToMerge.Wires.Count==0, Pin.Id {0} Remove endToMerge.Id", pin.Id, endToMerge.Id);
+                }
 
-                            //Console.WriteLine ("TryToMergeWire: endToMerge.Wires.Count==0, Pin.Id {0} Remove endToMerge.Id", pin.Id, endToMerge.Id);
-                        }
+                // if pin does not have any connected wires than need to be removed
+                if (pin.Wires.Count == 0)
+                {
+                    Element value;
+                    Elements.TryRemove(pin.Id, out value);
 
-                    // if pin does not have any connected wires than need to be removed
-                    if (pin.Wires.Count == 0)
-                        {
-                            Element value;
-                            Elements.TryRemove (pin.Id, out value);
-
-                            //Console.WriteLine ("TryToMergeWire: pin.Wires.Count==0, Pin.Id {0} Remove pin.Id", pin.Id);
-                        }
+                    //Console.WriteLine ("TryToMergeWire: pin.Wires.Count==0, Pin.Id {0} Remove pin.Id", pin.Id);
+                }
                     // otherwise update all wires connected to pin
                     else
-                        UpdateWires (pin.Wires, 0f, 0f);
+                    UpdateWires(pin.Wires, 0f, 0f);
 
-                    ResetStartAndEndPin ();
+                ResetStartAndEndPin();
 
-                    return true;
-                }
+                return true;
+            }
 
             return false;
         }
@@ -1860,7 +1892,7 @@ namespace CanvasDiagram.Droid
 
         #region Input Touch
 
-        public void HandleOneInputDown (float x, float y)
+        public void HandleOneInputDown(float x, float y)
         {
             float scaledX = (x - translate.X) / zoom;
             float scaledY = (y - translate.Y) / zoom;
@@ -1872,109 +1904,109 @@ namespace CanvasDiagram.Droid
             previousY = scaledY;
 
             // set pan start position
-            SetPanStart (x, y);
+            SetPanStart(x, y);
 
             // check for wires
             // - if no current element selected
             // - if have start pin to split wires
-            if (currentElement == null) 
-                {
-                    haveWire = HitTestWire (scaledX, scaledY, true);
-                }
-            else if (currentElement != null && (startPin != null && endPin == null)) 
-                {
-                    haveWire = HitTestWire (scaledX, scaledY, false);
-                }
+            if (currentElement == null)
+            {
+                haveWire = HitTestWire(scaledX, scaledY, true);
+            }
+            else if (currentElement != null && (startPin != null && endPin == null))
+            {
+                haveWire = HitTestWire(scaledX, scaledY, false);
+            }
 
             // check for current element pins
-            if (currentElement != null && currentElement.ShowPins == true && 
-                !(currentElement is Pin) && 
-                (startPin == null || endPin == null) && 
-                haveWire == false) 
+            if (currentElement != null && currentElement.ShowPins == true &&
+                !(currentElement is Pin) &&
+                (startPin == null || endPin == null) &&
+                haveWire == false)
+            {
+                havePin = HitTestPin(scaledX, scaledY);
+            }
+
+            if (startPin != null && endPin != null &&
+                havePin == true && haveWire == false)
+            {
+                Snapshot();
+                InsertWire(startPin, endPin, false);
+            }
+            else if (havePin == false && haveWire == true)
+            {
+                // split wire
+                if (startPin != null && endPin == null)
                 {
-                    havePin = HitTestPin (scaledX, scaledY);
+                    Snapshot();
+
+                    // deselect current wire
+                    SetWireSelection(currentWire, false, null);
+
+                    // split current wire
+                    SplitWire(currentWire, scaledX, scaledY, true);
                 }
+            }
+            else if (havePin == false && haveWire == false)
+            {
+                bool haveElement = HitTestElement(scaledX, scaledY);
 
-            if (startPin != null && endPin != null && 
-                havePin == true && haveWire == false) 
+                // reset current element and start&end pins
+                // if current element is not present and do not have start pin
+                if (haveElement == false && !(startPin != null && endPin == null))
                 {
-                    Snapshot ();
-                    InsertWire (startPin, endPin, false);
+                    ResetStartAndEndPin();
+                    currentElement = null;
                 }
-            else if (havePin == false && haveWire == true) 
+                else if (haveElement == false && startPin != null && endPin == null)
                 {
-                    // split wire
-                    if (startPin != null && endPin == null) 
-                        {
-                            Snapshot ();
+                    Snapshot();
 
-                            // deselect current wire
-                            SetWireSelection (currentWire, false, null);
+                    // create standalone pin
+                    var pin = InsertPin(scaledX, scaledY, false);
+                    InsertWire(startPin, pin, false);
 
-                            // split current wire
-                            SplitWire (currentWire, scaledX, scaledY, true);
-                        }
+                    // reset previous start pin
+                    startPin.IsSelected = false;
+
+                    // set new start pin
+                    startPin = pin;
+                    startPin.IsSelected = true;
+                    currentElement = pin;
                 }
-            else if (havePin == false && haveWire == false) 
-                {
-                    bool haveElement = HitTestElement (scaledX, scaledY);
-
-                    // reset current element and start&end pins
-                    // if current element is not present and do not have start pin
-                    if (haveElement == false && !(startPin != null && endPin == null))
-                        {
-                            ResetStartAndEndPin ();
-                            currentElement = null;
-                        }
-                    else if (haveElement == false && startPin != null && endPin == null) 
-                        {
-                            Snapshot ();
-
-                            // create standalone pin
-                            var pin = InsertPin (scaledX, scaledY, false);
-                            InsertWire (startPin, pin, false);
-
-                            // reset previous start pin
-                            startPin.IsSelected = false;
-
-                            // set new start pin
-                            startPin = pin;
-                            startPin.IsSelected = true;
-                            currentElement = pin;
-                        }
                     // reset start and end pins if have new element selected
                     // and start and end pin has beed already connected
-                    else if (haveElement == true && startPin != null && endPin != null) 
-                        {
-                            ResetStartAndEndPin ();
-                        }
+                    else if (haveElement == true && startPin != null && endPin != null)
+                {
+                    ResetStartAndEndPin();
                 }
+            }
         }
 
-        public void HandleOneInputMove (float x, float y)
+        public void HandleOneInputMove(float x, float y)
         {
-            if (currentElement != null) 
+            if (currentElement != null)
+            {
+                if (moveCurrentElementStarted == false)
                 {
-                    if (moveCurrentElementStarted == false) 
-                        {
-                            moveCurrentElementStarted = true;
+                    moveCurrentElementStarted = true;
 
-                            Snapshot ();
+                    Snapshot();
 
-                            if (!(currentElement is Pin))
-                                {
-                                    //if (TryToDetachWire (x, y) == true) 
-                                    //  Snapshot ();
-                                    TryToDetachWire (x, y);
-                                }
-                        }
-
-                    MoveCurrentElement (x, y);
+                    if (!(currentElement is Pin))
+                    {
+                        //if (TryToDetachWire (x, y) == true) 
+                        //  Snapshot ();
+                        TryToDetachWire(x, y);
+                    }
                 }
-            else 
-                {
-                    PanCanvas (x, y);
-                }
+
+                MoveCurrentElement(x, y);
+            }
+            else
+            {
+                PanCanvas(x, y);
+            }
         }
 
         #endregion
@@ -1985,31 +2017,31 @@ namespace CanvasDiagram.Droid
         {
             int action = args.Action;
 
-            if (action == InputActions.Hitest) 
-                {
-                    HandleOneInputDown (args.X, args.Y);
-                }
+            if (action == InputActions.Hitest)
+            {
+                HandleOneInputDown(args.X, args.Y);
+            }
             else if (action == InputActions.Move)
-                {
-                    HandleOneInputMove (args.X, args.Y);
-                }
-            else if (action == InputActions.StartZoom) 
-                {
-                    StartPinchToZoom (args.X0, args.Y0, args.X1, args.Y1);
-                }
-            else if (action == InputActions.Zoom) 
-                {
-                    PinchToZoom (args.X0, args.Y0, args.X1, args.Y1);
-                }
+            {
+                HandleOneInputMove(args.X, args.Y);
+            }
+            else if (action == InputActions.StartZoom)
+            {
+                StartPinchToZoom(args.X0, args.Y0, args.X1, args.Y1);
+            }
+            else if (action == InputActions.Zoom)
+            {
+                PinchToZoom(args.X0, args.Y0, args.X1, args.Y1);
+            }
             else if (action == InputActions.Merge)
-                {
-                    FinishCurrentElement (args.X, args.Y);
-                }
+            {
+                FinishCurrentElement(args.X, args.Y);
+            }
             else if (action == InputActions.StartPan)
-                {
-                    SetPanStart (args.Index == 0 ? args.X0 : args.X1, 
-                        args.Index == 0 ? args.Y0 : args.Y1);
-                }
+            {
+                SetPanStart(args.Index == 0 ? args.X0 : args.X1, 
+                    args.Index == 0 ? args.Y0 : args.Y1);
+            }
         }
 
         #endregion
@@ -2023,15 +2055,15 @@ namespace CanvasDiagram.Droid
 
             int i, j = 0;
 
-            for (i = 0, j = sides - 1; i < sides; j = i++) 
-                {
-                    x1 = poly.GetX (i);
-                    y1 = poly.GetY (i);
-                    x2 = poly.GetX (j);
-                    y2 = poly.GetY (j);
+            for (i = 0, j = sides - 1; i < sides; j = i++)
+            {
+                x1 = poly.GetX(i);
+                y1 = poly.GetY(i);
+                x2 = poly.GetX(j);
+                y2 = poly.GetY(j);
 
-                    canvas.DrawLine (x1, y1, x2, y2, paint);
-                }
+                canvas.DrawLine(x1, y1, x2, y2, paint);
+            }
         }
 
         private void DrawWire(Canvas canvas, Wire wire)
@@ -2047,16 +2079,16 @@ namespace CanvasDiagram.Droid
                 wirePaint.Color = colorElement;
 
             // draw element shape
-            canvas.DrawLine (x1, y1, x2,  y2, wirePaint);
+            canvas.DrawLine(x1, y1, x2, y2, wirePaint);
 
             // draw wire bounds
             if (wire.IsSelected == true)
-                {
-                    DrawPolygon (canvas, boundsPaint, wire.WireBounds);
+            {
+                DrawPolygon(canvas, boundsPaint, wire.WireBounds);
 
-                    canvas.DrawRect (wire.StartBounds, boundsPaint);
-                    canvas.DrawRect (wire.EndBounds, boundsPaint);
-                }
+                canvas.DrawRect(wire.StartBounds, boundsPaint);
+                canvas.DrawRect(wire.EndBounds, boundsPaint);
+            }
         }
 
         private void DrawPin(Canvas canvas, Pin pin)
@@ -2066,30 +2098,30 @@ namespace CanvasDiagram.Droid
             else
                 pinPaint.Color = colorElement;
 
-            canvas.DrawCircle (pin.X, pin.Y, pin.Radius, pinPaint);
+            canvas.DrawCircle(pin.X, pin.Y, pin.Radius, pinPaint);
 
             if (pin.IsSelected == true || pin.ShowPins == true)
-                canvas.DrawRect (pin.Bounds, boundsPaint);
+                canvas.DrawRect(pin.Bounds, boundsPaint);
         }
 
         private void DrawPins(Canvas canvas, List<Pin> pins)
         {
             foreach (var pin in pins)
-                DrawPin (canvas, pin);
+                DrawPin(canvas, pin);
         }
 
-        private void SetElementColor (Element element)
+        private void SetElementColor(Element element)
         {
-            if (element.IsSelected == true) 
-                {
-                    elementPaint.Color = colorSelected;
-                    textElementPaint.Color = colorSelected;
-                }
-            else 
-                {
-                    elementPaint.Color = colorElement;
-                    textElementPaint.Color = colorElement;
-                }
+            if (element.IsSelected == true)
+            {
+                elementPaint.Color = colorSelected;
+                textElementPaint.Color = colorSelected;
+            }
+            else
+            {
+                elementPaint.Color = colorElement;
+                textElementPaint.Color = colorElement;
+            }
         }
 
         private void DrawAndGate(Canvas canvas, AndGate andGate)
@@ -2100,22 +2132,22 @@ namespace CanvasDiagram.Droid
             float w = andGate.Width; // element width
             float h = andGate.Height; // element height
 
-            SetElementColor (andGate);
+            SetElementColor(andGate);
 
             // draw element shape
-            canvas.DrawLine (x + 0f, y + 0f, x + w,  y + 0f, elementPaint);
-            canvas.DrawLine (x + w,  y + 0f, x + w,  y + h,  elementPaint);
-            canvas.DrawLine (x + w,  y + h,  x + 0f, y + h,  elementPaint);
-            canvas.DrawLine (x + 0f, y + h,  x + 0f, y + 0f, elementPaint);
+            canvas.DrawLine(x + 0f, y + 0f, x + w, y + 0f, elementPaint);
+            canvas.DrawLine(x + w, y + 0f, x + w, y + h, elementPaint);
+            canvas.DrawLine(x + w, y + h, x + 0f, y + h, elementPaint);
+            canvas.DrawLine(x + 0f, y + h, x + 0f, y + 0f, elementPaint);
 
             // draw text in center of element shape
             string text = "&";
-            float textVerticalOffset = (textElementPaint.Descent () + textElementPaint.Ascent ()) / 2f;
-            canvas.DrawText (text, x + w / 2f, y + (h / 2f) - textVerticalOffset, textElementPaint);
+            float textVerticalOffset = (textElementPaint.Descent() + textElementPaint.Ascent()) / 2f;
+            canvas.DrawText(text, x + w / 2f, y + (h / 2f) - textVerticalOffset, textElementPaint);
 
             // draw element pins
-            if (showPins == true) 
-                DrawPins (canvas, andGate.Pins);
+            if (showPins == true)
+                DrawPins(canvas, andGate.Pins);
         }
 
         private void DrawOrGate(Canvas canvas, OrGate orGate)
@@ -2127,29 +2159,29 @@ namespace CanvasDiagram.Droid
             float w = orGate.Width; // element width
             float h = orGate.Height; // element height
 
-            SetElementColor (orGate);
+            SetElementColor(orGate);
 
             // draw element shape
-            canvas.DrawLine (x + 0f, y + 0f, x + w,  y + 0f, elementPaint);
-            canvas.DrawLine (x + w,  y + 0f, x + w,  y + h,  elementPaint);
-            canvas.DrawLine (x + w,  y + h,  x + 0f, y + h,  elementPaint);
-            canvas.DrawLine (x + 0f, y + h,  x + 0f, y + 0f, elementPaint);
+            canvas.DrawLine(x + 0f, y + 0f, x + w, y + 0f, elementPaint);
+            canvas.DrawLine(x + w, y + 0f, x + w, y + h, elementPaint);
+            canvas.DrawLine(x + w, y + h, x + 0f, y + h, elementPaint);
+            canvas.DrawLine(x + 0f, y + h, x + 0f, y + 0f, elementPaint);
 
             // draw text in center of element shape
             string text = "≥" + counter.ToString(); // default counter is 1
-            float textVerticalOffset = (textElementPaint.Descent () + textElementPaint.Ascent ()) / 2f;
-            canvas.DrawText (text, x + w / 2f, y + (h / 2f) - textVerticalOffset, textElementPaint);
+            float textVerticalOffset = (textElementPaint.Descent() + textElementPaint.Ascent()) / 2f;
+            canvas.DrawText(text, x + w / 2f, y + (h / 2f) - textVerticalOffset, textElementPaint);
 
             // draw element pins
-            if (showPins == true) 
-                DrawPins (canvas, orGate.Pins);
+            if (showPins == true)
+                DrawPins(canvas, orGate.Pins);
         }
 
         #endregion
 
         #region Draw Diagram
 
-        private void ScaleStrokeWidth ()
+        private void ScaleStrokeWidth()
         {
             wirePaint.StrokeWidth = wireStrokeWidth / zoom;
             elementPaint.StrokeWidth = elementStrokeWidth / zoom;
@@ -2165,56 +2197,56 @@ namespace CanvasDiagram.Droid
             canvas.Matrix = matrix;
         }
 
-        private void DrawBackgorud (Canvas canvas)
+        private void DrawBackgorud(Canvas canvas)
         {
-            canvas.DrawColor (colorBackground);
+            canvas.DrawColor(colorBackground);
         }
 
         private void DrawGrid(Canvas canvas, Paint paint, 
-            float ox, float oy,
-            float width, float height, 
-            float sx, float sy)
+                              float ox, float oy,
+                              float width, float height, 
+                              float sx, float sy)
         {
             // horizontal lines
             for (float y = sy + oy; y < height + oy; y += sx)
-                canvas.DrawLine (ox, y, width + ox, y, paint);
+                canvas.DrawLine(ox, y, width + ox, y, paint);
 
             // vertical lines
             for (float x = sx + ox; x < width + ox; x += sx)
-                canvas.DrawLine (x, oy, x, height + oy, paint);
+                canvas.DrawLine(x, oy, x, height + oy, paint);
 
             // box rect
             float sw = paint.StrokeWidth;
             paint.StrokeWidth *= 2f;
-            canvas.DrawRect (ox, oy, width + ox, height + oy, paint);
+            canvas.DrawRect(ox, oy, width + ox, height + oy, paint);
             paint.StrokeWidth = sw;
         }
 
-        private void DrawElements (Canvas canvas)
+        private void DrawElements(Canvas canvas)
         {
-            foreach (var pair in Elements) 
-                {
-                    var element = pair.Value;
+            foreach (var pair in Elements)
+            {
+                var element = pair.Value;
 
-                    if (element is Wire)
-                        DrawWire (canvas, element as Wire);
-                    else if (element is AndGate)
-                        DrawAndGate (canvas, element as AndGate);
-                    else if (element is OrGate)
-                        DrawOrGate (canvas, element as OrGate);
-                    else if (element is Pin)
-                        DrawPin (canvas, element as Pin);
-                }
+                if (element is Wire)
+                    DrawWire(canvas, element as Wire);
+                else if (element is AndGate)
+                    DrawAndGate(canvas, element as AndGate);
+                else if (element is OrGate)
+                    DrawOrGate(canvas, element as OrGate);
+                else if (element is Pin)
+                    DrawPin(canvas, element as Pin);
+            }
         }
 
         public void DrawWidgets(Canvas canvas)
         {
             float ox = -(translate.X / zoom);
             float oy = -(translate.Y / zoom);
-            widgetBounds.Set (ox, oy, ((float)this.SurfaceWidth / zoom) + ox, ((float)this.SurfaceHeight / zoom) + oy);
+            widgetBounds.Set(ox, oy, ((float)this.SurfaceWidth / zoom) + ox, ((float)this.SurfaceHeight / zoom) + oy);
 
             test.StrokeWidth = 4f / zoom;
-            canvas.DrawRect (widgetBounds, test);
+            canvas.DrawRect(widgetBounds, test);
 
             // TODO: Draw widgets.
         }
@@ -2224,11 +2256,11 @@ namespace CanvasDiagram.Droid
             if (canvas == null)
                 return;
 
-            canvas.Save ();
+            canvas.Save();
 
-            ScaleStrokeWidth ();
-            TransformCanvas (canvas);
-            DrawBackgorud (canvas);
+            ScaleStrokeWidth();
+            TransformCanvas(canvas);
+            DrawBackgorud(canvas);
 
             // grid size and origin
             float sx = 30f;
@@ -2236,16 +2268,16 @@ namespace CanvasDiagram.Droid
             float ox = (SurfaceWidth % sx) / 2f;
             float oy = (SurfaceHeight % sy) / 2f;
 
-            DrawGrid (canvas, gridPaint, 
+            DrawGrid(canvas, gridPaint, 
                 ox, oy, 
                 SurfaceWidth - (ox + ox), 
                 SurfaceHeight - (oy + oy), 
                 sx, sy);
 
-            DrawElements (canvas);
+            DrawElements(canvas);
             //DrawWidgets (canvas);
 
-            canvas.Restore ();
+            canvas.Restore();
         }
 
         #endregion
@@ -2253,52 +2285,52 @@ namespace CanvasDiagram.Droid
         #region Redraw
 
         private static Action<InputArgs, InputArgs> CopyInputArgs = (src, dst) =>
+        {
+            if (src != null && dst != null)
             {
-                if (src != null && dst != null)
-                    {
-                        dst.Action = src.Action;
-                        dst.X = src.X;
-                        dst.Y = src.Y;
-                        dst.Index = src.Index;
-                        dst.X0 = src.X0;
-                        dst.Y0 = src.Y0;
-                        dst.X1 = src.X1;
-                        dst.Y1 = src.Y1;
-                    }
-            };
+                dst.Action = src.Action;
+                dst.X = src.X;
+                dst.Y = src.Y;
+                dst.Index = src.Index;
+                dst.X0 = src.X0;
+                dst.Y0 = src.Y0;
+                dst.X1 = src.X1;
+                dst.Y1 = src.Y1;
+            }
+        };
 
         public void RedrawCanvas()
         {
-            if (Service != null) 
-                {
-                    var result = Service.HandleEvent(EmptyArgs, CopyInputArgs, 16);
-                    //if (result == false)
-                    //  Console.WriteLine("Skip: " + FrameCount);
+            if (Service != null)
+            {
+                var result = Service.HandleEvent(EmptyArgs, CopyInputArgs, 16);
+                //if (result == false)
+                //  Console.WriteLine("Skip: " + FrameCount);
 
-                    FrameCount++;
-                }
+                FrameCount++;
+            }
         }
 
         public void RedrawCanvas(InputArgs args)
         {
-            if (Service != null) 
-                {
-                    var result = Service.HandleEvent(args, CopyInputArgs, 16);
-                    //if (result == false)
-                    //  Console.WriteLine("Skip: " + FrameCount);
+            if (Service != null)
+            {
+                var result = Service.HandleEvent(args, CopyInputArgs, 16);
+                //if (result == false)
+                //  Console.WriteLine("Skip: " + FrameCount);
 
-                    FrameCount++;
-                }
+                FrameCount++;
+            }
         }
 
         #endregion
 
         #region Reset
 
-        public void Reset ()
+        public void Reset()
         {
-            Clear ();
-            RedrawCanvas ();
+            Clear();
+            RedrawCanvas();
         }
 
         #endregion
@@ -2307,28 +2339,28 @@ namespace CanvasDiagram.Droid
 
         public void SetZoom(float scale, float midX, float midY, float transX, float transY)
         {
-            matrix.Reset ();
+            matrix.Reset();
 
             matrix.PostTranslate(transX, transY);
             matrix.PostScale(scale, scale, midX, midY);
 
             savedMatrix.Set(matrix);
 
-            translate.Set (transX, transY);
-            middle.Set (midX, midY);
+            translate.Set(transX, transY);
+            middle.Set(midX, midY);
             zoom = scale;
         }
 
-        public void ResetZoom ()
+        public void ResetZoom()
         {
             zoom = 1f;
-            translate.Set (0f, 0f);
+            translate.Set(0f, 0f);
 
             start.Set(0f, 0f);
             previousDist = 0f;
-            middle.Set (0f, 0f);
-            matrix.Reset ();
-            savedMatrix.Reset ();
+            middle.Set(0f, 0f);
+            matrix.Reset();
+            savedMatrix.Reset();
         }
 
         #endregion
@@ -2339,7 +2371,7 @@ namespace CanvasDiagram.Droid
         {
             float ox = -(translate.X / zoom);
             float oy = -(translate.Y / zoom);
-            var rect = new RectF (ox, oy, ((float)this.SurfaceWidth / zoom) + ox, ((float)this.SurfaceHeight / zoom) + oy);
+            var rect = new RectF(ox, oy, ((float)this.SurfaceWidth / zoom) + ox, ((float)this.SurfaceHeight / zoom) + oy);
 
             x = rect.CenterX();
             y = rect.CenterY();
@@ -2347,57 +2379,57 @@ namespace CanvasDiagram.Droid
 
         public Pin InsertPin(float x, float y, bool redraw)
         {
-            int id = GetNextId ();
-            var pin = new Pin (id, null, x, y, 4f, 3f);
+            int id = GetNextId();
+            var pin = new Pin(id, null, x, y, 4f, 3f);
 
-            Elements.TryAdd (id, pin);
+            Elements.TryAdd(id, pin);
 
             if (redraw == true)
-                RedrawCanvas ();
+                RedrawCanvas();
 
             return pin;
         }
 
-        public Wire InsertWire (Pin startPin, Pin endPin, bool redraw)
+        public Wire InsertWire(Pin startPin, Pin endPin, bool redraw)
         {
-            int id = GetNextId ();
-            var wire = new Wire (id, startPin, endPin, 4f, 3f);
+            int id = GetNextId();
+            var wire = new Wire(id, startPin, endPin, 4f, 3f);
 
-            Elements.TryAdd (id, wire);
+            Elements.TryAdd(id, wire);
 
             // update pin to wire connections
-            startPin.Wires.Add (wire);
-            endPin.Wires.Add (wire);
+            startPin.Wires.Add(wire);
+            endPin.Wires.Add(wire);
 
             // redraw if requested
             if (redraw == true)
-                RedrawCanvas ();
+                RedrawCanvas();
 
             return wire;
         }
 
-        public AndGate InsertAndGate (float x, float y, bool redraw)
+        public AndGate InsertAndGate(float x, float y, bool redraw)
         {
-            int id = GetNextId ();
-            var andGate = new AndGate (id, x, y);
+            int id = GetNextId();
+            var andGate = new AndGate(id, x, y);
 
-            Elements.TryAdd (id, andGate);
+            Elements.TryAdd(id, andGate);
 
             if (redraw == true)
-                RedrawCanvas ();
+                RedrawCanvas();
 
             return andGate;
         }
 
-        public OrGate InsertOrGate (float x, float y, bool redraw)
+        public OrGate InsertOrGate(float x, float y, bool redraw)
         {
-            int id = GetNextId ();
-            var orGate = new OrGate (id, x, y, 1);
+            int id = GetNextId();
+            var orGate = new OrGate(id, x, y, 1);
 
-            Elements.TryAdd (id, orGate);
+            Elements.TryAdd(id, orGate);
 
             if (redraw == true)
-                RedrawCanvas ();
+                RedrawCanvas();
 
             return orGate;
         }
@@ -2408,10 +2440,10 @@ namespace CanvasDiagram.Droid
 
         public void Snapshot()
         {
-            string model = Editor.Generate (this.Elements);
-            undoStack.Push (model);
+            string model = Editor.Generate(this.Elements);
+            undoStack.Push(model);
 
-            redoStack.Clear ();
+            redoStack.Clear();
         }
 
         public void Undo()
@@ -2421,16 +2453,16 @@ namespace CanvasDiagram.Droid
 
             string model;
             if (undoStack.TryPop(out model))
-                {
-                    string current = Editor.Generate (this.Elements);
-                    redoStack.Push (current);
+            {
+                string current = Editor.Generate(this.Elements);
+                redoStack.Push(current);
 
-                    Clear ();
-                    Editor.Parse (model, this.Elements);
-                    UpdateNextId ();
+                Clear();
+                Editor.Parse(model, this.Elements);
+                UpdateNextId();
 
-                    RedrawCanvas ();
-                }
+                RedrawCanvas();
+            }
         }
 
         public void Redo()
@@ -2439,23 +2471,23 @@ namespace CanvasDiagram.Droid
                 return;
 
             string model;
-            if (redoStack.TryPop (out model))
-                {
-                    string current = Editor.Generate (this.Elements);
-                    undoStack.Push (current);
+            if (redoStack.TryPop(out model))
+            {
+                string current = Editor.Generate(this.Elements);
+                undoStack.Push(current);
 
-                    Clear ();
-                    Editor.Parse (model, this.Elements);
-                    UpdateNextId ();
+                Clear();
+                Editor.Parse(model, this.Elements);
+                UpdateNextId();
 
-                    RedrawCanvas ();
-                }
+                RedrawCanvas();
+            }
         }
 
         public void Clear()
         {
-            Elements.Clear ();
-            SetNextId (0);
+            Elements.Clear();
+            SetNextId(0);
         }
 
         #endregion
@@ -2465,190 +2497,190 @@ namespace CanvasDiagram.Droid
 
     #region UI
 
-	[Activity (Label = "Diagram Editor")]
-	public class DiagramEditor : Activity
-	{
-		#region Fields
+    [Activity(Label = "Diagram Editor")]
+    public class DiagramEditor : Activity
+    {
+        #region Fields
 
-		private DrawingView drawingView;
-		private DiagramRepository repository;
-		private Diagram currentDiagram;
+        private DrawingView drawingView;
+        private DiagramRepository repository;
+        private Diagram currentDiagram;
 
-		#endregion
+        #endregion
 
-		#region Activity Lifecycle
-		
-		protected override void OnCreate (Bundle bundle)
-		{
-			//RequestWindowFeature(WindowFeatures.NoTitle);
-			base.OnCreate (bundle);
+        #region Activity Lifecycle
 
-			repository = new DiagramRepository ();
+        protected override void OnCreate(Bundle bundle)
+        {
+            //RequestWindowFeature(WindowFeatures.NoTitle);
+            base.OnCreate(bundle);
 
-			// create drawing canvas
-			drawingView = new DrawingView (this);
+            repository = new DiagramRepository();
 
-			RegisterForContextMenu (drawingView);
+            // create drawing canvas
+            drawingView = new DrawingView(this);
 
-			// get diagram from repository
-			int diagramId = Intent.GetIntExtra ("DiagramId", 0);
-			if (diagramId > 0)
-				currentDiagram = repository.Get (diagramId);
-			else
-				currentDiagram = new Diagram ();
+            RegisterForContextMenu(drawingView);
 
-			// create diagram
-			Editor.Parse (currentDiagram.Model, drawingView.Service.Elements);
-			drawingView.Service.UpdateNextId ();
-			drawingView.Service.CurrentModel = Editor.Generate (drawingView.Service.Elements);
+            // get diagram from repository
+            int diagramId = Intent.GetIntExtra("DiagramId", 0);
+            if (diagramId > 0)
+                currentDiagram = repository.Get(diagramId);
+            else
+                currentDiagram = new Diagram();
 
-			// set content view to drawing canvas
-			SetContentView (drawingView);
+            // create diagram
+            Editor.Parse(currentDiagram.Model, drawingView.Service.Elements);
+            drawingView.Service.UpdateNextId();
+            drawingView.Service.CurrentModel = Editor.Generate(drawingView.Service.Elements);
 
-			//ActivityCompat.InvalidateOptionsMenu (this);
+            // set content view to drawing canvas
+            SetContentView(drawingView);
 
-			//Console.WriteLine ("DiagramEditor OnCreate");
-		}
+            //ActivityCompat.InvalidateOptionsMenu (this);
 
-		protected override void OnStop ()
-		{
-			base.OnStop ();
+            //Console.WriteLine ("DiagramEditor OnCreate");
+        }
 
-			// store diagram model
-			currentDiagram.Model = Editor.Generate(drawingView.Service.Elements);
-			currentDiagram.Id = repository.Save(currentDiagram);
+        protected override void OnStop()
+        {
+            base.OnStop();
 
-			//Console.WriteLine ("DiagramEditor OnStop");
-		}
+            // store diagram model
+            currentDiagram.Model = Editor.Generate(drawingView.Service.Elements);
+            currentDiagram.Id = repository.Save(currentDiagram);
 
-		protected override void OnPause ()
-		{
-			base.OnPause ();
+            //Console.WriteLine ("DiagramEditor OnStop");
+        }
 
-			//Console.WriteLine ("DiagramEditor OnPause");
+        protected override void OnPause()
+        {
+            base.OnPause();
 
-			// stop drawing thread
-			drawingView.Service.Stop ();
-		}
+            //Console.WriteLine ("DiagramEditor OnPause");
 
-		protected override void OnResume ()
-		{
-			base.OnResume ();
+            // stop drawing thread
+            drawingView.Service.Stop();
+        }
 
-			//Console.WriteLine ("DiagramEditor OnResume");
+        protected override void OnResume()
+        {
+            base.OnResume();
 
-			// start drawing thread
-			drawingView.Service.Start (drawingView.Holder);
-		}
-		
-		#endregion
+            //Console.WriteLine ("DiagramEditor OnResume");
 
-		#region Options Menu
+            // start drawing thread
+            drawingView.Service.Start(drawingView.Holder);
+        }
 
-		private const int ItemGroupInsert = 0;
-		private const int ItemGroupEdit = 1;
+        #endregion
 
-		private const int ItemInsertAndGate = 0;
-		private const int ItemInsertOrGate = 1;
+        #region Options Menu
 
-		private const int ItemResetDiagram = 2;
-		private const int ItemResetZoom = 3;
-		private const int ItemEditUndo = 4;
-		private const int ItemEditRedo = 5;
+        private const int ItemGroupInsert = 0;
+        private const int ItemGroupEdit = 1;
 
-		public bool HabdleItemSelected(IMenuItem item)
-		{
-			switch (item.ItemId) 
-			{
-			case ItemInsertAndGate:
-				{
-					float x, y;
-					drawingView.Service.Snapshot ();
-					drawingView.Service.GetCenterPoint (out x, out y);
-					drawingView.Service.InsertAndGate (x - 15f, y - 15f, true);
-				}
-				return true;
-			case ItemInsertOrGate:
-				{
-					float x, y;
-					drawingView.Service.Snapshot ();
-					drawingView.Service.GetCenterPoint (out x, out y);
-					drawingView.Service.InsertOrGate (x - 15f, y - 15f, true);
-				}
-				return true;
-			case ItemResetDiagram:
-				drawingView.Service.Snapshot ();
-				drawingView.Service.Reset ();
-				return true;
-			case ItemResetZoom:
-				drawingView.Service.ResetZoom ();
-				drawingView.Service.RedrawCanvas ();
-				return true;
-			case ItemEditUndo:
-				drawingView.Service.Undo ();
-				return true;
-			case ItemEditRedo:
-				drawingView.Service.Redo ();
-				return true;
-			default:
-				return base.OnContextItemSelected (item);
-			}
-		}
+        private const int ItemInsertAndGate = 0;
+        private const int ItemInsertOrGate = 1;
 
-		public static void CreateOptionsMenu (IMenu menu)
-		{
-			// insert
-			menu.Add (ItemGroupInsert, ItemInsertAndGate, 0, "Insert AndGate");
-			menu.Add (ItemGroupInsert, ItemInsertOrGate, 1, "Insert OrGate");
-			// edit
-			menu.Add (ItemGroupEdit, ItemResetDiagram, 2, "Reset Diagram");
-			menu.Add (ItemGroupEdit, ItemResetZoom, 3, "Reset Zoom");
-			menu.Add (ItemGroupEdit, ItemEditUndo, 4, "Undo");
-			menu.Add (ItemGroupEdit, ItemEditRedo, 5, "Redo");
-		}
+        private const int ItemResetDiagram = 2;
+        private const int ItemResetZoom = 3;
+        private const int ItemEditUndo = 4;
+        private const int ItemEditRedo = 5;
 
-		public override void OnCreateContextMenu (IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
-		{
-			base.OnCreateContextMenu (menu, v, menuInfo);
+        public bool HabdleItemSelected(IMenuItem item)
+        {
+            switch (item.ItemId)
+            {
+                case ItemInsertAndGate:
+                    {
+                        float x, y;
+                        drawingView.Service.Snapshot();
+                        drawingView.Service.GetCenterPoint(out x, out y);
+                        drawingView.Service.InsertAndGate(x - 15f, y - 15f, true);
+                    }
+                    return true;
+                case ItemInsertOrGate:
+                    {
+                        float x, y;
+                        drawingView.Service.Snapshot();
+                        drawingView.Service.GetCenterPoint(out x, out y);
+                        drawingView.Service.InsertOrGate(x - 15f, y - 15f, true);
+                    }
+                    return true;
+                case ItemResetDiagram:
+                    drawingView.Service.Snapshot();
+                    drawingView.Service.Reset();
+                    return true;
+                case ItemResetZoom:
+                    drawingView.Service.ResetZoom();
+                    drawingView.Service.RedrawCanvas();
+                    return true;
+                case ItemEditUndo:
+                    drawingView.Service.Undo();
+                    return true;
+                case ItemEditRedo:
+                    drawingView.Service.Redo();
+                    return true;
+                default:
+                    return base.OnContextItemSelected(item);
+            }
+        }
 
-			CreateOptionsMenu (menu);
-		}
+        public static void CreateOptionsMenu(IMenu menu)
+        {
+            // insert
+            menu.Add(ItemGroupInsert, ItemInsertAndGate, 0, "Insert AndGate");
+            menu.Add(ItemGroupInsert, ItemInsertOrGate, 1, "Insert OrGate");
+            // edit
+            menu.Add(ItemGroupEdit, ItemResetDiagram, 2, "Reset Diagram");
+            menu.Add(ItemGroupEdit, ItemResetZoom, 3, "Reset Zoom");
+            menu.Add(ItemGroupEdit, ItemEditUndo, 4, "Undo");
+            menu.Add(ItemGroupEdit, ItemEditRedo, 5, "Redo");
+        }
 
-		public override bool OnContextItemSelected (IMenuItem item)
-		{
-			return HabdleItemSelected (item);
-		}
+        public override void OnCreateContextMenu(IContextMenu menu, View v, IContextMenuContextMenuInfo menuInfo)
+        {
+            base.OnCreateContextMenu(menu, v, menuInfo);
 
-		public override bool OnCreateOptionsMenu (IMenu menu)
-		{
-			CreateOptionsMenu (menu);
+            CreateOptionsMenu(menu);
+        }
 
-			return true;
-		}
+        public override bool OnContextItemSelected(IMenuItem item)
+        {
+            return HabdleItemSelected(item);
+        }
 
-		public override bool OnOptionsItemSelected (IMenuItem item)
-		{
-			return HabdleItemSelected (item);
-		}
+        public override bool OnCreateOptionsMenu(IMenu menu)
+        {
+            CreateOptionsMenu(menu);
 
-		#endregion
+            return true;
+        }
 
-		#region Instance State
+        public override bool OnOptionsItemSelected(IMenuItem item)
+        {
+            return HabdleItemSelected(item);
+        }
 
-		protected override void OnSaveInstanceState (Bundle outState)
-		{
-			base.OnSaveInstanceState (outState);
-		}
+        #endregion
 
-		protected override void OnRestoreInstanceState (Bundle savedInstanceState)
-		{
-			base.OnRestoreInstanceState (savedInstanceState);
-		}
+        #region Instance State
 
-		#endregion
-	}
-        
-    [Activity (Label = "Canvas Diagram", MainLauncher = true)]          
+        protected override void OnSaveInstanceState(Bundle outState)
+        {
+            base.OnSaveInstanceState(outState);
+        }
+
+        protected override void OnRestoreInstanceState(Bundle savedInstanceState)
+        {
+            base.OnRestoreInstanceState(savedInstanceState);
+        }
+
+        #endregion
+    }
+
+    [Activity(Label = "Canvas Diagram", MainLauncher = true)]          
     public class DiagramList : Activity
     {
         #region Fields
@@ -2662,11 +2694,11 @@ namespace CanvasDiagram.Droid
 
         #region Activity Lifecycle
 
-        protected override void OnCreate (Bundle bundle)
+        protected override void OnCreate(Bundle bundle)
         {
             //RequestWindowFeature(WindowFeatures.NoTitle);
-            base.OnCreate (bundle);
-            SetContentView (Resource.Layout.DiagramList);
+            base.OnCreate(bundle);
+            SetContentView(Resource.Layout.DiagramList);
 
             /*
 
@@ -2702,44 +2734,44 @@ namespace CanvasDiagram.Droid
 
             */
 
-            repository = new DiagramRepository ();
+            repository = new DiagramRepository();
 
             // connect view elements
-            listViewDiagrams = FindViewById<ListView> (Resource.Id.listViewDiagrams);
+            listViewDiagrams = FindViewById<ListView>(Resource.Id.listViewDiagrams);
 
             // edit diagram model
-            listViewDiagrams.ItemClick += (sender, e) => 
-                {
-                    var diagramEidtor = new Intent(this, typeof(DiagramEditor));
-                    diagramEidtor.PutExtra("DiagramId", diagrams[e.Position].Id);
+            listViewDiagrams.ItemClick += (sender, e) =>
+            {
+                var diagramEidtor = new Intent(this, typeof(DiagramEditor));
+                diagramEidtor.PutExtra("DiagramId", diagrams[e.Position].Id);
 
-                    StartActivity(diagramEidtor);
-                };
+                StartActivity(diagramEidtor);
+            };
 
             // edit diagram properties
-            listViewDiagrams.ItemLongClick += (sender, e) => 
-                {
-                    var diagramProperties = new Intent(this, typeof(DiagramProperties));
-                    diagramProperties.PutExtra("DiagramId", diagrams[e.Position].Id);
+            listViewDiagrams.ItemLongClick += (sender, e) =>
+            {
+                var diagramProperties = new Intent(this, typeof(DiagramProperties));
+                diagramProperties.PutExtra("DiagramId", diagrams[e.Position].Id);
 
-                    StartActivity(diagramProperties);
-                };
+                StartActivity(diagramProperties);
+            };
 
-            Console.WriteLine ("DiagramList OnResume");
+            Console.WriteLine("DiagramList OnResume");
         }
 
-        protected override void OnResume ()
+        protected override void OnResume()
         {
-            base.OnResume ();
+            base.OnResume();
 
             // get diagrams from repository
-            diagrams = repository.GetAll ();
+            diagrams = repository.GetAll();
 
             // set diagram list adapter
-            var adapter = new DiagramListAdapter (this, diagrams);
+            var adapter = new DiagramListAdapter(this, diagrams);
             listViewDiagrams.Adapter = adapter;
 
-            Console.WriteLine ("DiagramList OnResume");
+            Console.WriteLine("DiagramList OnResume");
         }
 
         #endregion
@@ -2748,9 +2780,9 @@ namespace CanvasDiagram.Droid
 
         public void DeleteAll()
         {
-            repository.RemoveAll ();
-            diagrams.Clear ();
-            (listViewDiagrams.Adapter as DiagramListAdapter).NotifyDataSetChanged ();
+            repository.RemoveAll();
+            diagrams.Clear();
+            (listViewDiagrams.Adapter as DiagramListAdapter).NotifyDataSetChanged();
         }
 
         #endregion
@@ -2764,7 +2796,7 @@ namespace CanvasDiagram.Droid
 
         public bool HabdleItemSelected(IMenuItem item)
         {
-            switch (item.ItemId) 
+            switch (item.ItemId)
             {
                 case ItemAddDiagram:
                     StartActivity(typeof(DiagramProperties));
@@ -2773,32 +2805,34 @@ namespace CanvasDiagram.Droid
                     {
                         AlertDialog.Builder ab = new AlertDialog.Builder(this);
                         ab.SetMessage("Delete All diagrams?")
-                            .SetNegativeButton("No", (sender, e) => { } )
+                            .SetNegativeButton("No", (sender, e) =>
+                            {
+                            })
                             .SetPositiveButton("Yes", (sender, e) => DeleteAll())
                             .Show();
                     }
                     return true;
                 default:
-                    return base.OnContextItemSelected (item);
+                    return base.OnContextItemSelected(item);
             }
         }
 
-        public static void CreateOptionsMenu (IMenu menu)
+        public static void CreateOptionsMenu(IMenu menu)
         {
-            menu.Add (ItemGroupAdd, ItemAddDiagram, 0, "Add Diagram");
-            menu.Add (ItemGroupAdd, ItemDeleteAll, 1, "Delete All");
+            menu.Add(ItemGroupAdd, ItemAddDiagram, 0, "Add Diagram");
+            menu.Add(ItemGroupAdd, ItemDeleteAll, 1, "Delete All");
         }
 
-        public override bool OnCreateOptionsMenu (IMenu menu)
+        public override bool OnCreateOptionsMenu(IMenu menu)
         {
-            CreateOptionsMenu (menu);
+            CreateOptionsMenu(menu);
 
             return true;
         }
 
-        public override bool OnOptionsItemSelected (IMenuItem item)
+        public override bool OnOptionsItemSelected(IMenuItem item)
         {
-            return HabdleItemSelected (item);
+            return HabdleItemSelected(item);
         }
 
         #endregion
@@ -2809,19 +2843,19 @@ namespace CanvasDiagram.Droid
         protected Activity context = null;
         protected IList<Diagram> diagrams = new List<Diagram>();
 
-        public DiagramListAdapter (Activity context, IList<Diagram> diagrams) 
+        public DiagramListAdapter(Activity context, IList<Diagram> diagrams)
             : base()
         {
             this.context = context;
             this.diagrams = diagrams;
         }
 
-        public override Diagram this[int index] 
+        public override Diagram this [int index]
         {
-            get { return diagrams [index]; }
+            get { return diagrams[index]; }
         }
 
-        public override long GetItemId (int position)
+        public override long GetItemId(int position)
         {
             return position;
         }
@@ -2831,23 +2865,23 @@ namespace CanvasDiagram.Droid
             get { return diagrams.Count; }
         }
 
-        public override View GetView (int position, View convertView, ViewGroup parent)
+        public override View GetView(int position, View convertView, ViewGroup parent)
         {
-            var diagram = diagrams [position];
+            var diagram = diagrams[position];
 
-            var view = (convertView ?? 
-                context.LayoutInflater.Inflate (
-                    Android.Resource.Layout.SimpleListItem1,
-                    parent, 
-                    false)) as TextView;
+            var view = (convertView ??
+                       context.LayoutInflater.Inflate(
+                           Android.Resource.Layout.SimpleListItem1,
+                           parent, 
+                           false)) as TextView;
 
-            view.SetText (diagram.Title, TextView.BufferType.Normal);
+            view.SetText(diagram.Title, TextView.BufferType.Normal);
 
             return view;
         }
     }
 
-    [Activity (Label = "Diagram Properties")]           
+    [Activity(Label = "Diagram Properties")]           
     public class DiagramProperties : Activity
     {
         #region Fields
@@ -2866,75 +2900,75 @@ namespace CanvasDiagram.Droid
 
         #region Activity Lifecycle
 
-        protected override void OnCreate (Bundle bundle)
+        protected override void OnCreate(Bundle bundle)
         {
             //RequestWindowFeature(WindowFeatures.NoTitle);
-            base.OnCreate (bundle);
+            base.OnCreate(bundle);
 
-            SetContentView (Resource.Layout.DiagramProperties);
+            SetContentView(Resource.Layout.DiagramProperties);
 
-            repository = new DiagramRepository ();
+            repository = new DiagramRepository();
 
             // get diagram from repository
             bool isExistingDiagram = false;
-            int diagramId = Intent.GetIntExtra ("DiagramId", 0);
+            int diagramId = Intent.GetIntExtra("DiagramId", 0);
             if (diagramId > 0)
-                {
-                    currentDiagram = repository.Get (diagramId);
-                    isExistingDiagram = true;
-                }
+            {
+                currentDiagram = repository.Get(diagramId);
+                isExistingDiagram = true;
+            }
             else
-                {
-                    // create new diagram
-                    currentDiagram = new Diagram ();
-                }
+            {
+                // create new diagram
+                currentDiagram = new Diagram();
+            }
 
             // connect view elements
-            buttonCancel = FindViewById<Button> (Resource.Id.buttonCancel);
-            buttonDelete = FindViewById<Button> (Resource.Id.buttonDelete);
-            buttonSave = FindViewById<Button> (Resource.Id.buttonSave);
-            editTextTitle = FindViewById<EditText> (Resource.Id.editTextTitle);
-            editTextModel = FindViewById<EditText> (Resource.Id.editTextModel);
+            buttonCancel = FindViewById<Button>(Resource.Id.buttonCancel);
+            buttonDelete = FindViewById<Button>(Resource.Id.buttonDelete);
+            buttonSave = FindViewById<Button>(Resource.Id.buttonSave);
+            editTextTitle = FindViewById<EditText>(Resource.Id.editTextTitle);
+            editTextModel = FindViewById<EditText>(Resource.Id.editTextModel);
 
             // enable delete button for existing diagrams
             buttonDelete.Enabled = isExistingDiagram;
 
             // cancel
-            buttonCancel.Click += (sender, e) => 
-                {
-                    Finish ();
-                };
+            buttonCancel.Click += (sender, e) =>
+            {
+                Finish();
+            };
 
             // delete
-            buttonDelete.Click += (sender, e) => 
-                {
-                    repository.Delete(currentDiagram);
+            buttonDelete.Click += (sender, e) =>
+            {
+                repository.Delete(currentDiagram);
 
-                    Finish ();
-                };
+                Finish();
+            };
 
             // save
-            buttonSave.Click += (sender, e) => 
-                {
-                    currentDiagram.Title = editTextTitle.Text;
-                    currentDiagram.Model = editTextModel.Text;
-                    currentDiagram.Id = repository.Save(currentDiagram);
+            buttonSave.Click += (sender, e) =>
+            {
+                currentDiagram.Title = editTextTitle.Text;
+                currentDiagram.Model = editTextModel.Text;
+                currentDiagram.Id = repository.Save(currentDiagram);
 
-                    Finish ();
-                };
+                Finish();
+            };
 
             // set current diagram properties
             editTextTitle.Text = currentDiagram.Title;
             editTextModel.Text = currentDiagram.Model;
 
-            Console.WriteLine ("DiagramProperties OnCreate");
+            Console.WriteLine("DiagramProperties OnCreate");
         }
 
-        protected override void OnResume ()
+        protected override void OnResume()
         {
-            base.OnResume ();
+            base.OnResume();
 
-            Console.WriteLine ("DiagramProperties OnResume");
+            Console.WriteLine("DiagramProperties OnResume");
         }
 
         #endregion
