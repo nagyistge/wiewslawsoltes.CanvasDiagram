@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F57C1738-B68D-48BD-9847-E946B278A9E3}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -51,86 +51,23 @@
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Core\Element.cs" />
-    <Compile Include="Core\Pin.cs" />
-    <Compile Include="Core\Wire.cs" />
-    <Compile Include="Core\AndGate.cs" />
-    <Compile Include="Core\OrGate.cs" />
-    <Compile Include="Core\MathUtil.cs" />
-    <Compile Include="Core\PolygonF.cs" />
-    <Compile Include="DiagramProperties.cs" />
-    <Compile Include="Core\Diagram.cs" />
-    <Compile Include="Core\DiagramRepository.cs" />
-    <Compile Include="DiagramList.cs" />
-    <Compile Include="DiagramListAdapter.cs" />
-    <Compile Include="DiagramEditor.cs" />
-    <Compile Include="Core\Editor.cs" />
-    <Compile Include="Test\Renderers\ArcRenderer.cs" />
-    <Compile Include="Test\Renderers\CircleRenderer.cs" />
-    <Compile Include="Test\Renderers\LineRenderer.cs" />
-    <Compile Include="Test\Renderers\PinRenderer.cs" />
-    <Compile Include="Test\Renderers\RectangleRenderer.cs" />
-    <Compile Include="Test\Renderers\RendererFactory.cs" />
-    <Compile Include="Test\Renderers\TextRenderer.cs" />
-    <Compile Include="Test\Core\Styles\ArcStyle.cs" />
-    <Compile Include="Test\Core\Styles\CircleStyle.cs" />
-    <Compile Include="Test\Core\Styles\LineStyle.cs" />
-    <Compile Include="Test\Core\Styles\PinStyle.cs" />
-    <Compile Include="Test\Core\Styles\RectangleStyle.cs" />
-    <Compile Include="Test\Core\Styles\TextStyle.cs" />
-    <Compile Include="Test\Core\Styles\Core\BaseStyle.cs" />
-    <Compile Include="Test\Core\Styles\Core\HorizontalAlignment.cs" />
-    <Compile Include="Test\Core\Styles\Core\VerticalAlignment.cs" />
-    <Compile Include="Test\Core\Elements\Arc.cs" />
-    <Compile Include="Test\Core\Elements\Circle.cs" />
-    <Compile Include="Test\Core\Elements\Line.cs" />
-    <Compile Include="Test\Core\Elements\Rectangle.cs" />
-    <Compile Include="Test\Core\Elements\Text.cs" />
-    <Compile Include="Test\Core\Elements\Pin.cs" />
-    <Compile Include="Test\Core\Elements\Custom.cs" />
-    <Compile Include="Test\Core\Elements\Reference.cs" />
-    <Compile Include="Test\Core\Elements\Core\Element.cs" />
-    <Compile Include="Test\Core\Rendering\IRenderer.cs" />
-    <Compile Include="Test\Core\Rendering\IRendererFactory.cs" />
-    <Compile Include="Test\Core\Editor\Context.cs" />
-    <Compile Include="Test\Core\Editor\Editor.cs" />
-    <Compile Include="Test\Core\Editor\Model.cs" />
-    <Compile Include="Test\Core\Editor\Constants.cs" />
-    <Compile Include="DrawingView.cs" />
-    <Compile Include="DrawingService.cs" />
-    <Compile Include="ThreadSync\BackgroundService.cs" />
-    <Compile Include="ThreadSync\DataHolder.cs" />
-    <Compile Include="Test\Core\Editor\Util.cs" />
-    <Compile Include="Test\Core\Editor\EditorFindExtensions.cs" />
-    <Compile Include="Test\Core\Editor\EditorAddExtensions.cs" />
-    <Compile Include="Test\Core\Editor\EditorParseExtensions.cs" />
+    <Compile Include="App.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
+    <None Include="Test.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\Strings.xml" />
     <AndroidResource Include="Resources\drawable\Icon.png" />
-    <AndroidResource Include="Resources\layout\DiagramList.axml" />
     <AndroidResource Include="Resources\layout\DiagramProperties.axml" />
+    <AndroidResource Include="Resources\layout\DiagramList.axml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
-    <Folder Include="Core\" />
-    <Folder Include="Test\Core\" />
-    <Folder Include="Test\Core\Styles\" />
-    <Folder Include="Test\Core\Styles\Core\" />
-    <Folder Include="Test\Core\Elements\" />
-    <Folder Include="Test\Core\Elements\Core\" />
-    <Folder Include="Test\Core\Rendering\" />
-    <Folder Include="Test\Core\Editor\" />
-    <Folder Include="ThreadSync\" />
-  </ItemGroup>
-  <ItemGroup>
     <XamarinComponentReference Include="sqlite-net">
-      <InstallationInProgress>False</InstallationInProgress>
       <Version>1.0.1</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
