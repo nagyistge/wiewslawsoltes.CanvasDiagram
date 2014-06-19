@@ -1,4 +1,5 @@
 ﻿#region References
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,16 +8,12 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using Android.Graphics;
-using SQLite;
+//using SQLite;
 
 #endregion
 
 namespace CanvasDiagram.Droid.Test
 {
-
-
-
-
     #region Element
 
     public abstract class Element
@@ -350,10 +347,6 @@ namespace CanvasDiagram.Droid.Test
     }
 
     #endregion
-
-
-
-
 
     #region Constants
 
@@ -1512,9 +1505,6 @@ namespace CanvasDiagram.Droid.Test
 
     #endregion
 
-
-
-
     #region IRenderer
 
     public interface IRenderer<TElement, TStyle>
@@ -1534,9 +1524,6 @@ namespace CanvasDiagram.Droid.Test
     }
 
     #endregion
-
-
-
 
     #region BaseStyle
 
@@ -1836,9 +1823,6 @@ namespace CanvasDiagram.Droid.Test
 
     #endregion
 
-
-
-
     #region Android Canvas Renderers
 
     public class ArcRenderer : IRenderer<Arc, ArcStyle>
@@ -2056,8 +2040,4 @@ namespace CanvasDiagram.Droid.Test
     }
 
     #endregion
-
-
-
-
 }
