@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -700,15 +701,14 @@ namespace CanvasDiagram.Droid
 
     #endregion
 
-    #region Repository
+    #region Repository SQLite
 
+    /*
     public class Diagram
     {
-        public Diagram()
-        {
-        }
+        public Diagram() { }
 
-        //[PrimaryKey, AutoIncrement]
+        [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
         public string Title { get; set; }
@@ -718,36 +718,85 @@ namespace CanvasDiagram.Droid
 
     public class DiagramRepository
     {
-        //private SQLiteConnection conn;
-
-        private static List<Diagram> diagrams;
+        private SQLiteConnection conn;
 
         public DiagramRepository()
         {
-            //string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-            //conn = new SQLiteConnection(System.IO.Path.Combine(folder, "diagrams.db"));
-            //conn.CreateTable<Diagram>();
-
-            if (diagrams == null)
-            diagrams = new List<Diagram>();
+            string folder = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+            conn = new SQLiteConnection(System.IO.Path.Combine(folder, "diagrams.db"));
+            conn.CreateTable<Diagram>();
         }
 
         public List<Diagram> GetAll()
         {
-            //return conn.Table<Diagram>().OrderBy(x => x.Id).ToList();
+            return conn.Table<Diagram>().OrderBy(x => x.Id).ToList();
+        }
+
+        public void RemoveAll()
+        {
+            foreach (var diagram in conn.Table<Diagram> ())
+                conn.Delete(diagram);
+        }
+
+        public Diagram Get(int id)
+        {
+            return conn.Table<Diagram>().FirstOrDefault(x => x.Id == id);
+        }
+
+        public int Save(Diagram diagram)
+        {
+            if (diagram.Id != 0)
+                {
+                    conn.Update(diagram);
+                    return diagram.Id;
+                }
+            else
+                {
+                    return conn.Insert(diagram);
+                }
+        }
+
+        public void Delete(Diagram diagram)
+        {
+            if (diagram.Id != 0)
+                conn.Delete(diagram);
+        }
+    }
+    */
+
+    #endregion
+
+    #region Repository Dummy
+
+    public class Diagram
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Model { get; set; }
+    }
+
+    public class DiagramRepository
+    {
+        private static IList<Diagram> diagrams;
+
+        public DiagramRepository()
+        {
+            if (diagrams == null)
+                diagrams = new ObservableCollection<Diagram>();
+        }
+
+        public IList<Diagram> GetAll()
+        {
             return diagrams;
         }
 
         public void RemoveAll()
         {
-            //foreach (var diagram in conn.Table<Diagram> ())
-            //    conn.Delete(diagram);
             diagrams.Clear();
         }
 
         public Diagram Get(int id)
         {
-            //return conn.Table<Diagram>().FirstOrDefault(x => x.Id == id);
             return diagrams[id];
         }
 
@@ -755,14 +804,11 @@ namespace CanvasDiagram.Droid
         {
             if (diagram.Id != 0)
             {
-                    //conn.Update(diagram);
-                    //return diagram.Id;
                 diagrams[diagram.Id] = diagram;
                 return diagram.Id;
             }
             else
             {
-                    //return conn.Insert(diagram);
                 diagrams.Add(diagram);
                 return diagrams.Count - 1;
             }
@@ -770,8 +816,6 @@ namespace CanvasDiagram.Droid
 
         public void Delete(Diagram diagram)
         {
-            //if (diagram.Id != 0)
-            //    conn.Delete(diagram);
             diagrams.Remove(diagram);
         }
     }
@@ -2707,7 +2751,7 @@ namespace CanvasDiagram.Droid
         private ListView listViewDiagrams;
 
         private DiagramRepository repository;
-        private List<Diagram> diagrams;
+        private IList<Diagram> diagrams;
 
         #endregion
 
