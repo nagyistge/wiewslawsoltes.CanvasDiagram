@@ -14,13 +14,59 @@ using Android.Graphics;
 
 namespace CanvasDiagram.Droid.Test
 {
-    #region Element
+    #region Util
+
+    public static class Util
+    {
+        #region Util
+
+        public static bool Compare(string a, string b)
+        {
+            return string.Compare(a, b, StringComparison.InvariantCultureIgnoreCase) == 0;
+        }
+
+        public static string[] GetLines(string model)
+        {
+            return model.Split(Constants.LineSeparators, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static string[] GetArgs(string line)
+        {
+            return line.Split(Constants.ArgSeparators, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static bool GetBool(string flag)
+        {
+            return (int.Parse(flag) == 1) ? true : false;
+        }
+
+        public static int GetInt(string number)
+        {
+            return int.Parse(number);
+        }
+
+        public static float GetFloat(string number)
+        {
+            return float.Parse(number, System.Globalization.CultureInfo.GetCultureInfo("en-GB"));
+        }
+
+        public static string GetString(float number)
+        {
+            return number.ToString(System.Globalization.CultureInfo.GetCultureInfo("en-GB"));
+        }
+
+        #endregion
+    }
+
+    #endregion
+
+    #region Model
 
     public abstract class Element
     {
         #region Constructor
 
-        public Element(int id, 
+        public Element(int id,
                   string type)
         {
             Id = id;
@@ -40,16 +86,82 @@ namespace CanvasDiagram.Droid.Test
         public abstract void Render(object canvas);
     }
 
-    #endregion
+    public class Pin : Element
+    {
+        #region Constructor
 
-    #region Arc
+        public Pin(int id,
+              string type,
+              PinStyle style,
+              float x,
+              float y)
+            : base(id, type)
+        {
+            Style = style;
+            X = x;
+            Y = y;
+        }
+
+        #endregion
+
+        #region Properties
+
+        public PinStyle Style { get; set; }
+
+        public float X { get; set; }
+
+        public float Y { get; set; }
+
+        public List<Line> Lines { get; set; }
+
+        #endregion
+
+        public override void Render(object canvas)
+        {
+            Style.Render(canvas, this);
+        }
+    }
+
+    public class Line : Element
+    {
+        #region Constructor
+
+        public Line(int id,
+               string type,
+               LineStyle style,
+               Pin start,
+               Pin end)
+            : base(id, type)
+        {
+            Style = style;
+            Start = start;
+            End = end;
+        }
+
+        #endregion
+
+        #region Properties
+
+        public LineStyle Style { get; set; }
+
+        public Pin Start { get; set; }
+
+        public Pin End { get; set; }
+
+        #endregion
+
+        public override void Render(object canvas)
+        {
+            Style.Render(canvas, this);
+        }
+    }
 
     public class Arc : Element
     {
         #region Constructor
 
-        public Arc(int id, 
-              string type, 
+        public Arc(int id,
+              string type,
               ArcStyle style,
               Pin start,
               Pin end,
@@ -82,16 +194,12 @@ namespace CanvasDiagram.Droid.Test
         }
     }
 
-    #endregion
-
-    #region Circle
-
     public class Circle : Element
     {
         #region Constructor
 
-        public Circle(int id, 
-                 string type, 
+        public Circle(int id,
+                 string type,
                  CircleStyle style,
                  Pin center,
                  Pin radius)
@@ -120,136 +228,12 @@ namespace CanvasDiagram.Droid.Test
         }
     }
 
-    #endregion
-
-    #region Custom
-
-    public class Custom : Element
-    {
-        #region Properties
-
-        public List<Element> Primitives { get; set; }
-
-        public List<Custom> Customs { get; set; }
-
-        #endregion
-
-        #region Constructor
-
-        public Custom(int id, 
-                 string type)
-            : base(id, type)
-        {
-            Primitives = new List<Element>();
-            Customs = new List<Custom>();
-        }
-
-        #endregion
-
-        public override void Render(object canvas)
-        { 
-            int count, i;
-            var primitives = Primitives;
-            var customs = Customs;
-
-            count = Primitives.Count;
-            for (i = 0; i < count; i++)
-                primitives[i].Render(canvas);
-
-            count = Customs.Count;
-            for (i = 0; i < count; i++)
-                customs[i].Render(canvas);
-        }
-    }
-
-    #endregion
-
-    #region Line
-
-    public class Line : Element
-    {
-        #region Constructor
-
-        public Line(int id, 
-               string type, 
-               LineStyle style,
-               Pin start,
-               Pin end)
-            : base(id, type)
-        {
-            Style = style;
-            Start = start;
-            End = end;
-        }
-
-        #endregion
-
-        #region Properties
-
-        public LineStyle Style { get; set; }
-
-        public Pin Start { get; set; }
-
-        public Pin End { get; set; }
-
-        #endregion
-
-        public override void Render(object canvas)
-        {
-            Style.Render(canvas, this);
-        }
-    }
-
-    #endregion
-
-    #region Pin
-
-    public class Pin : Element
-    {
-        #region Constructor
-
-        public Pin(int id, 
-              string type, 
-              PinStyle style,
-              float x,
-              float y)
-            : base(id, type)
-        {
-            Style = style;
-            X = x;
-            Y = y;
-        }
-
-        #endregion
-
-        #region Properties
-
-        public PinStyle Style { get; set; }
-
-        public float X { get; set; }
-
-        public float Y { get; set; }
-
-        public List<Line> Lines { get; set; }
-
-        #endregion
-
-        public override void Render(object canvas)
-        {
-            Style.Render(canvas, this);
-        }
-    }
-
-    #endregion
-
-    #region Rectangle
-
     public class Rectangle : Element
     {
         #region Constructor
 
-        public Rectangle(int id, 
-                    string type, 
+        public Rectangle(int id,
+                    string type,
                     RectangleStyle style,
                     Pin topLeft,
                     Pin bottomRight)
@@ -278,50 +262,12 @@ namespace CanvasDiagram.Droid.Test
         }
     }
 
-    #endregion
-
-    #region Reference
-
-    public class Reference : Element
-    {
-        #region Constructor
-
-        public Reference(int id, 
-                    string type, 
-                    Pin position,
-                    Element copy)
-            : base(id, type)
-        {
-            Position = position;
-            Copy = copy;
-        }
-
-        #endregion
-
-        #region Properties
-
-        public Pin Position { get; set; }
-
-        public Element Copy { get; set; }
-
-        #endregion
-
-        public override void Render(object canvas)
-        { 
-            Copy.Render(canvas);
-        }
-    }
-
-    #endregion
-
-    #region Text
-
     public class Text : Element
     {
         #region Constructor
 
-        public Text(int id, 
-               string type, 
+        public Text(int id,
+               string type,
                TextStyle style,
                Pin position)
             : base(id, type)
@@ -346,9 +292,77 @@ namespace CanvasDiagram.Droid.Test
         }
     }
 
+    public class Custom : Element
+    {
+        #region Properties
+
+        public List<Element> Primitives { get; set; }
+
+        public List<Custom> Customs { get; set; }
+
+        #endregion
+
+        #region Constructor
+
+        public Custom(int id,
+                 string type)
+            : base(id, type)
+        {
+            Primitives = new List<Element>();
+            Customs = new List<Custom>();
+        }
+
+        #endregion
+
+        public override void Render(object canvas)
+        {
+            int count, i;
+            var primitives = Primitives;
+            var customs = Customs;
+
+            count = Primitives.Count;
+            for (i = 0; i < count; i++)
+                primitives[i].Render(canvas);
+
+            count = Customs.Count;
+            for (i = 0; i < count; i++)
+                customs[i].Render(canvas);
+        }
+    }
+
+    public class Reference : Element
+    {
+        #region Constructor
+
+        public Reference(int id,
+                    string type,
+                    Pin position,
+                    Element copy)
+            : base(id, type)
+        {
+            Position = position;
+            Copy = copy;
+        }
+
+        #endregion
+
+        #region Properties
+
+        public Pin Position { get; set; }
+
+        public Element Copy { get; set; }
+
+        #endregion
+
+        public override void Render(object canvas)
+        {
+            Copy.Render(canvas);
+        }
+    }
+
     #endregion
 
-    #region Constants
+    #region Editor
 
     public static class Constants
     {
@@ -382,9 +396,71 @@ namespace CanvasDiagram.Droid.Test
         public static string[] Styles = { PinStyle, LineStyle, ArcStyle, CircleStyle, TextStyle };
     }
 
-    #endregion
+    public class Model
+    {
+        #region Properties
 
-    #region Context
+        public ConcurrentDictionary<int, PinStyle> PinStyles { get; set; }
+
+        public ConcurrentDictionary<int, LineStyle> LineStyles { get; set; }
+
+        public ConcurrentDictionary<int, RectangleStyle> RectangleStyles { get; set; }
+
+        public ConcurrentDictionary<int, ArcStyle> ArcStyles { get; set; }
+
+        public ConcurrentDictionary<int, CircleStyle> CircleStyles { get; set; }
+
+        public ConcurrentDictionary<int, TextStyle> TextStyles { get; set; }
+
+        public ConcurrentDictionary<int, Pin> Pins { get; set; }
+
+        public ConcurrentDictionary<int, Line> Lines { get; set; }
+
+        public ConcurrentDictionary<int, Rectangle> Rectangles { get; set; }
+
+        public ConcurrentDictionary<int, Arc> Arcs { get; set; }
+
+        public ConcurrentDictionary<int, Circle> Circles { get; set; }
+
+        public ConcurrentDictionary<int, Text> Texts { get; set; }
+
+        public ConcurrentDictionary<int, Pin> ElementPins { get; set; }
+
+        public ConcurrentDictionary<int, Pin> ConnectorPins { get; set; }
+
+        public ConcurrentDictionary<int, Custom> CustomElements { get; set; }
+
+        public ConcurrentDictionary<int, Reference> ReferenceElements { get; set; }
+
+        #endregion
+
+        #region Constructor
+
+        public Model()
+        {
+            PinStyles = new ConcurrentDictionary<int, PinStyle>();
+            LineStyles = new ConcurrentDictionary<int, LineStyle>();
+            RectangleStyles = new ConcurrentDictionary<int, RectangleStyle>();
+            ArcStyles = new ConcurrentDictionary<int, ArcStyle>();
+            CircleStyles = new ConcurrentDictionary<int, CircleStyle>();
+            TextStyles = new ConcurrentDictionary<int, TextStyle>();
+
+            Pins = new ConcurrentDictionary<int, Pin>();
+            Lines = new ConcurrentDictionary<int, Line>();
+            Rectangles = new ConcurrentDictionary<int, Rectangle>();
+            Arcs = new ConcurrentDictionary<int, Arc>();
+            Circles = new ConcurrentDictionary<int, Circle>();
+            Texts = new ConcurrentDictionary<int, Text>();
+
+            ElementPins = new ConcurrentDictionary<int, Pin>();
+            ConnectorPins = new ConcurrentDictionary<int, Pin>();
+
+            CustomElements = new ConcurrentDictionary<int, Custom>();
+            ReferenceElements = new ConcurrentDictionary<int, Reference>();
+        }
+
+        #endregion
+    }
 
     public class Context
     {
@@ -437,13 +513,13 @@ namespace CanvasDiagram.Droid.Test
             Model = new Model();
 
             PinArgs = new List<string[]>();
-            LineArgs = new List <string[]>();
-            RectangleArgs = new List <string[]>();
-            CircleArgs = new List <string[]>();
-            ArcArgs = new List <string[]>();
-            TextArgs = new List <string[]>();
-            CustomArgs = new List <string[]>();
-            ReferenceArgs = new List <string[]>();
+            LineArgs = new List<string[]>();
+            RectangleArgs = new List<string[]>();
+            CircleArgs = new List<string[]>();
+            ArcArgs = new List<string[]>();
+            TextArgs = new List<string[]>();
+            CustomArgs = new List<string[]>();
+            ReferenceArgs = new List<string[]>();
 
             PinRenderer = factory.GetActivator<Pin, PinStyle>();
             LineRenderer = factory.GetActivator<Line, LineStyle>();
@@ -455,239 +531,6 @@ namespace CanvasDiagram.Droid.Test
 
         #endregion
     }
-
-    #endregion
-
-    #region Editor
-
-    public static class Editor
-    {
-        #region Stage 1
-
-        private static void Stage1(Context ctx, string data)
-        {
-            ctx.ParseData(data);
-        }
-
-        #endregion
-
-        #region Stage 2
-
-        private static void Stage2(Context ctx)
-        {
-            // pins - parse before any other primitive type
-            ctx.ParsePins(ctx.PinArgs);
-
-            // lines
-            ctx.ParseLines(ctx.LineArgs);
-
-            // rectangles
-            ctx.ParseRectangles(ctx.RectangleArgs);
-
-            // circles
-            ctx.ParseCircles(ctx.CircleArgs);
-
-            // arcs
-            ctx.ParseArcs(ctx.ArcArgs);
-
-            // texts
-            ctx.ParseTexts(ctx.TextArgs);
-        }
-
-        #endregion
-
-        #region Stage 3
-
-        private static void Stage3(Context ctx)
-        {
-            ctx.ParseCustoms(ctx.CustomArgs);
-        }
-
-        #endregion
-
-        #region Stage 4
-
-        private static void Stage4(Context ctx)
-        {
-            throw new NotImplementedException("Parser stage 4 is not implemented.");
-        }
-
-        #endregion
-
-        #region Stage 5
-
-        private static void Stage5(Context ctx)
-        {
-            throw new NotImplementedException("Parser stage 5 is not implemented.");
-        }
-
-        #endregion
-
-        #region Parse
-
-        public static Model Parse(string data, IRendererFactory factory)
-        {
-            var ctx = new Context(factory);
-
-            //
-            //  1st stage: get styles and sort other elements by type
-            //
-
-            Stage1(ctx, data);
-
-            //
-            // 2nd stage: parse primitive types
-            //
-
-            Stage2(ctx);
-
-            //
-            // 3rd stage: parse custom types
-            //
-
-            Stage3(ctx);
-
-            //
-            //  4th stage: resolve custom elements reference dependencies
-            //
-
-            // TODO:
-            // Each custom type may reference another custom type
-            // create depnedences for each custom type
-            // using topological sort order them by dependencies
-            // than create custom types in that order of least depnedencies.
-            // TODO:
-            // Store all found dependecies in List<Element> Dependecies;
-            // TODO: 
-            // Currently custom types only can reference primtive types!
-
-            Stage4(ctx);
-
-            //
-            // 5th stage: parse references
-            //
-
-            Stage5(ctx);
-
-            return ctx.Model;
-        }
-
-        #endregion
-
-        #region Generate
-
-        /*
-		private static StringBuilder sb = new StringBuilder();
-
-		public static string Generate(ICollection<KeyValuePair<int, Element>> elements)
-		{
-			//var sb = new StringBuilder(); 
-			sb.Length = 0;
-
-			//var sw = System.Diagnostics.Stopwatch.StartNew ();
-
-			foreach (var pair in elements) 
-			{
-				var element = pair.Value;
-
-				if (element is Pin)
-				{
-					var pin = element as Pin;
-					//string str = string.Format ("Pin;{0};{1};{2}", pin.Id, pin.X, pin.Y);
-					//sb.AppendLine (str);
-
-					sb.Append (Constants.Pin); 
-					sb.Append (Constants.Separator);
-
-					sb.Append (pin.Id);
-					sb.Append (Constants.Separator);
-
-					sb.Append (pin.X);
-					sb.Append (Constants.Separator);
-
-					sb.Append (pin.Y);
-					sb.Append (Constants.NewLine);
-				}
-				else if (element is Wire) 
-				{
-					var wire = element as Wire;
-					//string str = string.Format ("Wire;{0};{1};{2};{3};{4}", 
-					//                            wire.Id, 
-					//                            wire.Start.Parent != null ? wire.Start.Parent.Id : StandalonePinId, 
-					//                            wire.Start.Id, 
-					//                            wire.End.Parent != null ? wire.End.Parent.Id : StandalonePinId, 
-					//                            wire.End.Id);
-					//sb.AppendLine (str);
-
-					sb.Append (Constants.Wire); 
-					sb.Append (Constants.Separator);
-
-					sb.Append (wire.Id);
-					sb.Append (Constants.Separator);
-
-					sb.Append (wire.Start.Parent != null ? wire.Start.Parent.Id : StandalonePinId);
-					sb.Append (Constants.Separator);
-
-					sb.Append (wire.Start.Id);
-					sb.Append (Constants.Separator);
-
-					sb.Append (wire.End.Parent != null ? wire.End.Parent.Id : StandalonePinId);
-					sb.Append (Constants.Separator);
-
-					sb.Append (wire.End.Id);
-					sb.Append (Constants.NewLine);
-				}
-				else if (element is AndGate) 
-				{
-					var andGate = element as AndGate;
-					//string str = string.Format ("AndGate;{0};{1};{2}", andGate.Id, andGate.X, andGate.Y);
-					//sb.AppendLine (str);
-
-					sb.Append (TagAndGate); 
-					sb.Append (Constants.Separator);
-
-					sb.Append (andGate.Id);
-					sb.Append (Constants.Separator);
-
-					sb.Append (andGate.X);
-					sb.Append (Constants.Separator);
-
-					sb.Append (andGate.Y);
-					sb.Append (Constants.NewLine);
-				}
-				else if (element is OrGate) 
-				{
-					var orGate = element as OrGate;
-					//string str = string.Format ("OrGate;{0};{1};{2}", orGate.Id, orGate.X, orGate.Y);
-					//sb.AppendLine (str);
-
-					sb.Append (TagOrGate); 
-					sb.Append (Constants.Separator);
-
-					sb.Append (orGate.Id);
-					sb.Append (Constants.Separator);
-
-					sb.Append (orGate.X);
-					sb.Append (Constants.Separator);
-
-					sb.Append (orGate.Y);
-					sb.Append (Constants.NewLine);
-				}
-			}
-
-			//sw.Stop ();
-			//Console.WriteLine ("Generate: {0}ms", sw.Elapsed.TotalMilliseconds);
-
-			return sb.ToString();
-		}
-		*/
-
-        #endregion
-    }
-
-    #endregion
-
-    #region Editor Add Extensions
 
     public static class EditorAddExtensions
     {
@@ -781,10 +624,6 @@ namespace CanvasDiagram.Droid.Test
 
         #endregion
     }
-
-    #endregion
-
-    #region Editor Find Extensions
 
     public static class EditorFindExtensions
     {
@@ -893,10 +732,6 @@ namespace CanvasDiagram.Droid.Test
         #endregion
     }
 
-    #endregion
-
-    #region Editor Parse Extensions
-
     public static class EditorParseExtensions
     {
         #region Parse Data
@@ -987,10 +822,10 @@ namespace CanvasDiagram.Droid.Test
 
             var renderer = ctx.PinRenderer();
             var style = new PinStyle(null,
-                   id, type, 
+                   id, type,
                    colorA, colorR, colorG, colorB,
                    isFilled,
-                   strokeWidth, 
+                   strokeWidth,
                    radius);
 
             renderer.Initialize(style);
@@ -1010,7 +845,7 @@ namespace CanvasDiagram.Droid.Test
 
             var renderer = ctx.LineRenderer();
             var style = new LineStyle(renderer,
-                   id, type, 
+                   id, type,
                    colorA, colorR, colorG, colorB,
                    isFilled,
                    strokeWidth);
@@ -1032,7 +867,7 @@ namespace CanvasDiagram.Droid.Test
 
             var renderer = ctx.RectangleRenderer();
             var style = new RectangleStyle(renderer,
-                   id, type, 
+                   id, type,
                    colorA, colorR, colorG, colorB,
                    isFilled,
                    strokeWidth);
@@ -1054,7 +889,7 @@ namespace CanvasDiagram.Droid.Test
 
             var renderer = ctx.CircleRenderer();
             var style = new CircleStyle(renderer,
-                   id, type, 
+                   id, type,
                    colorA, colorR, colorG, colorB,
                    isFilled,
                    strokeWidth);
@@ -1076,7 +911,7 @@ namespace CanvasDiagram.Droid.Test
 
             var renderer = ctx.ArcRenderer();
             var style = new ArcStyle(renderer,
-                   id, type, 
+                   id, type,
                    colorA, colorR, colorG, colorB,
                    isFilled,
                    strokeWidth);
@@ -1100,8 +935,8 @@ namespace CanvasDiagram.Droid.Test
             float size = Util.GetFloat(args[10]);
 
             var renderer = ctx.TextRenderer();
-            var style = new TextStyle(renderer, 
-                   id, type, 
+            var style = new TextStyle(renderer,
+                   id, type,
                    colorA, colorR, colorG, colorB,
                    isFilled,
                    strokeWidth,
@@ -1387,118 +1222,227 @@ namespace CanvasDiagram.Droid.Test
         #endregion
     }
 
-    #endregion
-
-    #region Model
-
-    public class Model
+    public static class Editor
     {
-        #region Properties
+        #region Stage 1
 
-        public ConcurrentDictionary<int, PinStyle> PinStyles { get; set; }
-
-        public ConcurrentDictionary<int, LineStyle> LineStyles { get; set; }
-
-        public ConcurrentDictionary<int, RectangleStyle> RectangleStyles { get; set; }
-
-        public ConcurrentDictionary<int, ArcStyle> ArcStyles { get; set; }
-
-        public ConcurrentDictionary<int, CircleStyle> CircleStyles { get; set; }
-
-        public ConcurrentDictionary<int, TextStyle> TextStyles { get; set; }
-
-        public ConcurrentDictionary<int, Pin> Pins { get; set; }
-
-        public ConcurrentDictionary<int, Line> Lines { get; set; }
-
-        public ConcurrentDictionary<int, Rectangle> Rectangles { get; set; }
-
-        public ConcurrentDictionary<int, Arc> Arcs { get; set; }
-
-        public ConcurrentDictionary<int, Circle> Circles { get; set; }
-
-        public ConcurrentDictionary<int, Text> Texts { get; set; }
-
-        public ConcurrentDictionary<int, Pin> ElementPins { get; set; }
-
-        public ConcurrentDictionary<int, Pin> ConnectorPins { get; set; }
-
-        public ConcurrentDictionary<int, Custom> CustomElements { get; set; }
-
-        public ConcurrentDictionary<int, Reference> ReferenceElements { get; set; }
+        private static void Stage1(Context ctx, string data)
+        {
+            ctx.ParseData(data);
+        }
 
         #endregion
 
-        #region Constructor
+        #region Stage 2
 
-        public Model()
+        private static void Stage2(Context ctx)
         {
-            PinStyles = new ConcurrentDictionary<int, PinStyle>();
-            LineStyles = new ConcurrentDictionary<int, LineStyle>();
-            RectangleStyles = new ConcurrentDictionary<int, RectangleStyle>();
-            ArcStyles = new ConcurrentDictionary<int, ArcStyle>();
-            CircleStyles = new ConcurrentDictionary<int, CircleStyle>();
-            TextStyles = new ConcurrentDictionary<int, TextStyle>();
+            // pins - parse before any other primitive type
+            ctx.ParsePins(ctx.PinArgs);
 
-            Pins = new ConcurrentDictionary<int, Pin>();
-            Lines = new ConcurrentDictionary<int, Line>();
-            Rectangles = new ConcurrentDictionary<int, Rectangle>();
-            Arcs = new ConcurrentDictionary<int, Arc>();
-            Circles = new ConcurrentDictionary<int, Circle>();
-            Texts = new ConcurrentDictionary<int, Text>();
+            // lines
+            ctx.ParseLines(ctx.LineArgs);
 
-            ElementPins = new ConcurrentDictionary<int, Pin>();
-            ConnectorPins = new ConcurrentDictionary<int, Pin>();
+            // rectangles
+            ctx.ParseRectangles(ctx.RectangleArgs);
 
-            CustomElements = new ConcurrentDictionary<int, Custom>();
-            ReferenceElements = new ConcurrentDictionary<int, Reference>();
+            // circles
+            ctx.ParseCircles(ctx.CircleArgs);
+
+            // arcs
+            ctx.ParseArcs(ctx.ArcArgs);
+
+            // texts
+            ctx.ParseTexts(ctx.TextArgs);
         }
 
         #endregion
-    }
 
-    #endregion
+        #region Stage 3
 
-    #region Util
-
-    public static class Util
-    {
-        #region Util
-
-        public static bool Compare(string a, string b)
+        private static void Stage3(Context ctx)
         {
-            return string.Compare(a, b, StringComparison.InvariantCultureIgnoreCase) == 0;
+            ctx.ParseCustoms(ctx.CustomArgs);
         }
 
-        public static string[] GetLines(string model)
+        #endregion
+
+        #region Stage 4
+
+        private static void Stage4(Context ctx)
         {
-            return model.Split(Constants.LineSeparators, StringSplitOptions.RemoveEmptyEntries);
+            throw new NotImplementedException("Parser stage 4 is not implemented.");
         }
 
-        public static string[] GetArgs(string line)
+        #endregion
+
+        #region Stage 5
+
+        private static void Stage5(Context ctx)
         {
-            return line.Split(Constants.ArgSeparators, StringSplitOptions.RemoveEmptyEntries);
+            throw new NotImplementedException("Parser stage 5 is not implemented.");
         }
 
-        public static bool GetBool(string flag)
+        #endregion
+
+        #region Parse
+
+        public static Model Parse(string data, IRendererFactory factory)
         {
-            return (int.Parse(flag) == 1) ? true : false;
+            var ctx = new Context(factory);
+
+            //
+            //  1st stage: get styles and sort other elements by type
+            //
+
+            Stage1(ctx, data);
+
+            //
+            // 2nd stage: parse primitive types
+            //
+
+            Stage2(ctx);
+
+            //
+            // 3rd stage: parse custom types
+            //
+
+            Stage3(ctx);
+
+            //
+            //  4th stage: resolve custom elements reference dependencies
+            //
+
+            // TODO:
+            // Each custom type may reference another custom type
+            // create depnedences for each custom type
+            // using topological sort order them by dependencies
+            // than create custom types in that order of least depnedencies.
+            // TODO:
+            // Store all found dependecies in List<Element> Dependecies;
+            // TODO: 
+            // Currently custom types only can reference primtive types!
+
+            Stage4(ctx);
+
+            //
+            // 5th stage: parse references
+            //
+
+            Stage5(ctx);
+
+            return ctx.Model;
         }
 
-        public static int GetInt(string number)
-        {
-            return int.Parse(number);
-        }
+        #endregion
 
-        public static float GetFloat(string number)
-        {
-            return float.Parse(number, System.Globalization.CultureInfo.GetCultureInfo("en-GB"));
-        }
+        #region Generate
 
-        public static string GetString(float number)
-        {
-            return number.ToString(System.Globalization.CultureInfo.GetCultureInfo("en-GB"));
-        }
+        /*
+		private static StringBuilder sb = new StringBuilder();
+
+		public static string Generate(ICollection<KeyValuePair<int, Element>> elements)
+		{
+			//var sb = new StringBuilder(); 
+			sb.Length = 0;
+
+			//var sw = System.Diagnostics.Stopwatch.StartNew ();
+
+			foreach (var pair in elements) 
+			{
+				var element = pair.Value;
+
+				if (element is Pin)
+				{
+					var pin = element as Pin;
+					//string str = string.Format ("Pin;{0};{1};{2}", pin.Id, pin.X, pin.Y);
+					//sb.AppendLine (str);
+
+					sb.Append (Constants.Pin); 
+					sb.Append (Constants.Separator);
+
+					sb.Append (pin.Id);
+					sb.Append (Constants.Separator);
+
+					sb.Append (pin.X);
+					sb.Append (Constants.Separator);
+
+					sb.Append (pin.Y);
+					sb.Append (Constants.NewLine);
+				}
+				else if (element is Wire) 
+				{
+					var wire = element as Wire;
+					//string str = string.Format ("Wire;{0};{1};{2};{3};{4}", 
+					//                            wire.Id, 
+					//                            wire.Start.Parent != null ? wire.Start.Parent.Id : StandalonePinId, 
+					//                            wire.Start.Id, 
+					//                            wire.End.Parent != null ? wire.End.Parent.Id : StandalonePinId, 
+					//                            wire.End.Id);
+					//sb.AppendLine (str);
+
+					sb.Append (Constants.Wire); 
+					sb.Append (Constants.Separator);
+
+					sb.Append (wire.Id);
+					sb.Append (Constants.Separator);
+
+					sb.Append (wire.Start.Parent != null ? wire.Start.Parent.Id : StandalonePinId);
+					sb.Append (Constants.Separator);
+
+					sb.Append (wire.Start.Id);
+					sb.Append (Constants.Separator);
+
+					sb.Append (wire.End.Parent != null ? wire.End.Parent.Id : StandalonePinId);
+					sb.Append (Constants.Separator);
+
+					sb.Append (wire.End.Id);
+					sb.Append (Constants.NewLine);
+				}
+				else if (element is AndGate) 
+				{
+					var andGate = element as AndGate;
+					//string str = string.Format ("AndGate;{0};{1};{2}", andGate.Id, andGate.X, andGate.Y);
+					//sb.AppendLine (str);
+
+					sb.Append (TagAndGate); 
+					sb.Append (Constants.Separator);
+
+					sb.Append (andGate.Id);
+					sb.Append (Constants.Separator);
+
+					sb.Append (andGate.X);
+					sb.Append (Constants.Separator);
+
+					sb.Append (andGate.Y);
+					sb.Append (Constants.NewLine);
+				}
+				else if (element is OrGate) 
+				{
+					var orGate = element as OrGate;
+					//string str = string.Format ("OrGate;{0};{1};{2}", orGate.Id, orGate.X, orGate.Y);
+					//sb.AppendLine (str);
+
+					sb.Append (TagOrGate); 
+					sb.Append (Constants.Separator);
+
+					sb.Append (orGate.Id);
+					sb.Append (Constants.Separator);
+
+					sb.Append (orGate.X);
+					sb.Append (Constants.Separator);
+
+					sb.Append (orGate.Y);
+					sb.Append (Constants.NewLine);
+				}
+			}
+
+			//sw.Stop ();
+			//Console.WriteLine ("Generate: {0}ms", sw.Elapsed.TotalMilliseconds);
+
+			return sb.ToString();
+		}
+		*/
 
         #endregion
     }
@@ -1525,24 +1469,24 @@ namespace CanvasDiagram.Droid.Test
 
     #endregion
 
-    #region BaseStyle
+    #region Styles
 
     public abstract class BaseStyle<E, S>
     {
         #region Constructor
 
         public BaseStyle(IRenderer<E, S> renderer,
-                    int id, 
-                    string type, 
+                    int id,
+                    string type,
                     int colorA,
                     int colorR,
                     int colorG,
                     int colorB,
                     bool isFilled,
                     float strokeWidth)
-        { 
+        {
             Renderer = renderer;
-            Id = id; 
+            Id = id;
             Type = type;
             ColorA = colorA;
             ColorR = colorR;
@@ -1582,20 +1526,12 @@ namespace CanvasDiagram.Droid.Test
         }
     }
 
-    #endregion
-
-    #region HorizontalAlignment
-
     public static class HorizontalAlignment
     {
         public const int Left = 0;
         public const int Center = 1;
         public const int Right = 2;
     }
-
-    #endregion
-
-    #region VerticalAlignment
 
     public static class VerticalAlignment
     {
@@ -1604,113 +1540,13 @@ namespace CanvasDiagram.Droid.Test
         public const int Bottom = 2;
     }
 
-    #endregion
-
-    #region ArcStyle
-
-    public class ArcStyle : BaseStyle<Arc, ArcStyle>
-    {
-        #region Constructor
-
-        public ArcStyle(IRenderer<Arc, ArcStyle> renderer,
-                   int id, 
-                   string type, 
-                   int colorA,
-                   int colorR,
-                   int colorG,
-                   int colorB,
-                   bool isFilled,
-                   float strokeWidth)
-            : base(renderer,
-            id, 
-            type, 
-            colorA,
-            colorR,
-            colorG,
-            colorB,
-            isFilled,
-            strokeWidth)
-        {
-        }
-
-        #endregion
-    }
-
-    #endregion
-
-    #region CircleStyle
-
-    public class CircleStyle : BaseStyle<Circle, CircleStyle>
-    {
-        #region Constructor
-
-        public CircleStyle(IRenderer<Circle, CircleStyle> renderer,
-                      int id, 
-                      string type, 
-                      int colorA,
-                      int colorR,
-                      int colorG,
-                      int colorB,
-                      bool isFilled,
-                      float strokeWidth)
-            : base(renderer,
-            id, 
-            type, 
-            colorA,
-            colorR,
-            colorG,
-            colorB,
-            isFilled,
-            strokeWidth)
-        {
-        }
-
-        #endregion
-    }
-
-    #endregion
-
-    #region LineStyle
-
-    public class LineStyle : BaseStyle<Line, LineStyle>
-    {
-        #region Constructor
-
-        public LineStyle(IRenderer<Line, LineStyle> renderer,
-                    int id, 
-                    string type, 
-                    int colorA,
-                    int colorR,
-                    int colorG,
-                    int colorB,
-                    bool isFilled,
-                    float strokeWidth)
-            : base(renderer,
-            id, 
-            type, 
-            colorA,
-            colorR,
-            colorG,
-            colorB,
-            isFilled,
-            strokeWidth)
-        {
-        }
-
-        #endregion
-    }
-
-    #endregion
-
-    #region PinStyle
-
     public class PinStyle : BaseStyle<Pin, PinStyle>
     {
         #region Constructor
 
         public PinStyle(IRenderer<Pin, PinStyle> renderer,
-                   int id, 
-                   string type, 
+                   int id,
+                   string type,
                    int colorA,
                    int colorR,
                    int colorG,
@@ -1719,8 +1555,8 @@ namespace CanvasDiagram.Droid.Test
                    float strokeWidth,
                    float radius)
             : base(renderer,
-            id, 
-            type, 
+            id,
+            type,
             colorA,
             colorR,
             colorG,
@@ -1741,26 +1577,22 @@ namespace CanvasDiagram.Droid.Test
         #endregion
     }
 
-    #endregion
-
-    #region RectangleStyle
-
-    public class RectangleStyle : BaseStyle<Rectangle, RectangleStyle>
+    public class LineStyle : BaseStyle<Line, LineStyle>
     {
         #region Constructor
 
-        public RectangleStyle(IRenderer<Rectangle, RectangleStyle> renderer,
-                         int id, 
-                         string type, 
-                         int colorA,
-                         int colorR,
-                         int colorG,
-                         int colorB,
-                         bool isFilled,
-                         float strokeWidth)
+        public LineStyle(IRenderer<Line, LineStyle> renderer,
+                    int id,
+                    string type,
+                    int colorA,
+                    int colorR,
+                    int colorG,
+                    int colorB,
+                    bool isFilled,
+                    float strokeWidth)
             : base(renderer,
-            id, 
-            type, 
+            id,
+            type,
             colorA,
             colorR,
             colorG,
@@ -1773,17 +1605,97 @@ namespace CanvasDiagram.Droid.Test
         #endregion
     }
 
-    #endregion
+    public class ArcStyle : BaseStyle<Arc, ArcStyle>
+    {
+        #region Constructor
 
-    #region TextStyle
+        public ArcStyle(IRenderer<Arc, ArcStyle> renderer,
+                   int id,
+                   string type,
+                   int colorA,
+                   int colorR,
+                   int colorG,
+                   int colorB,
+                   bool isFilled,
+                   float strokeWidth)
+            : base(renderer,
+            id,
+            type,
+            colorA,
+            colorR,
+            colorG,
+            colorB,
+            isFilled,
+            strokeWidth)
+        {
+        }
+
+        #endregion
+    }
+
+    public class CircleStyle : BaseStyle<Circle, CircleStyle>
+    {
+        #region Constructor
+
+        public CircleStyle(IRenderer<Circle, CircleStyle> renderer,
+                      int id,
+                      string type,
+                      int colorA,
+                      int colorR,
+                      int colorG,
+                      int colorB,
+                      bool isFilled,
+                      float strokeWidth)
+            : base(renderer,
+            id,
+            type,
+            colorA,
+            colorR,
+            colorG,
+            colorB,
+            isFilled,
+            strokeWidth)
+        {
+        }
+
+        #endregion
+    }
+
+    public class RectangleStyle : BaseStyle<Rectangle, RectangleStyle>
+    {
+        #region Constructor
+
+        public RectangleStyle(IRenderer<Rectangle, RectangleStyle> renderer,
+                         int id,
+                         string type,
+                         int colorA,
+                         int colorR,
+                         int colorG,
+                         int colorB,
+                         bool isFilled,
+                         float strokeWidth)
+            : base(renderer,
+            id,
+            type,
+            colorA,
+            colorR,
+            colorG,
+            colorB,
+            isFilled,
+            strokeWidth)
+        {
+        }
+
+        #endregion
+    }
 
     public class TextStyle : BaseStyle<Text, TextStyle>
     {
         #region Constructor
 
         public TextStyle(IRenderer<Text, TextStyle> renderer,
-                    int id, 
-                    string type, 
+                    int id,
+                    string type,
                     int colorA,
                     int colorR,
                     int colorG,
@@ -1794,8 +1706,8 @@ namespace CanvasDiagram.Droid.Test
                     int verticalAlignment,
                     float size)
             : base(renderer,
-            id, 
-            type, 
+            id,
+            type,
             colorA,
             colorR,
             colorG,
@@ -1823,97 +1735,7 @@ namespace CanvasDiagram.Droid.Test
 
     #endregion
 
-    #region Android Canvas Renderers
-
-    public class ArcRenderer : IRenderer<Arc, ArcStyle>
-    {
-        #region IRenderer implementation
-
-        private Paint paint = new Paint();
-        private ArcStyle style = null;
-
-        public void Initialize(ArcStyle style)
-        {
-            this.style = style;
-            this.paint.Color = Color.Argb(style.ColorA, style.ColorR, style.ColorG, style.ColorB);
-            this.paint.AntiAlias = true;
-            this.paint.StrokeWidth = style.StrokeWidth;
-            this.paint.StrokeCap = Paint.Cap.Square;
-            this.paint.SetStyle(style.IsFilled ? Paint.Style.FillAndStroke : Paint.Style.Stroke);
-        }
-
-        public void Render(object canvas, Arc element)
-        {
-            var _canvas = canvas as Canvas;
-            //
-        }
-
-        #endregion
-    }
-
-    #endregion
-
-    #region Android Canvas Renderers
-
-    public class CircleRenderer : IRenderer<Circle, CircleStyle>
-    {
-        #region IRenderer implementation
-
-        private Paint paint = new Paint();
-        private CircleStyle style = null;
-
-        public void Initialize(CircleStyle style)
-        {
-            this.style = style;
-            this.paint.Color = Color.Argb(style.ColorA, style.ColorR, style.ColorG, style.ColorB);
-            this.paint.AntiAlias = true;
-            this.paint.StrokeWidth = style.StrokeWidth;
-            this.paint.StrokeCap = Paint.Cap.Square;
-            this.paint.SetStyle(style.IsFilled ? Paint.Style.FillAndStroke : Paint.Style.Stroke);
-        }
-
-        public void Render(object canvas, Circle element)
-        {
-            var _canvas = canvas as Canvas;
-            //
-        }
-
-        #endregion
-    }
-
-    #endregion
-
-    #region Android Canvas Renderers
-
-    public class LineRenderer : IRenderer<Line, LineStyle>
-    {
-        #region IRenderer implementation
-
-        private Paint paint = new Paint();
-        private LineStyle style = null;
-
-        public void Initialize(LineStyle style)
-        {
-            this.style = style;
-            this.paint.Color = Color.Argb(style.ColorA, style.ColorR, style.ColorG, style.ColorB);
-            this.paint.AntiAlias = true;
-            this.paint.StrokeWidth = style.StrokeWidth;
-            this.paint.StrokeCap = Paint.Cap.Square;
-            this.paint.SetStyle(style.IsFilled ? Paint.Style.FillAndStroke : Paint.Style.Stroke);
-        }
-
-        public void Render(object canvas, Line element)
-        {
-            var _canvas = canvas as Canvas;
-            _canvas.DrawLine(element.Start.X, element.Start.Y, element.End.X, element.End.Y, paint);
-        }
-
-        #endregion
-    }
-
-    #endregion
-
-    #region Android Canvas Renderers
+    #region Renderers
 
     public class PinRenderer : IRenderer<Pin, PinStyle>
     {
@@ -1941,9 +1763,83 @@ namespace CanvasDiagram.Droid.Test
         #endregion
     }
 
-    #endregion
+    public class LineRenderer : IRenderer<Line, LineStyle>
+    {
+        #region IRenderer implementation
 
-    #region Android Canvas Renderers
+        private Paint paint = new Paint();
+        private LineStyle style = null;
+
+        public void Initialize(LineStyle style)
+        {
+            this.style = style;
+            this.paint.Color = Color.Argb(style.ColorA, style.ColorR, style.ColorG, style.ColorB);
+            this.paint.AntiAlias = true;
+            this.paint.StrokeWidth = style.StrokeWidth;
+            this.paint.StrokeCap = Paint.Cap.Square;
+            this.paint.SetStyle(style.IsFilled ? Paint.Style.FillAndStroke : Paint.Style.Stroke);
+        }
+
+        public void Render(object canvas, Line element)
+        {
+            var _canvas = canvas as Canvas;
+            _canvas.DrawLine(element.Start.X, element.Start.Y, element.End.X, element.End.Y, paint);
+        }
+
+        #endregion
+    }
+
+    public class ArcRenderer : IRenderer<Arc, ArcStyle>
+    {
+        #region IRenderer implementation
+
+        private Paint paint = new Paint();
+        private ArcStyle style = null;
+
+        public void Initialize(ArcStyle style)
+        {
+            this.style = style;
+            this.paint.Color = Color.Argb(style.ColorA, style.ColorR, style.ColorG, style.ColorB);
+            this.paint.AntiAlias = true;
+            this.paint.StrokeWidth = style.StrokeWidth;
+            this.paint.StrokeCap = Paint.Cap.Square;
+            this.paint.SetStyle(style.IsFilled ? Paint.Style.FillAndStroke : Paint.Style.Stroke);
+        }
+
+        public void Render(object canvas, Arc element)
+        {
+            var _canvas = canvas as Canvas;
+            //
+        }
+
+        #endregion
+    }
+
+    public class CircleRenderer : IRenderer<Circle, CircleStyle>
+    {
+        #region IRenderer implementation
+
+        private Paint paint = new Paint();
+        private CircleStyle style = null;
+
+        public void Initialize(CircleStyle style)
+        {
+            this.style = style;
+            this.paint.Color = Color.Argb(style.ColorA, style.ColorR, style.ColorG, style.ColorB);
+            this.paint.AntiAlias = true;
+            this.paint.StrokeWidth = style.StrokeWidth;
+            this.paint.StrokeCap = Paint.Cap.Square;
+            this.paint.SetStyle(style.IsFilled ? Paint.Style.FillAndStroke : Paint.Style.Stroke);
+        }
+
+        public void Render(object canvas, Circle element)
+        {
+            var _canvas = canvas as Canvas;
+            //
+        }
+
+        #endregion
+    }
 
     public class RectangleRenderer : IRenderer<Rectangle, RectangleStyle>
     {
@@ -1971,48 +1867,6 @@ namespace CanvasDiagram.Droid.Test
         #endregion
     }
 
-    #endregion
-
-    #region Android RendererFactory
-
-    public class RendererFactory : IRendererFactory
-    {
-        public string RenererSuffix { get; private set; }
-        // "Renderer"
-        public string RenderersNamespace { get; private set; }
-        // "CanvasDiagram.Droid.Renderers"
-
-        public RendererFactory(string renererSuffix, string renderersNamespace)
-        {
-            RenererSuffix = renererSuffix;
-            RenderersNamespace = renderersNamespace;
-        }
-
-        public Func<IRenderer<TElement, TStyle>> GetActivator<TElement, TStyle>()
-        {
-            Type renderer = Type.GetType(string.Concat(RenderersNamespace, '.', typeof(TElement).Name, RenererSuffix));
-            ConstructorInfo constructor = renderer.GetConstructor(Type.EmptyTypes);
-
-            Func<IRenderer<TElement, TStyle>> activator = (Func<IRenderer<TElement, TStyle>>)
-				(
-                                                     Expression.Lambda 
-					(
-                                                         Expression.Convert 
-						(
-                                                             Expression.New(constructor), 
-                                                             typeof(IRenderer<TElement, TStyle>)
-                                                         )
-                                                     ).Compile()
-                                                 );
-
-            return activator;
-        }
-    }
-
-    #endregion
-
-    #region Android Canvas Renderers
-
     public class TextRenderer : IRenderer<Text, TextStyle>
     {
         #region IRenderer implementation
@@ -2037,6 +1891,29 @@ namespace CanvasDiagram.Droid.Test
         }
 
         #endregion
+    }
+
+    public class RendererFactory : IRendererFactory
+    {
+        public string RenererSuffix { get; private set; }
+        // "Renderer"
+        public string RenderersNamespace { get; private set; }
+        // "CanvasDiagram.Droid.Renderers"
+
+        public RendererFactory(string renererSuffix, string renderersNamespace)
+        {
+            RenererSuffix = renererSuffix;
+            RenderersNamespace = renderersNamespace;
+        }
+
+        public Func<IRenderer<TElement, TStyle>> GetActivator<TElement, TStyle>()
+        {
+            Type renderer = Type.GetType(string.Concat(RenderersNamespace, '.', typeof(TElement).Name, RenererSuffix));
+            ConstructorInfo constructor = renderer.GetConstructor(Type.EmptyTypes);
+            Func<IRenderer<TElement, TStyle>> activator = (Func<IRenderer<TElement, TStyle>>)(
+                Expression.Lambda(Expression.Convert(Expression.New(constructor), typeof(IRenderer<TElement, TStyle>))).Compile());
+            return activator;
+        }
     }
 
     #endregion
