@@ -72,10 +72,7 @@
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="MathUtil.cs" />
-    <Compile Include="PolygonF.cs" />
     <Compile Include="Editor.cs" />
-    <Compile Include="DiagramRepository.cs" />
     <Compile Include="DataHolder.cs" />
     <Compile Include="BackgroundService.cs" />
     <Compile Include="InputActions.cs" />
@@ -86,12 +83,14 @@
     <Compile Include="DiagramList.cs" />
     <Compile Include="DiagramListAdapter.cs" />
     <Compile Include="DiagramProperties.cs" />
-    <Compile Include="Diagram.cs" />
-    <Compile Include="AndGate.cs" />
-    <Compile Include="Element.cs" />
-    <Compile Include="OrGate.cs" />
-    <Compile Include="Pin.cs" />
-    <Compile Include="Wire.cs" />
+    <Compile Include="Model\AndGate.cs" />
+    <Compile Include="Model\OrGate.cs" />
+    <Compile Include="Model\Pin.cs" />
+    <Compile Include="Model\Element.cs" />
+    <Compile Include="Repository\Diagram.cs" />
+    <Compile Include="Repository\Repository.cs" />
+    <Compile Include="Model\Wire.cs" />
+    <Compile Include="Math.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -108,6 +107,7 @@
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Model\" />
+    <Folder Include="Repository\" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="sqlite-net">

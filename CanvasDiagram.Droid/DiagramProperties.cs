@@ -26,7 +26,7 @@ namespace CanvasDiagram.Droid
         private Button buttonSave;
         private EditText editTextTitle;
         private EditText editTextModel;
-        private DiagramRepository repository;
+        private Repository repository;
         private Diagram currentDiagram;
 
         protected override void OnCreate(Bundle bundle)
@@ -36,7 +36,10 @@ namespace CanvasDiagram.Droid
 
             SetContentView(Resource.Layout.DiagramProperties);
 
-            repository = new DiagramRepository();
+            repository = new Repository(
+                System.IO.Path.Combine(
+                    System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), 
+                    "diagrams.db"));
 
             // get diagram from repository
             bool isExistingDiagram = false;

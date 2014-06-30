@@ -60,13 +60,15 @@ namespace CanvasDiagram.Droid
             float ey = End.Y;
 
             // start point bounds
-            StartBounds = new RectF(sx - radius - offset, 
+            StartBounds = new RectF(
+                sx - radius - offset, 
                 sy - radius - offset, 
                 sx + radius + offset, 
                 sy + radius + offset);
 
             // end point bounds
-            EndBounds = new RectF(ex - radius - offset, 
+            EndBounds = new RectF(
+                ex - radius - offset, 
                 ey - radius - offset, 
                 ex + radius + offset, 
                 ey + radius + offset);
@@ -89,12 +91,14 @@ namespace CanvasDiagram.Droid
             float ex = End.X;
             float ey = End.Y;
 
-            StartBounds.Set(sx - radius - offset, 
+            StartBounds.Set(
+                sx - radius - offset, 
                 sy - radius - offset, 
                 sx + radius + offset, 
                 sy + radius + offset);
 
-            EndBounds.Set(ex - radius - offset, 
+            EndBounds.Set(
+                ex - radius - offset, 
                 ey - radius - offset, 
                 ex + radius + offset, 
                 ey + radius + offset);
@@ -104,7 +108,8 @@ namespace CanvasDiagram.Droid
 
         private void UpdateWireBounds(float sx, float sy, float ex, float ey)
         {
-            if ((ex > sx && ey < sy) || (ex < sx && ey > sy))
+            if ((ex > sx && ey < sy) 
+                || (ex < sx && ey > sy))
             {
                 WireBounds.SetX(0, StartBounds.Left);
                 WireBounds.SetX(1, StartBounds.Right);

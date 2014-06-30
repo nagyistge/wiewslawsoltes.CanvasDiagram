@@ -21,8 +21,11 @@ namespace CanvasDiagram.Droid
     public class DrawingService
     {
         public ConcurrentDictionary<int, Element> Elements { get; set; }
+
         public string CurrentModel { get; set; }
+
         public int SurfaceWidth { get; set; }
+
         public int SurfaceHeight { get; set; }
 
         private BackgroundService<InputArgs> Service;
@@ -440,7 +443,7 @@ namespace CanvasDiagram.Droid
 
         public void PinchToZoom(float x0, float y0, float x1, float y1)
         {
-            float currentDist = MathUtil.LineDistance(x0, y0, x1, y1);
+            float currentDist = LineUtil.Distance(x0, y0, x1, y1);
 
             if (currentDist > minPinchToZoomDistance)
             {
@@ -458,13 +461,13 @@ namespace CanvasDiagram.Droid
         public void StartPinchToZoom(float x0, float y0, float x1, float y1)
         {
             // update previous distance
-            previousDist = MathUtil.LineDistance(x0, y0, x1, y1);
+            previousDist = LineUtil.Distance(x0, y0, x1, y1);
 
             if (previousDist > minPinchToZoomDistance)
             {
                 savedMatrix.Set(matrix);
 
-                MathUtil.LineMiddle(ref middle, x0, y0, x1, y1);
+                LineUtil.Middle(ref middle, x0, y0, x1, y1);
             }
         }
 
@@ -504,7 +507,7 @@ namespace CanvasDiagram.Droid
             var a = new PointF(start.X, start.Y);
             var b = new PointF(end.X, end.Y);
             var p = new PointF(x, y);
-            var insert = findClosest ? MathUtil.ClosestPointOnLine(a, b, p) : p;
+            var insert = findClosest ? VectorUtil.NearestPointOnLine(a, b, p) : p;
 
             // create standalone pin
             var pin = InsertPin(insert.X, insert.Y, false);

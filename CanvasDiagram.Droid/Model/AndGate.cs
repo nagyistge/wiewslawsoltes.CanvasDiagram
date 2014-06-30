@@ -15,11 +15,6 @@ namespace CanvasDiagram.Droid
         public AndGate(int id, float x, float y)
             : base()
         {
-            Initialize(id, x, y);
-        }
-
-        private void Initialize(int id, float x, float y)
-        {
             float width = 30f;
             float height = 30f;
             float radius = 4f;

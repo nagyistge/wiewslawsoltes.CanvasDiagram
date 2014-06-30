@@ -19,17 +19,13 @@ namespace CanvasDiagram.Droid
         public Pin(int id, Element parent, float x, float y, float radius, float offset)
             : base()
         {
-            Initialize(id, parent, x, y, radius, offset);
-        }
-
-        private void Initialize(int id, Element parent, float x, float y, float radius, float offset)
-        {
             Id = id;
             X = x;
             Y = y;
             Radius = radius;
             HitOffset = offset;
-            Bounds = new RectF(x - radius - offset, 
+            Bounds = new RectF(
+                x - radius - offset, 
                 y - radius - offset, 
                 x + radius + offset, 
                 y + radius + offset);
@@ -43,7 +39,8 @@ namespace CanvasDiagram.Droid
             float y = Y + dy;
             X = x; 
             Y = y;
-            Bounds.Set(x - Radius - HitOffset, 
+            Bounds.Set(
+                x - Radius - HitOffset, 
                 y - Radius - HitOffset, 
                 x + Radius + HitOffset, 
                 y + Radius + HitOffset);

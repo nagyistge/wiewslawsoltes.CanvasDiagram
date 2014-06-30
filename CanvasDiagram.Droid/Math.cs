@@ -1,7 +1,63 @@
 using System;
+using Android.Graphics;
 
 namespace CanvasDiagram.Droid
 {
+    public static class VectorUtil
+    {
+        public static float Dot(PointF a, PointF b)
+        {
+            return (a.X * b.X) + (a.Y * b.Y);
+        }
+
+        public static PointF Multiply(PointF a, float scalar)
+        {
+            return new PointF(a.X * scalar, a.Y * scalar);
+        }
+
+        public static PointF Project(PointF a, PointF b)
+        {
+            return Multiply(b, Dot(a, b) / Dot(b, b));
+        }
+
+        public static PointF Substract(PointF a, PointF b)
+        {
+            return new PointF(a.X - b.X, a.Y - b.Y);
+        }
+
+        public static PointF Add(PointF a, PointF b)
+        {
+            return new PointF(a.X + b.X, a.Y + b.Y);
+        }
+
+        public static PointF NearestPointOnLine(PointF a, PointF b, PointF p)
+        {
+            // http://en.wikipedia.org/wiki/Vector_projection
+            return Add(
+                Project(
+                    Substract(p, a), 
+                    Substract(b, a)), 
+                a);
+        }
+    }
+
+    public static class LineUtil
+    {
+        public static float Distance(float x1, float y1, float x2, float y2)
+        {
+            float dx = x1 - x2;
+            float dy = y1 - y2;
+            return (float)Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        public static void Middle(ref PointF point, float x1, float y1, float x2, float y2)
+        {
+            float x = x1 + x2;
+            float y = y1 + y2;
+            point.Set(x / 2f, y / 2f);
+        }
+    }
+
     public class PolygonF
     {
         public int Sides { get { return polySides; } }

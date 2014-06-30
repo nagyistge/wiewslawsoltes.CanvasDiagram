@@ -17,11 +17,6 @@ namespace CanvasDiagram.Droid
         public OrGate(int id, float x, float y, int counter)
             : base()
         {
-            Initialize(id, x, y, counter);
-        }
-
-        private void Initialize(int id, float x, float y, int counter)
-        {
             float width = 30f;
             float height = 30f;
             float radius = 4f;

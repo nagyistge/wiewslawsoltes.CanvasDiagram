@@ -34,7 +34,9 @@ namespace CanvasDiagram.Droid
             if (Pins != null)
             {
                 for (int i = 0; i < Pins.Count; i++)
+                {
                     Pins[i].Update(dx, dy);
+                }
             }
         }
     }

@@ -22,7 +22,7 @@ namespace CanvasDiagram.Droid
     public class DiagramEditor : Activity
     {
         private DrawingView drawingView;
-        private DiagramRepository repository;
+        private Repository repository;
         private Diagram currentDiagram;
 
         protected override void OnCreate(Bundle bundle)
@@ -30,7 +30,10 @@ namespace CanvasDiagram.Droid
             //RequestWindowFeature(WindowFeatures.NoTitle);
             base.OnCreate(bundle);
 
-            repository = new DiagramRepository();
+            repository = new Repository(
+                System.IO.Path.Combine(
+                    System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), 
+                    "diagrams.db"));
 
             // create drawing canvas
             drawingView = new DrawingView(this);

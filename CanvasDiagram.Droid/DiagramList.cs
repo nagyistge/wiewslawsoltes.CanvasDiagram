@@ -22,7 +22,7 @@ namespace CanvasDiagram.Droid
     public class DiagramList : Activity
     {
         private ListView listViewDiagrams;
-        private DiagramRepository repository;
+        private Repository repository;
         private IList<Diagram> diagrams;
 
         protected override void OnCreate(Bundle bundle)
@@ -31,41 +31,10 @@ namespace CanvasDiagram.Droid
             base.OnCreate(bundle);
             SetContentView(Resource.Layout.DiagramList);
 
-            /*
-
-            //
-            // Begin: new Core.Test
-            //
-
-            try
-            {
-                var sb = new StringBuilder ();
-                var nl = CanvasDiagram.Core.Test.Constants.NewLine;
-
-                sb.Append ("PS;0;255;255;0;0;1;1.0;4.0"); sb.Append (nl);
-                sb.Append ("LS;1;255;255;0;0;0;1.0"); sb.Append (nl);
-                sb.Append ("RS;2;255;255;0;0;0;1.0"); sb.Append (nl);
-                sb.Append ("CS;3;255;255;0;0;0;1.0"); sb.Append (nl);
-                sb.Append ("AS;4;255;255;0;0;0;1.0"); sb.Append (nl);
-                sb.Append ("TS;5;255;255;0;0;0;1.0;1;1;14.0"); sb.Append (nl);
-
-                var data = sb.ToString ();
-                var factory = new CanvasDiagram.Droid.Renderers.RendererFactory ("Renderer", "CanvasDiagram.Droid.Renderers");
-                var model = CanvasDiagram.Core.Test.Editor.Parse (data, factory);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine ("Parse Error: {0}", ex.Message);
-                Console.WriteLine (ex.StackTrace);
-            }
-
-            //
-            // End: new Core.Test
-            //
-
-            */
-
-            repository = new DiagramRepository();
+            repository = new Repository(
+                System.IO.Path.Combine(
+                    System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), 
+                    "diagrams.db"));
 
             // connect view elements
             listViewDiagrams = FindViewById<ListView>(Resource.Id.listViewDiagrams);
