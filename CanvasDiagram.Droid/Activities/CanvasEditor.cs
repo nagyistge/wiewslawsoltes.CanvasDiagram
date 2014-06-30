@@ -48,9 +48,9 @@ namespace CanvasDiagram.Droid
                 currentDiagram = new Diagram();
 
             // create diagram
-            ModelSerializer.Deserialize(currentDiagram.Model, drawingView.Drawing.Elements);
-            drawingView.Drawing.UpdateNextId();
-            drawingView.Drawing.CurrentModel = ModelSerializer.Serialize(drawingView.Drawing.Elements);
+            TextSerializer.Deserialize(currentDiagram.Model, drawingView.Model.Elements);
+            drawingView.Model.UpdateNextId();
+            drawingView.Model.CurrentModel = TextSerializer.Serialize(drawingView.Model.Elements);
 
             // set content view to drawing canvas
             SetContentView(drawingView);
@@ -65,7 +65,7 @@ namespace CanvasDiagram.Droid
             base.OnStop();
 
             // store diagram model
-            currentDiagram.Model = ModelSerializer.Serialize(drawingView.Drawing.Elements);
+            currentDiagram.Model = TextSerializer.Serialize(drawingView.Model.Elements);
             currentDiagram.Id = repository.Save(currentDiagram);
 
             //Console.WriteLine ("DiagramEditor OnStop");
@@ -78,7 +78,7 @@ namespace CanvasDiagram.Droid
             //Console.WriteLine ("DiagramEditor OnPause");
 
             // stop drawing thread
-            drawingView.Drawing.Stop();
+            drawingView.Model.Stop();
         }
 
         protected override void OnResume()
@@ -88,7 +88,7 @@ namespace CanvasDiagram.Droid
             //Console.WriteLine ("DiagramEditor OnResume");
 
             // start drawing thread
-            drawingView.Drawing.Start(drawingView.Holder);
+            drawingView.Model.Start(drawingView.Holder);
         }
 
         private const int ItemGroupInsert = 0;
@@ -109,32 +109,32 @@ namespace CanvasDiagram.Droid
                 case ItemInsertAndGate:
                     {
                         float x, y;
-                        drawingView.Drawing.Snapshot();
-                        drawingView.Drawing.GetCenterPoint(out x, out y);
-                        drawingView.Drawing.InsertAndGate(x - 15f, y - 15f, true);
+                        drawingView.Model.Snapshot();
+                        drawingView.Model.GetCenterPoint(out x, out y);
+                        drawingView.Model.InsertAndGate(x - 15f, y - 15f, true);
                     }
                     return true;
                 case ItemInsertOrGate:
                     {
                         float x, y;
-                        drawingView.Drawing.Snapshot();
-                        drawingView.Drawing.GetCenterPoint(out x, out y);
-                        drawingView.Drawing.InsertOrGate(x - 15f, y - 15f, true);
+                        drawingView.Model.Snapshot();
+                        drawingView.Model.GetCenterPoint(out x, out y);
+                        drawingView.Model.InsertOrGate(x - 15f, y - 15f, true);
                     }
                     return true;
                 case ItemResetDiagram:
-                    drawingView.Drawing.Snapshot();
-                    drawingView.Drawing.Reset();
+                    drawingView.Model.Snapshot();
+                    drawingView.Model.Reset();
                     return true;
                 case ItemResetZoom:
-                    drawingView.Drawing.ResetZoom();
-                    drawingView.Drawing.RedrawCanvas();
+                    drawingView.Model.ResetZoom();
+                    drawingView.Model.RedrawCanvas();
                     return true;
                 case ItemEditUndo:
-                    drawingView.Drawing.Undo();
+                    drawingView.Model.Undo();
                     return true;
                 case ItemEditRedo:
-                    drawingView.Drawing.Redo();
+                    drawingView.Model.Redo();
                     return true;
                 default:
                     return base.OnContextItemSelected(item);

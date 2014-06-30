@@ -72,8 +72,6 @@
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DataHolder.cs" />
-    <Compile Include="BackgroundService.cs" />
     <Compile Include="Model\AndGate.cs" />
     <Compile Include="Model\OrGate.cs" />
     <Compile Include="Model\Pin.cs" />
@@ -82,14 +80,12 @@
     <Compile Include="Repository\Repository.cs" />
     <Compile Include="Model\Wire.cs" />
     <Compile Include="Math.cs" />
-    <Compile Include="Input.cs" />
-    <Compile Include="ModelSerializer.cs" />
+    <Compile Include="Activities\CanvasEditor.cs" />
+    <Compile Include="Activities\CanvasList.cs" />
+    <Compile Include="Activities\CanvasListAdapter.cs" />
+    <Compile Include="Activities\CanvasProperties.cs" />
     <Compile Include="CanvasView.cs" />
-    <Compile Include="CanvasEditor.cs" />
-    <Compile Include="CanvasList.cs" />
-    <Compile Include="CanvasProperties.cs" />
-    <Compile Include="CanvasListAdapter.cs" />
-    <Compile Include="CanvasDrawing.cs" />
+    <Compile Include="TextSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -107,6 +103,7 @@
   <ItemGroup>
     <Folder Include="Model\" />
     <Folder Include="Repository\" />
+    <Folder Include="Activities\" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="sqlite-net">
