@@ -9,7 +9,7 @@ using Android.App;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("")]
 [assembly: AssemblyProduct ("Canvas Diagram Editor")]
-[assembly: AssemblyCopyright ("Copyright © Wiesław Šoltés 2013")]
+[assembly: AssemblyCopyright ("Copyright © Wiesław Šoltés 2013-2014")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 // The assembly version has the format "{Major}.{Minor}.{Build}.{Revision}".
