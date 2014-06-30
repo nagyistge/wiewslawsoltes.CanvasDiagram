@@ -1,3 +1,4 @@
 CanvasDiagram
+=============
 
 Canvas diagram editor.
