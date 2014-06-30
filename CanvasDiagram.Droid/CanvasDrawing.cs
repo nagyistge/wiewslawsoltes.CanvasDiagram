@@ -18,14 +18,11 @@ using Android.Widget;
 
 namespace CanvasDiagram.Droid
 {
-    public class DrawingService
+    public class CanvasDrawing
     {
         public ConcurrentDictionary<int, Element> Elements { get; set; }
-
         public string CurrentModel { get; set; }
-
         public int SurfaceWidth { get; set; }
-
         public int SurfaceHeight { get; set; }
 
         private BackgroundService<InputArgs> Service;
@@ -95,7 +92,9 @@ namespace CanvasDiagram.Droid
             try
             {
                 if (Service == null)
+                {
                     Service = new BackgroundService<InputArgs>();
+                }
 
                 ISurfaceHolder holder = surfaceHolder;
                 Canvas canvas = null;
@@ -1351,7 +1350,7 @@ namespace CanvasDiagram.Droid
 
         public void Snapshot()
         {
-            string model = Editor.Serialize(this.Elements);
+            string model = ModelSerializer.Serialize(this.Elements);
             undoStack.Push(model);
 
             redoStack.Clear();
@@ -1365,11 +1364,11 @@ namespace CanvasDiagram.Droid
             string model;
             if (undoStack.TryPop(out model))
             {
-                string current = Editor.Serialize(this.Elements);
+                string current = ModelSerializer.Serialize(this.Elements);
                 redoStack.Push(current);
 
                 Clear();
-                Editor.Deserialize(model, this.Elements);
+                ModelSerializer.Deserialize(model, this.Elements);
                 UpdateNextId();
 
                 RedrawCanvas();
@@ -1384,11 +1383,11 @@ namespace CanvasDiagram.Droid
             string model;
             if (redoStack.TryPop(out model))
             {
-                string current = Editor.Serialize(this.Elements);
+                string current = ModelSerializer.Serialize(this.Elements);
                 undoStack.Push(current);
 
                 Clear();
-                Editor.Deserialize(model, this.Elements);
+                ModelSerializer.Deserialize(model, this.Elements);
                 UpdateNextId();
 
                 RedrawCanvas();

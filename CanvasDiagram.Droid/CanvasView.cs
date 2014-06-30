@@ -18,19 +18,18 @@ using Android.Widget;
 
 namespace CanvasDiagram.Droid
 {
-    public class DrawingView : SurfaceView, ISurfaceHolderCallback
+    public class CanvasView : SurfaceView, ISurfaceHolderCallback
     {
-        public DrawingService Service { get; set; }
-
+        public CanvasDrawing Drawing { get; set; }
         public InputArgs Args = new InputArgs();
 
-        public DrawingView(Context context)
+        public CanvasView(Context context)
             : base(context)
         {
             Initialize(context);
         }
 
-        public DrawingView(Context context, IAttributeSet attrs)
+        public CanvasView(Context context, IAttributeSet attrs)
             : base(context, attrs)
         {
             Initialize(context);
@@ -43,32 +42,31 @@ namespace CanvasDiagram.Droid
 
             this.Touch += (sender, e) => HandleTouch(sender, e);
 
-            Service = new DrawingService();
-            Service.Initialize();
+            Drawing = new CanvasDrawing();
+            Drawing.Initialize();
         }
 
         public void SurfaceChanged(ISurfaceHolder holder, Format format, int width, int height)
         {
             Console.WriteLine("SurfaceChanged");
 
-            Service.SurfaceWidth = width;
-            Service.SurfaceHeight = height;
-
-            Service.RedrawCanvas();
+            Drawing.SurfaceWidth = width;
+            Drawing.SurfaceHeight = height;
+            Drawing.RedrawCanvas();
         }
 
         public void SurfaceCreated(ISurfaceHolder holder)
         {
             Console.WriteLine("SurfaceCreated");
 
-            Service.Start(this.Holder);
+            Drawing.Start(this.Holder);
         }
 
         public void SurfaceDestroyed(ISurfaceHolder holder)
         {
             Console.WriteLine("SurfaceDestroyed");
 
-            Service.Stop();
+            Drawing.Stop();
         }
 
         private static int GetPointerIndex(TouchEventArgs e)
@@ -106,7 +104,7 @@ namespace CanvasDiagram.Droid
             else
                 Args.Action = InputActions.None;
 
-            Service.RedrawCanvas(Args);
+            Drawing.RedrawCanvas(Args);
         }
 
         protected override void OnDraw(Canvas canvas)

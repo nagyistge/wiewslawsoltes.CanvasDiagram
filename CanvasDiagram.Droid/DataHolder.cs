@@ -12,11 +12,8 @@ namespace CanvasDiagram.Droid
     public class DataHolder<T>
     {
         public readonly object Sync = new object();
-
         public bool IsRunning { get; private set; }
-
         public T Data { get; private set; }
-
         public Action<T> Action { get; private set; }
 
         public DataHolder(Action<T> action, T data, bool isRunning)
@@ -29,7 +26,9 @@ namespace CanvasDiagram.Droid
         public void SetAction(Action<T> action)
         {
             lock (Sync)
+            {
                 Action = action;
+            }
         }
 
         public void SetRunning(bool isRunning)
@@ -40,7 +39,9 @@ namespace CanvasDiagram.Droid
         public bool SetData(T data, Action<T, T> copy, int timeout)
         {
             if (Monitor.TryEnter(Sync, timeout) == false)
+            {
                 return false;
+            }
 
             copy(data, Data);
 
@@ -57,7 +58,9 @@ namespace CanvasDiagram.Droid
                 lock (Sync)
                 {
                     if (Action != null)
+                    {
                         Action(Data);
+                    }
 
                     Monitor.Wait(Sync);
                 }

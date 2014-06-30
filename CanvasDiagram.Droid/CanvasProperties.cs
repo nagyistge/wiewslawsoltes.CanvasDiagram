@@ -18,8 +18,8 @@ using Android.Widget;
 
 namespace CanvasDiagram.Droid
 {
-    [Activity(Label = "Diagram Properties")]           
-    public class DiagramProperties : Activity
+    [Activity(Label = "Canvas Properties")]           
+    public class CanvasProperties : Activity
     {
         private Button buttonCancel;
         private Button buttonDelete;
@@ -93,14 +93,14 @@ namespace CanvasDiagram.Droid
             editTextTitle.Text = currentDiagram.Title;
             editTextModel.Text = currentDiagram.Model;
 
-            Console.WriteLine("DiagramProperties OnCreate");
+            Console.WriteLine("CanvasProperties OnCreate");
         }
 
         protected override void OnResume()
         {
             base.OnResume();
 
-            Console.WriteLine("DiagramProperties OnResume");
+            Console.WriteLine("CanvasProperties OnResume");
         }
     }
 }

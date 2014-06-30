@@ -18,10 +18,10 @@ using Android.Widget;
 
 namespace CanvasDiagram.Droid
 {
-    [Activity(Label = "Diagram Editor")]
-    public class DiagramEditor : Activity
+    [Activity(Label = "Canvas Editor")]
+    public class CanvasEditor : Activity
     {
-        private DrawingView drawingView;
+        private CanvasView drawingView;
         private Repository repository;
         private Diagram currentDiagram;
 
@@ -36,7 +36,7 @@ namespace CanvasDiagram.Droid
                     "diagrams.db"));
 
             // create drawing canvas
-            drawingView = new DrawingView(this);
+            drawingView = new CanvasView(this);
 
             RegisterForContextMenu(drawingView);
 
@@ -48,9 +48,9 @@ namespace CanvasDiagram.Droid
                 currentDiagram = new Diagram();
 
             // create diagram
-            Editor.Deserialize(currentDiagram.Model, drawingView.Service.Elements);
-            drawingView.Service.UpdateNextId();
-            drawingView.Service.CurrentModel = Editor.Serialize(drawingView.Service.Elements);
+            ModelSerializer.Deserialize(currentDiagram.Model, drawingView.Drawing.Elements);
+            drawingView.Drawing.UpdateNextId();
+            drawingView.Drawing.CurrentModel = ModelSerializer.Serialize(drawingView.Drawing.Elements);
 
             // set content view to drawing canvas
             SetContentView(drawingView);
@@ -65,7 +65,7 @@ namespace CanvasDiagram.Droid
             base.OnStop();
 
             // store diagram model
-            currentDiagram.Model = Editor.Serialize(drawingView.Service.Elements);
+            currentDiagram.Model = ModelSerializer.Serialize(drawingView.Drawing.Elements);
             currentDiagram.Id = repository.Save(currentDiagram);
 
             //Console.WriteLine ("DiagramEditor OnStop");
@@ -78,7 +78,7 @@ namespace CanvasDiagram.Droid
             //Console.WriteLine ("DiagramEditor OnPause");
 
             // stop drawing thread
-            drawingView.Service.Stop();
+            drawingView.Drawing.Stop();
         }
 
         protected override void OnResume()
@@ -88,7 +88,7 @@ namespace CanvasDiagram.Droid
             //Console.WriteLine ("DiagramEditor OnResume");
 
             // start drawing thread
-            drawingView.Service.Start(drawingView.Holder);
+            drawingView.Drawing.Start(drawingView.Holder);
         }
 
         private const int ItemGroupInsert = 0;
@@ -109,32 +109,32 @@ namespace CanvasDiagram.Droid
                 case ItemInsertAndGate:
                     {
                         float x, y;
-                        drawingView.Service.Snapshot();
-                        drawingView.Service.GetCenterPoint(out x, out y);
-                        drawingView.Service.InsertAndGate(x - 15f, y - 15f, true);
+                        drawingView.Drawing.Snapshot();
+                        drawingView.Drawing.GetCenterPoint(out x, out y);
+                        drawingView.Drawing.InsertAndGate(x - 15f, y - 15f, true);
                     }
                     return true;
                 case ItemInsertOrGate:
                     {
                         float x, y;
-                        drawingView.Service.Snapshot();
-                        drawingView.Service.GetCenterPoint(out x, out y);
-                        drawingView.Service.InsertOrGate(x - 15f, y - 15f, true);
+                        drawingView.Drawing.Snapshot();
+                        drawingView.Drawing.GetCenterPoint(out x, out y);
+                        drawingView.Drawing.InsertOrGate(x - 15f, y - 15f, true);
                     }
                     return true;
                 case ItemResetDiagram:
-                    drawingView.Service.Snapshot();
-                    drawingView.Service.Reset();
+                    drawingView.Drawing.Snapshot();
+                    drawingView.Drawing.Reset();
                     return true;
                 case ItemResetZoom:
-                    drawingView.Service.ResetZoom();
-                    drawingView.Service.RedrawCanvas();
+                    drawingView.Drawing.ResetZoom();
+                    drawingView.Drawing.RedrawCanvas();
                     return true;
                 case ItemEditUndo:
-                    drawingView.Service.Undo();
+                    drawingView.Drawing.Undo();
                     return true;
                 case ItemEditRedo:
-                    drawingView.Service.Redo();
+                    drawingView.Drawing.Redo();
                     return true;
                 default:
                     return base.OnContextItemSelected(item);

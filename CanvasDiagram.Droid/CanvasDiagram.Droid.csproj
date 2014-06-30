@@ -72,17 +72,8 @@
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Editor.cs" />
     <Compile Include="DataHolder.cs" />
     <Compile Include="BackgroundService.cs" />
-    <Compile Include="InputActions.cs" />
-    <Compile Include="InputArgs.cs" />
-    <Compile Include="DrawingView.cs" />
-    <Compile Include="DrawingService.cs" />
-    <Compile Include="DiagramEditor.cs" />
-    <Compile Include="DiagramList.cs" />
-    <Compile Include="DiagramListAdapter.cs" />
-    <Compile Include="DiagramProperties.cs" />
     <Compile Include="Model\AndGate.cs" />
     <Compile Include="Model\OrGate.cs" />
     <Compile Include="Model\Pin.cs" />
@@ -91,6 +82,14 @@
     <Compile Include="Repository\Repository.cs" />
     <Compile Include="Model\Wire.cs" />
     <Compile Include="Math.cs" />
+    <Compile Include="Input.cs" />
+    <Compile Include="ModelSerializer.cs" />
+    <Compile Include="CanvasView.cs" />
+    <Compile Include="CanvasEditor.cs" />
+    <Compile Include="CanvasList.cs" />
+    <Compile Include="CanvasProperties.cs" />
+    <Compile Include="CanvasListAdapter.cs" />
+    <Compile Include="CanvasDrawing.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

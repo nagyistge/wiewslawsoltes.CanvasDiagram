@@ -19,7 +19,7 @@ using Android.Widget;
 namespace CanvasDiagram.Droid
 {
     [Activity(Label = "Canvas Diagram", MainLauncher = true)]          
-    public class DiagramList : Activity
+    public class CanvasList : Activity
     {
         private ListView listViewDiagrams;
         private Repository repository;
@@ -42,7 +42,7 @@ namespace CanvasDiagram.Droid
             // edit diagram model
             listViewDiagrams.ItemClick += (sender, e) =>
             {
-                var diagramEidtor = new Intent(this, typeof(DiagramEditor));
+                var diagramEidtor = new Intent(this, typeof(CanvasEditor));
                 diagramEidtor.PutExtra("DiagramId", diagrams[e.Position].Id);
 
                 StartActivity(diagramEidtor);
@@ -51,13 +51,13 @@ namespace CanvasDiagram.Droid
             // edit diagram properties
             listViewDiagrams.ItemLongClick += (sender, e) =>
             {
-                var diagramProperties = new Intent(this, typeof(DiagramProperties));
+                var diagramProperties = new Intent(this, typeof(CanvasProperties));
                 diagramProperties.PutExtra("DiagramId", diagrams[e.Position].Id);
 
                 StartActivity(diagramProperties);
             };
 
-            Console.WriteLine("DiagramList OnResume");
+            Console.WriteLine("CanvasList OnResume");
         }
 
         protected override void OnResume()
@@ -68,17 +68,17 @@ namespace CanvasDiagram.Droid
             diagrams = repository.GetAll();
 
             // set diagram list adapter
-            var adapter = new DiagramListAdapter(this, diagrams);
+            var adapter = new CanvasListAdapter(this, diagrams);
             listViewDiagrams.Adapter = adapter;
 
-            Console.WriteLine("DiagramList OnResume");
+            Console.WriteLine("CanvasList OnResume");
         }
 
         public void DeleteAll()
         {
             repository.RemoveAll();
             diagrams.Clear();
-            (listViewDiagrams.Adapter as DiagramListAdapter).NotifyDataSetChanged();
+            (listViewDiagrams.Adapter as CanvasListAdapter).NotifyDataSetChanged();
         }
 
         private const int ItemGroupAdd = 0;
@@ -90,15 +90,13 @@ namespace CanvasDiagram.Droid
             switch (item.ItemId)
             {
                 case ItemAddDiagram:
-                    StartActivity(typeof(DiagramProperties));
+                    StartActivity(typeof(CanvasProperties));
                     return true;
                 case ItemDeleteAll:
                     {
                         AlertDialog.Builder ab = new AlertDialog.Builder(this);
                         ab.SetMessage("Delete All diagrams?")
-                            .SetNegativeButton("No", (sender, e) =>
-                            {
-                            })
+                            .SetNegativeButton("No", (sender, e) => { })
                             .SetPositiveButton("Yes", (sender, e) => DeleteAll())
                             .Show();
                     }

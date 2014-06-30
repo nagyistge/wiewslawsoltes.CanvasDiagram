@@ -18,12 +18,12 @@ using Android.Widget;
 
 namespace CanvasDiagram.Droid
 {
-    public class DiagramListAdapter : BaseAdapter<Diagram>
+    public class CanvasListAdapter : BaseAdapter<Diagram>
     {
-        protected Activity context = null;
-        protected IList<Diagram> diagrams = new List<Diagram>();
+        private readonly Activity context = null;
+        private readonly IList<Diagram> diagrams = new List<Diagram>();
 
-        public DiagramListAdapter(Activity context, IList<Diagram> diagrams)
+        public CanvasListAdapter(Activity context, IList<Diagram> diagrams)
             : base()
         {
             this.context = context;
@@ -48,7 +48,6 @@ namespace CanvasDiagram.Droid
         public override View GetView(int position, View convertView, ViewGroup parent)
         {
             var diagram = diagrams[position];
-
             var view = (convertView ??
                        context.LayoutInflater.Inflate(
                            Android.Resource.Layout.SimpleListItem1,

@@ -17,10 +17,11 @@ namespace CanvasDiagram.Droid
         public void Start(Action<T> action, T data)
         {
             if (thread != null)
+            {
                 return;
+            }
 
             holder = new DataHolder<T>(action, data, true);
-
             thread = new Thread(new ThreadStart(holder.Loop));
             thread.Start();
         }
@@ -28,21 +29,26 @@ namespace CanvasDiagram.Droid
         public void Stop()
         {
             if (thread == null)
+            {
                 return;
+            }
 
             holder.SetRunning(false);
             lock (holder.Sync)
+            {
                 Monitor.Pulse(holder.Sync);
+            }
 
             thread.Join();
-
             thread = null;
             holder = null;
         }
             
         public bool HandleEvent(T data, Action<T, T> copy, int timeout)
         {
-            return holder != null ? holder.SetData(data, copy, timeout) : false;
+            return holder != null ? 
+                holder.SetData(data, copy, timeout) : 
+                false;
         }
     }
 }

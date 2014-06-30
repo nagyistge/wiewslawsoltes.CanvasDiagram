@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace CanvasDiagram.Droid
 {
-    public static class Editor
+    public static class ModelSerializer
     {
         public const int StandalonePinId = -1;
 
