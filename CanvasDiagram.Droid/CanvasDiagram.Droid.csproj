@@ -107,7 +107,6 @@
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="sqlite-net">
-      <InstallationInProgress>True</InstallationInProgress>
       <Version>1.0.8</Version>
       <Visible>False</Visible>
     </XamarinComponentReference>
