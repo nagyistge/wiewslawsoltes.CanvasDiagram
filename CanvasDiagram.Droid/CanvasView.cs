@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading;
 using Android.App;
@@ -1530,6 +1531,9 @@ namespace CanvasDiagram.Droid
 
     public class CanvasView : SurfaceView, ISurfaceHolderCallback
     {
+        private IObservable<MotionEvent> _touch;
+        private IDisposable _touches;
+
         public CanvasViewModel Model { get; private set; }
         public InputArgs Args { get; private set; }
 
@@ -1552,7 +1556,9 @@ namespace CanvasDiagram.Droid
             Holder.AddCallback(this);
             SetWillNotDraw(true);
 
-            this.Touch += (sender, e) => HandleTouch(sender, e);
+            //this.Touch += (sender, e) => OnTouch(e.Event);
+            _touch = Observable.FromEventPattern<TouchEventArgs>(this, "Touch").Select(e => e.EventArgs.Event);
+            _touches = _touch.Subscribe((e) => OnTouch(e));
 
             Model = new CanvasViewModel();
             Model.Initialize();
@@ -1581,26 +1587,22 @@ namespace CanvasDiagram.Droid
             Model.Stop();
         }
 
-        private static int GetPointerIndex(TouchEventArgs e)
+        private int ToPointerIndex(MotionEvent e)
         {
-            int index = ((int)(e.Event.Action & MotionEventActions.PointerIndexMask)
-                        >> (int)MotionEventActions.PointerIndexShift) == 0 ? 1 : 0;
-            return index;
+            return ((int)(e.Action & MotionEventActions.PointerIndexMask) >> (int)MotionEventActions.PointerIndexShift) == 0 ? 1 : 0;
         }
 
-        private void HandleTouch(object sender, TouchEventArgs e)
+        private void OnTouch(MotionEvent e)
         {
-            var action = e.Event.Action & MotionEventActions.Mask;
-            int count = e.Event.PointerCount;
-
-            Args.X = e.Event.GetX();
-            Args.Y = e.Event.GetY();
-            Args.Index = GetPointerIndex(e);
-            Args.X0 = e.Event.GetX(0);
-            Args.Y0 = e.Event.GetY(0);
-            Args.X1 = count == 2 ? e.Event.GetX(1) : 0f;
-            Args.Y1 = count == 2 ? e.Event.GetY(1) : 0f;
-
+            var action = e.Action & MotionEventActions.Mask;
+            int count = e.PointerCount;
+            Args.X = e.GetX();
+            Args.Y = e.GetY();
+            Args.Index = ToPointerIndex(e);
+            Args.X0 = e.GetX(0);
+            Args.Y0 = e.GetY(0);
+            Args.X1 = count == 2 ? e.GetX(1) : 0f;
+            Args.Y1 = count == 2 ? e.GetY(1) : 0f;
             if (count == 1 && action == MotionEventActions.Down)
             {
                 Args.Action = InputAction.Hitest;
@@ -1629,12 +1631,21 @@ namespace CanvasDiagram.Droid
             {
                 Args.Action = InputAction.None;
             }
-
             Model.RedrawCanvas(Args);
         }
 
         protected override void OnDraw(Canvas canvas)
         {
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            if (_touches != null)
+            {
+                _touches.Dispose();
+            }
         }
     }
 }
