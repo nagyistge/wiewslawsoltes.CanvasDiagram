@@ -68,7 +68,7 @@ namespace CanvasDiagram.Droid
             _currentDiagram.Model = TextSerializer.Serialize(_drawingView.Model.Elements);
             _currentDiagram.Id = _repository.Save(_currentDiagram);
 
-            _drawingView.Dispose();
+            //_drawingView.Dispose();
 
             Console.WriteLine ("DiagramEditor OnStop");
         }
