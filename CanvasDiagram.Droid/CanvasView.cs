@@ -1257,10 +1257,12 @@ namespace CanvasDiagram.Droid
             canvas.DrawColor(colorBackground);
         }
 
-        private void DrawGrid(Canvas canvas, Paint paint, 
-                              float ox, float oy,
-                              float width, float height, 
-                              float sx, float sy)
+        private void DrawGrid(
+            Canvas canvas, 
+            Paint paint,
+            float ox, float oy,
+            float width, float height,
+            float sx, float sy)
         {
             // horizontal lines
             for (float y = sy + oy; y < height + oy; y += sx)
@@ -1600,19 +1602,33 @@ namespace CanvasDiagram.Droid
             Args.Y1 = count == 2 ? e.Event.GetY(1) : 0f;
 
             if (count == 1 && action == MotionEventActions.Down)
+            {
                 Args.Action = InputAction.Hitest;
+            }
             else if (count == 1 && action == MotionEventActions.Move)
+            {
                 Args.Action = InputAction.Move;
+            }
             else if (count == 2 && action == MotionEventActions.PointerDown)
+            {
                 Args.Action = InputAction.StartZoom;
+            }
             else if (count == 2 && action == MotionEventActions.Move)
+            {
                 Args.Action = InputAction.Zoom;
+            }
             else if (action == MotionEventActions.Up)
+            {
                 Args.Action = InputAction.Merge;
+            }
             else if (action == MotionEventActions.PointerUp)
+            {
                 Args.Action = InputAction.StartPan;
+            }
             else
+            {
                 Args.Action = InputAction.None;
+            }
 
             Model.RedrawCanvas(Args);
         }
