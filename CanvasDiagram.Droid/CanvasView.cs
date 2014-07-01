@@ -41,14 +41,14 @@ namespace CanvasDiagram.Droid
         public float Y1;
     }
 
-    public class DataHolder<T>
+    public class SurfaceViewData<T>
     {
         public readonly object Sync = new object();
         public bool IsRunning { get; private set; }
         public T Data { get; private set; }
         public Action<T> Action { get; private set; }
 
-        public DataHolder(Action<T> action, T data, bool isRunning)
+        public SurfaceViewData(Action<T> action, T data, bool isRunning)
         {
             Data = data;
             Action = action;
@@ -100,45 +100,45 @@ namespace CanvasDiagram.Droid
         }
     }
 
-    public class BackgroundService<T>
+    public class SurfaceViewThread<T>
     {
-        private DataHolder<T> holder = null;
-        private Thread thread = null;
+        private SurfaceViewData<T> viewData = null;
+        private Thread viewThread = null;
 
         public void Start(Action<T> action, T data)
         {
-            if (thread != null)
+            if (viewThread != null)
             {
                 return;
             }
 
-            holder = new DataHolder<T>(action, data, true);
-            thread = new Thread(new ThreadStart(holder.Loop));
-            thread.Start();
+            viewData = new SurfaceViewData<T>(action, data, true);
+            viewThread = new Thread(new ThreadStart(viewData.Loop));
+            viewThread.Start();
         }
 
         public void Stop()
         {
-            if (thread == null)
+            if (viewThread == null)
             {
                 return;
             }
 
-            holder.SetRunning(false);
-            lock (holder.Sync)
+            viewData.SetRunning(false);
+            lock (viewData.Sync)
             {
-                Monitor.Pulse(holder.Sync);
+                Monitor.Pulse(viewData.Sync);
             }
 
-            thread.Join();
-            thread = null;
-            holder = null;
+            viewThread.Join();
+            viewThread = null;
+            viewData = null;
         }
 
         public bool HandleEvent(T data, Action<T, T> copy, int timeout)
         {
-            return holder != null ? 
-                holder.SetData(data, copy, timeout) : 
+            return viewData != null ? 
+                viewData.SetData(data, copy, timeout) : 
                 false;
         }
     }
@@ -150,7 +150,7 @@ namespace CanvasDiagram.Droid
         public int SurfaceWidth { get; set; }
         public int SurfaceHeight { get; set; }
 
-        private BackgroundService<InputArgs> Service;
+        private SurfaceViewThread<InputArgs> Service;
         private int FrameCount = 0;
         private InputArgs EmptyArgs = new InputArgs() { Action = InputAction.None };
 
@@ -218,7 +218,7 @@ namespace CanvasDiagram.Droid
             {
                 if (Service == null)
                 {
-                    Service = new BackgroundService<InputArgs>();
+                    Service = new SurfaceViewThread<InputArgs>();
                 }
 
                 ISurfaceHolder holder = surfaceHolder;
@@ -1528,8 +1528,8 @@ namespace CanvasDiagram.Droid
 
     public class CanvasView : SurfaceView, ISurfaceHolderCallback
     {
-        public CanvasViewModel Model { get; set; }
-        public InputArgs Args = new InputArgs();
+        public CanvasViewModel Model { get; private set; }
+        public InputArgs Args { get; private set; }
 
         public CanvasView(Context context)
             : base(context)
@@ -1545,6 +1545,8 @@ namespace CanvasDiagram.Droid
 
         private void Initialize(Context context)
         {
+            Args = new InputArgs();
+
             Holder.AddCallback(this);
             SetWillNotDraw(true);
 
