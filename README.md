@@ -1,4 +1,4 @@
 CanvasDiagram
 =============
 
-Logic diagram editor written for Android using Canvas.
+Logic diagram editor written in C# for Android using Canvas.
