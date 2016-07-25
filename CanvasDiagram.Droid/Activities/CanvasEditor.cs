@@ -1,20 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using Android.App;
 using Android.Content;
-using Android.Graphics;
 using Android.OS;
-using Android.OS.Storage;
-using Android.Runtime;
-using Android.Util;
 using Android.Views;
-using Android.Widget;
 
 namespace CanvasDiagram.Droid
 {
@@ -25,10 +13,10 @@ namespace CanvasDiagram.Droid
         private Repository _repository;
         private Diagram _currentDiagram;
 
-        protected override void OnCreate(Bundle bundle)
+        protected override void OnCreate(Bundle savedInstanceState)
         {
             //RequestWindowFeature(WindowFeatures.NoTitle);
-            base.OnCreate(bundle);
+            base.OnCreate(savedInstanceState);
 
             _repository = new Repository(
                 System.IO.Path.Combine(
