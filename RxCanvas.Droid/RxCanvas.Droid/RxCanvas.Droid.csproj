@@ -102,14 +102,7 @@
       <Link>Shared\Model.cs</Link>
     </Compile>
     <Compile Include="Droid\DroidModule.cs" />
-    <Compile Include="Droid\Droid.cs" />
-    <Compile Include="Droid\Activities\CanvasEditor.cs" />
-    <Compile Include="Droid\Activities\CanvasList.cs" />
-    <Compile Include="Droid\Activities\CanvasListAdapter.cs" />
-    <Compile Include="Droid\Activities\CanvasProperties.cs" />
-    <Compile Include="Droid\Repository\Diagram.cs" />
-    <Compile Include="Droid\Repository\IRepository.cs" />
-    <Compile Include="Droid\Repository\SQLiteRepository.cs" />
+    <Compile Include="Droid\DroidConverter.cs" />
     <Compile Include="..\..\RxCanvas\RxCanvas.Shared\MathUtil\MonotoneChain.cs">
       <Link>Shared\MathUtil\MonotoneChain.cs</Link>
     </Compile>
@@ -119,6 +112,19 @@
     <Compile Include="..\..\RxCanvas\RxCanvas.Shared\MathUtil\Vector2.cs">
       <Link>Shared\MathUtil\Vector2.cs</Link>
     </Compile>
+    <Compile Include="Repository\Diagram.cs" />
+    <Compile Include="Repository\IRepository.cs" />
+    <Compile Include="Repository\SQLiteRepository.cs" />
+    <Compile Include="Activities\CanvasEditor.cs" />
+    <Compile Include="Activities\CanvasList.cs" />
+    <Compile Include="Activities\CanvasListAdapter.cs" />
+    <Compile Include="Activities\CanvasProperties.cs" />
+    <Compile Include="Droid\VectorUtil.cs" />
+    <Compile Include="Droid\LineUtil.cs" />
+    <Compile Include="Droid\DroidService.cs" />
+    <Compile Include="Droid\DroidCanvas.cs" />
+    <Compile Include="Droid\DroidRenderer.cs" />
+    <Compile Include="Droid\DroidCanvasPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -132,12 +138,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ItemGroup>
-    <Folder Include="Shared\" />
     <Folder Include="Shared\Creators\" />
     <Folder Include="Shared\Files\" />
     <Folder Include="Shared\Views\" />
     <Folder Include="Droid\" />
     <Folder Include="Shared\MathUtil\" />
+    <Folder Include="Repository\" />
+    <Folder Include="Activities\" />
   </ItemGroup>
   <ItemGroup>
     <XamarinComponentReference Include="sqlite-net">

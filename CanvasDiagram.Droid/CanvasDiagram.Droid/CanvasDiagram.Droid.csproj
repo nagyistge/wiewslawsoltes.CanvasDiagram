@@ -88,9 +88,9 @@
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Core\AndGate.cs" />
-    <Compile Include="Core\OrGate.cs" />
-    <Compile Include="Core\Pin.cs" />
+    <Compile Include="Shared\AndGate.cs" />
+    <Compile Include="Shared\OrGate.cs" />
+    <Compile Include="Shared\Pin.cs" />
     <Compile Include="Core\Element.cs" />
     <Compile Include="Repository\Diagram.cs" />
     <Compile Include="Repository\Repository.cs" />

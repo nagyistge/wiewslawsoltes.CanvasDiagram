@@ -1,26 +1,14 @@
 // Copyright (c) Wiesław Šoltés. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 using System;
-using System.Collections;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
-using System.Threading;
 using Android.App;
 using Android.Content;
-using Android.Graphics;
 using Android.OS;
-using Android.OS.Storage;
-using Android.Runtime;
-using Android.Util;
 using Android.Views;
-using Android.Widget;
-using RxCanvas.Interfaces;
-using RxCanvas.Views;
 
 namespace RxCanvas.Droid
 {
