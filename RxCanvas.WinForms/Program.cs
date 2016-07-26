@@ -10,8 +10,6 @@ namespace RxCanvas.WinForms
         [STAThread]
         static void Main()
         {
-            var v = new MathUtil.Vector2();
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

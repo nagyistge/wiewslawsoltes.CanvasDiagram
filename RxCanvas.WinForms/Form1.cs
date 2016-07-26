@@ -19,12 +19,6 @@ namespace RxCanvas.WinForms
             InitializeComponent();
             InitializeStyle();
 
-            var assembly = new Assembly[]
-            {
-                typeof(Bootstrapper).GetTypeInfo().Assembly,
-                typeof(Form1).GetTypeInfo().Assembly
-            };
-
             InitializeDrawingView();
             InitlializeShortucts();
             Initialize();
