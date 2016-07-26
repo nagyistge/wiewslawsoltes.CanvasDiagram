@@ -12,22 +12,22 @@ using RxCanvas.Views;
 
 namespace RxCanvas.Droid
 {
-    public class DroidCanvasPanel : SurfaceView, ISurfaceHolderCallback
+    public class CanvasView : SurfaceView, ISurfaceHolderCallback
     {
         public DrawingView View { get; set; }
-        public DroidRenderer Renderer { get; set; }
+        public SurfaceRenderer Renderer { get; set; }
 
-        private DroidService _service;
+        private SurfaceViewData _viewData;
         private IObservable<MotionEvent> _touch;
         private IDisposable _touches;
 
-        public DroidCanvasPanel(Context context)
+        public CanvasView(Context context)
             : base(context)
         {
             Initialize(context);
         }
 
-        public DroidCanvasPanel(Context context, IAttributeSet attrs)
+        public CanvasView(Context context, IAttributeSet attrs)
             : base(context, attrs)
         {
             Initialize(context);
@@ -41,7 +41,7 @@ namespace RxCanvas.Droid
             _touch = Observable.FromEventPattern<TouchEventArgs>(this, "Touch").Select(e => e.EventArgs.Event);
             _touches = _touch.Subscribe((e) => OnTouch(e));
 
-            Renderer = new DroidRenderer();
+            Renderer = new SurfaceRenderer();
             View = new DrawingView();
 
             var canvas = View.Layers.LastOrDefault();
@@ -126,15 +126,15 @@ namespace RxCanvas.Droid
         {
             try
             {
-                if (_service == null)
+                if (_viewData == null)
                 {
-                    _service = new DroidService();
+                    _viewData = new SurfaceViewData();
                 }
 
                 ISurfaceHolder holder = surfaceHolder;
                 Canvas canvas = null;
 
-                _service.Start(() =>
+                _viewData.Start(() =>
                     {
                         canvas = null;
 
@@ -169,9 +169,9 @@ namespace RxCanvas.Droid
         {
             try
             {
-                if (_service != null)
+                if (_viewData != null)
                 {
-                    _service.Stop();
+                    _viewData.Stop();
                 }
             }
             catch (Exception ex)
@@ -182,9 +182,9 @@ namespace RxCanvas.Droid
 
         public void Render()
         {
-            if (_service != null)
+            if (_viewData != null)
             {
-                _service.Tick(16);
+                _viewData.Tick(16);
             }
         }
 
@@ -203,11 +203,11 @@ namespace RxCanvas.Droid
                 if (count == 1 && action == MotionEventActions.Down)
                 {
                     Renderer.StartPan(e.GetX(), e.GetY());
-                    Renderer.RenderState = DroidRenderer.State.Pan;
+                    Renderer.RenderState = SurfaceRenderer.State.Pan;
                 }
                 else if (count == 1 && action == MotionEventActions.Move)
                 {
-                    if (Renderer.RenderState == DroidRenderer.State.Pan)
+                    if (Renderer.RenderState == SurfaceRenderer.State.Pan)
                     {
                         Renderer.Pan(e.GetX(), e.GetY());
                         InvalidateView();
@@ -217,11 +217,11 @@ namespace RxCanvas.Droid
                 {
                     Renderer.StartPinchToZoom(e.GetX(0), e.GetY(0), count == 2 ? e.GetX(1) : 0f, count == 2 ? e.GetY(1) : 0f);
                     InvalidateView();
-                    Renderer.RenderState = DroidRenderer.State.Zoom;
+                    Renderer.RenderState = SurfaceRenderer.State.Zoom;
                 }
                 else if (count == 2 && action == MotionEventActions.Move)
                 {
-                    if (Renderer.RenderState == DroidRenderer.State.Zoom)
+                    if (Renderer.RenderState == SurfaceRenderer.State.Zoom)
                     {
                         Renderer.PinchToZoom(e.GetX(0), e.GetY(0), count == 2 ? e.GetX(1) : 0f, count == 2 ? e.GetY(1) : 0f);
                         InvalidateView();
@@ -229,7 +229,7 @@ namespace RxCanvas.Droid
                 }
                 else
                 {
-                    Renderer.RenderState = DroidRenderer.State.None;
+                    Renderer.RenderState = SurfaceRenderer.State.None;
                 }
             }
         }

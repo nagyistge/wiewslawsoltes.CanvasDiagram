@@ -86,7 +86,7 @@ namespace RxCanvas.Droid
         {
             if (Native != null)
             {
-                (Native as DroidCanvasPanel).Render();
+                (Native as CanvasView).Render();
             }
         }
     }

@@ -110,8 +110,6 @@
     <Compile Include="..\..\RxCanvas\RxCanvas.Shared\Shared\Model.cs">
       <Link>Shared\Model.cs</Link>
     </Compile>
-    <Compile Include="Droid\DroidModule.cs" />
-    <Compile Include="Droid\DroidConverter.cs" />
     <Compile Include="..\..\RxCanvas\RxCanvas.Shared\MathUtil\MonotoneChain.cs">
       <Link>Shared\MathUtil\MonotoneChain.cs</Link>
     </Compile>
@@ -128,12 +126,14 @@
     <Compile Include="Activities\CanvasList.cs" />
     <Compile Include="Activities\CanvasListAdapter.cs" />
     <Compile Include="Activities\CanvasProperties.cs" />
-    <Compile Include="Droid\VectorUtil.cs" />
-    <Compile Include="Droid\LineUtil.cs" />
-    <Compile Include="Droid\DroidService.cs" />
-    <Compile Include="Droid\DroidCanvas.cs" />
-    <Compile Include="Droid\DroidRenderer.cs" />
-    <Compile Include="Droid\DroidCanvasPanel.cs" />
+    <Compile Include="Droid\SurfaceViewData.cs" />
+    <Compile Include="Droid\SurfaceRenderer.cs" />
+    <Compile Include="Droid\CanvasView.cs" />
+    <Compile Include="Droid\RxCanvas\DroidCanvas.cs" />
+    <Compile Include="Droid\RxCanvas\DroidConverter.cs" />
+    <Compile Include="Droid\RxCanvas\DroidModule.cs" />
+    <Compile Include="Droid\Util\LineUtil.cs" />
+    <Compile Include="Droid\Util\VectorUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AndroidManifest.xml" />
@@ -154,5 +154,7 @@
     <Folder Include="Shared\MathUtil\" />
     <Folder Include="Repository\" />
     <Folder Include="Activities\" />
+    <Folder Include="Droid\RxCanvas\" />
+    <Folder Include="Droid\Util\" />
   </ItemGroup>
 </Project>

@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace RxCanvas.Droid
 {
-    public class DroidService
+    public class SurfaceViewData
     {
         private readonly object _sync = new object();
         private bool _isRunning;

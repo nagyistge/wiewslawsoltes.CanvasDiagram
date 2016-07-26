@@ -15,7 +15,7 @@ namespace RxCanvas.Droid
     [Activity(Label = "Canvas Editor")]
     public class CanvasEditor : Activity
     {
-        private DroidCanvasPanel _panel;
+        private CanvasView _canvasView;
         private IRepository _repository;
         private Diagram _diagram;
 
@@ -28,13 +28,13 @@ namespace RxCanvas.Droid
                 _diagram = _repository.Get(diagramId);
 
                 // open string as diagram
-                int index = _panel.View.Files.IndexOf(_panel.View.Files.Where(c => c.Name == "Json").FirstOrDefault());
+                int index = _canvasView.View.Files.IndexOf(_canvasView.View.Files.Where(c => c.Name == "Json").FirstOrDefault());
                 using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(_diagram.Model)))
                 {
-                    var xcanvas = _panel.View.Files[index].Read(stream);
+                    var xcanvas = _canvasView.View.Files[index].Read(stream);
                     if (xcanvas != null)
                     {
-                        _panel.View.ToNative(xcanvas);
+                        _canvasView.View.ToNative(xcanvas);
                     }
                 }
             }
@@ -52,13 +52,13 @@ namespace RxCanvas.Droid
         private void Save()
         {
             // save diagram as string
-            int index = _panel.View.Files.IndexOf(_panel.View.Files.Where(c => c.Name == "Json").FirstOrDefault());
+            int index = _canvasView.View.Files.IndexOf(_canvasView.View.Files.Where(c => c.Name == "Json").FirstOrDefault());
             using (var stream = new MemoryStream())
             {
-                var xcanvas = _panel.View.ToModel();
+                var xcanvas = _canvasView.View.ToModel();
                 if (xcanvas != null)
                 {
-                    _panel.View.Files[index].Write(stream, xcanvas);
+                    _canvasView.View.Files[index].Write(stream, xcanvas);
                     _diagram.Model = Encoding.UTF8.GetString(stream.ToArray());
                 }
             }
@@ -78,14 +78,14 @@ namespace RxCanvas.Droid
                     System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), 
                     "diagrams.db"));
 
-            _panel = new DroidCanvasPanel(this);
+            _canvasView = new CanvasView(this);
 
-            RegisterForContextMenu(_panel);
+            RegisterForContextMenu(_canvasView);
 
             Open();
 
             // set content view to drawing canvas
-            SetContentView(_panel);
+            SetContentView(_canvasView);
 
             //ActivityCompat.InvalidateOptionsMenu (this);
         }
@@ -104,7 +104,7 @@ namespace RxCanvas.Droid
             Console.WriteLine ("DiagramEditor OnPause");
 
             // stop drawing thread
-            _panel.Stop();
+            _canvasView.Stop();
         }
 
         protected override void OnResume()
@@ -113,7 +113,7 @@ namespace RxCanvas.Droid
             Console.WriteLine ("DiagramEditor OnResume");
 
             // start drawing thread
-            _panel.Start(_panel.Holder);
+            _canvasView.Start(_canvasView.Holder);
         }
 
         private bool MenuItemSelected(IMenuItem item)
@@ -121,70 +121,70 @@ namespace RxCanvas.Droid
             switch (item.ItemId)
             {
                 case 0:
-                    _panel.View.Undo();
+                    _canvasView.View.Undo();
                     return true;
                 case 1:
-                    _panel.View.Redo();
+                    _canvasView.View.Redo();
                     return true;
                 case 2:
-                    _panel.View.Delete();
+                    _canvasView.View.Delete();
                     return true;
                 case 3:
-                    _panel.View.Clear();
+                    _canvasView.View.Clear();
                     return true;
                 case 4:
-                    _panel.View.Enable(null);
-                    _panel.Renderer.EnableZoom = true;
+                    _canvasView.View.Enable(null);
+                    _canvasView.Renderer.EnableZoom = true;
                     return true;
                 case 5:
-                    _panel.Renderer.ResetZoom();
-                    _panel.InvalidateView();
+                    _canvasView.Renderer.ResetZoom();
+                    _canvasView.InvalidateView();
                     return true;
                 case 6:
-                    _panel.View.CreateBlock();
+                    _canvasView.View.CreateBlock();
                     return true;
                 case 7:
-                    _panel.Renderer.EnableZoom = false;
-                    _panel.View.Enable(_panel.View.Editors.Where(e => e.Name == "Single Selection").FirstOrDefault());
+                    _canvasView.Renderer.EnableZoom = false;
+                    _canvasView.View.Enable(_canvasView.View.Editors.Where(e => e.Name == "Single Selection").FirstOrDefault());
                     return true;
                 case 8:
-                    _panel.Renderer.EnableZoom = false;
-                    _panel.View.Enable(_panel.View.Editors.Where(e => e.Name == "Multi Selection").FirstOrDefault());
+                    _canvasView.Renderer.EnableZoom = false;
+                    _canvasView.View.Enable(_canvasView.View.Editors.Where(e => e.Name == "Multi Selection").FirstOrDefault());
                     return true;
                 case 9:
-                    _panel.View.ToggleSnap();
+                    _canvasView.View.ToggleSnap();
                     return true;
                 case 11:
-                    _panel.Renderer.EnableZoom = false;
-                    _panel.View.Enable(_panel.View.Editors.Where(e => e.Name == "Pin").FirstOrDefault());
+                    _canvasView.Renderer.EnableZoom = false;
+                    _canvasView.View.Enable(_canvasView.View.Editors.Where(e => e.Name == "Pin").FirstOrDefault());
                     return true;
                 case 12:
-                    _panel.Renderer.EnableZoom = false;
-                    _panel.View.Enable(_panel.View.Editors.Where(e => e.Name == "Line").FirstOrDefault());
+                    _canvasView.Renderer.EnableZoom = false;
+                    _canvasView.View.Enable(_canvasView.View.Editors.Where(e => e.Name == "Line").FirstOrDefault());
                     return true;
                 case 13:
-                    _panel.Renderer.EnableZoom = false;
-                    _panel.View.Enable(_panel.View.Editors.Where(e => e.Name == "Bézier").FirstOrDefault());
+                    _canvasView.Renderer.EnableZoom = false;
+                    _canvasView.View.Enable(_canvasView.View.Editors.Where(e => e.Name == "Bézier").FirstOrDefault());
                     return true;
                 case 14:
-                    _panel.Renderer.EnableZoom = false;
-                    _panel.View.Enable(_panel.View.Editors.Where(e => e.Name == "Quadratic Bézier").FirstOrDefault());
+                    _canvasView.Renderer.EnableZoom = false;
+                    _canvasView.View.Enable(_canvasView.View.Editors.Where(e => e.Name == "Quadratic Bézier").FirstOrDefault());
                     return true;
                 case 15:
-                    _panel.Renderer.EnableZoom = false;
-                    _panel.View.Enable(_panel.View.Editors.Where(e => e.Name == "Arc").FirstOrDefault());
+                    _canvasView.Renderer.EnableZoom = false;
+                    _canvasView.View.Enable(_canvasView.View.Editors.Where(e => e.Name == "Arc").FirstOrDefault());
                     return true;
                 case 16:
-                    _panel.Renderer.EnableZoom = false;
-                    _panel.View.Enable(_panel.View.Editors.Where(e => e.Name == "Rectangle").FirstOrDefault());
+                    _canvasView.Renderer.EnableZoom = false;
+                    _canvasView.View.Enable(_canvasView.View.Editors.Where(e => e.Name == "Rectangle").FirstOrDefault());
                     return true;
                 case 17:
-                    _panel.Renderer.EnableZoom = false;
-                    _panel.View.Enable(_panel.View.Editors.Where(e => e.Name == "Ellipse").FirstOrDefault());
+                    _canvasView.Renderer.EnableZoom = false;
+                    _canvasView.View.Enable(_canvasView.View.Editors.Where(e => e.Name == "Ellipse").FirstOrDefault());
                     return true;
                 case 18:
-                    _panel.Renderer.EnableZoom = false;
-                    _panel.View.Enable(_panel.View.Editors.Where(e => e.Name == "Text").FirstOrDefault());
+                    _canvasView.Renderer.EnableZoom = false;
+                    _canvasView.View.Enable(_canvasView.View.Editors.Where(e => e.Name == "Text").FirstOrDefault());
                     return true;
                 default:
                     return base.OnContextItemSelected(item);

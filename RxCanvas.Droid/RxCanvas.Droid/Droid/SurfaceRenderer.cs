@@ -9,7 +9,7 @@ using RxCanvas.Interfaces;
 
 namespace RxCanvas.Droid
 {
-    public class DroidRenderer
+    public class SurfaceRenderer
     {
         public enum State { None, Pan, Zoom};
         public State RenderState { get; set; }
@@ -27,7 +27,7 @@ namespace RxCanvas.Droid
         private float _previousDist;
         private PointF _middle;
 
-        public DroidRenderer()
+        public SurfaceRenderer()
         {
             RenderState = State.None;
 

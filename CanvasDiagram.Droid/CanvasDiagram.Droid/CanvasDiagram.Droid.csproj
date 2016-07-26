@@ -110,12 +110,12 @@
     <Compile Include="Activities\CanvasProperties.cs" />
     <Compile Include="Droid\CanvasView.cs" />
     <Compile Include="Droid\CanvasViewModel.cs" />
-    <Compile Include="Droid\InputAction.cs" />
-    <Compile Include="Droid\InputArgs.cs" />
     <Compile Include="Droid\SurfaceViewData.cs" />
     <Compile Include="Droid\SurfaceViewThread.cs" />
     <Compile Include="Shared\Math.cs" />
     <Compile Include="Shared\TextSerializer.cs" />
+    <Compile Include="Droid\Input\InputAction.cs" />
+    <Compile Include="Droid\Input\InputArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -133,5 +133,6 @@
   <ItemGroup />
   <ItemGroup>
     <Folder Include="Droid\" />
+    <Folder Include="Droid\Input\" />
   </ItemGroup>
 </Project>
