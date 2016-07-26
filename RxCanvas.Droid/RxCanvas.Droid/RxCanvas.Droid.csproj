@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F57C1738-B68D-48BD-9847-E946B278A9E3}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>RxCanvas.Droid</RootNamespace>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <AndroidApplication>True</AndroidApplication>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AssemblyName>RxCanvas</AssemblyName>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
+    <TargetFrameworkVersion>v4.4</TargetFrameworkVersion>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <AndroidSupportedAbis>armeabi;armeabi-v7a;x86</AndroidSupportedAbis>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="OpenTK" />
+    <Reference Include="OpenTK-1.0" />
+    <Reference Include="SQLite">
+      <HintPath>..\Components\sqlite-net-1.0.8\lib\android\SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\Components\json.net-4.5.11\lib\android\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces">
+      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\portable-windows8+net45+wp8\System.Reactive.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Core">
+      <HintPath>..\packages\Rx-Core.2.2.5\lib\portable-windows8+net45+wp8\System.Reactive.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.Linq">
+      <HintPath>..\packages\Rx-Linq.2.2.5\lib\portable-windows8+net45+wp8\System.Reactive.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.5.2\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices">
+      <HintPath>..\packages\Rx-PlatformServices.2.3\lib\portable-windows8+net45+wp8\System.Reactive.PlatformServices.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Resources\Resource.designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\..\RxCanvas\RxCanvas.Shared\Shared\Creators\DxfCreator.cs">
+      <Link>Shared\Creators\DxfCreator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\RxCanvas\RxCanvas.Shared\Shared\Files\Binary.cs">
+      <Link>Shared\Files\Binary.cs</Link>
+    </Compile>
+    <Compile Include="..\..\RxCanvas\RxCanvas.Shared\Shared\Files\Json.cs">
+      <Link>Shared\Files\Json.cs</Link>
+    </Compile>
+    <Compile Include="..\..\RxCanvas\RxCanvas.Shared\Shared\Views\Bootstrapper.cs">
+      <Link>Shared\Views\Bootstrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\RxCanvas\RxCanvas.Shared\Shared\Views\DrawingView.cs">
+      <Link>Shared\Views\DrawingView.cs</Link>
+    </Compile>
+    <Compile Include="..\..\RxCanvas\RxCanvas.Shared\Shared\Bounds.cs">
+      <Link>Shared\Bounds.cs</Link>
+    </Compile>
+    <Compile Include="..\..\RxCanvas\RxCanvas.Shared\Shared\Editors.cs">
+      <Link>Shared\Editors.cs</Link>
+    </Compile>
+    <Compile Include="..\..\RxCanvas\RxCanvas.Shared\Shared\History.cs">
+      <Link>Shared\History.cs</Link>
+    </Compile>
+    <Compile Include="..\..\RxCanvas\RxCanvas.Shared\Shared\Interfaces.cs">
+      <Link>Shared\Interfaces.cs</Link>
+    </Compile>
+    <Compile Include="..\..\RxCanvas\RxCanvas.Shared\Shared\Model.cs">
+      <Link>Shared\Model.cs</Link>
+    </Compile>
+    <Compile Include="Droid\DroidModule.cs" />
+    <Compile Include="Droid\Droid.cs" />
+    <Compile Include="Droid\Activities\CanvasEditor.cs" />
+    <Compile Include="Droid\Activities\CanvasList.cs" />
+    <Compile Include="Droid\Activities\CanvasListAdapter.cs" />
+    <Compile Include="Droid\Activities\CanvasProperties.cs" />
+    <Compile Include="Droid\Repository\Diagram.cs" />
+    <Compile Include="Droid\Repository\IRepository.cs" />
+    <Compile Include="Droid\Repository\SQLiteRepository.cs" />
+    <Compile Include="..\..\RxCanvas\RxCanvas.Shared\MathUtil\MonotoneChain.cs">
+      <Link>Shared\MathUtil\MonotoneChain.cs</Link>
+    </Compile>
+    <Compile Include="..\..\RxCanvas\RxCanvas.Shared\MathUtil\Sat.cs">
+      <Link>Shared\MathUtil\Sat.cs</Link>
+    </Compile>
+    <Compile Include="..\..\RxCanvas\RxCanvas.Shared\MathUtil\Vector2.cs">
+      <Link>Shared\MathUtil\Vector2.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\AndroidManifest.xml" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\values\Strings.xml" />
+    <AndroidResource Include="Resources\drawable\Icon.png" />
+    <AndroidResource Include="Resources\layout\DiagramProperties.axml" />
+    <AndroidResource Include="Resources\layout\DiagramList.axml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Shared\" />
+    <Folder Include="Shared\Creators\" />
+    <Folder Include="Shared\Files\" />
+    <Folder Include="Shared\Views\" />
+    <Folder Include="Droid\" />
+    <Folder Include="Shared\MathUtil\" />
+  </ItemGroup>
+  <ItemGroup>
+    <XamarinComponentReference Include="sqlite-net">
+      <Version>1.0.8</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
+    <XamarinComponentReference Include="json.net">
+      <Version>4.5.11</Version>
+      <Visible>False</Visible>
+    </XamarinComponentReference>
+  </ItemGroup>
+</Project>
