@@ -14,7 +14,7 @@
     <AndroidResgenClass>Resource</AndroidResgenClass>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
-    <AssemblyName>RxCanvas</AssemblyName>
+    <AssemblyName>RxCanvas.Droid</AssemblyName>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
     <AndroidLinkMode>None</AndroidLinkMode>
