@@ -1,0 +1,29 @@
+﻿<!-- Copyright (c) Wiesław Šoltés. All rights reserved. -->
+<!-- Licensed under the MIT license. See LICENSE file in the project root for full license information. -->
+<Window x:Class="RxCanvas.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:RxCanvas.WPF"
+        Title="RxCanvas" Height="700" Width="920"
+        Background="White"
+        WindowStartupLocation="CenterScreen"
+        UseLayoutRounding="False" SnapsToDevicePixels="True"
+        TextOptions.TextFormattingMode="Ideal" TextOptions.TextHintingMode="Auto" TextOptions.TextRenderingMode="ClearType">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ListBox x:Name="Children" Grid.Row="0" ItemsSource="{Binding Children}" HorizontalContentAlignment="Stretch" BorderBrush="{x:Null}" BorderThickness="0" FocusVisualStyle="{x:Null}"/>
+            <local:SelectedItemControl Grid.Row="1"  DataContext="{Binding ElementName=Children, Path=SelectedItem}"/>
+        </Grid>
+        <local:PanAndZoomBorder ClipToBounds="True" Background="Transparent" Grid.Column="1">
+            <Grid x:Name="Layout"/>
+        </local:PanAndZoomBorder>
+    </Grid>
+</Window>

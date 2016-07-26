@@ -1,0 +1,254 @@
+﻿<!-- Copyright (c) Wiesław Šoltés. All rights reserved. -->
+<!-- Licensed under the MIT license. See LICENSE file in the project root for full license information. -->
+<UserControl x:Class="RxCanvas.WPF.SelectedItemControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RxCanvas.WPF"
+             xmlns:model="clr-namespace:RxCanvas.WPF"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="200">
+    <UserControl.Resources>
+        <local:XColorValueConverter x:Key="XColorValueConverter"/>
+        <local:XPointValueConverter x:Key="XPointValueConverter"/>
+        <DataTemplate DataType="{x:Type model:WpfPin}">
+            <Grid Margin="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Text="Pin" FontWeight="Bold" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Point" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Point, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:WpfLine}">
+            <Grid Margin="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Text="Line" FontWeight="Bold" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Point1" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Point1, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Point2"  Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Point2, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" Text="Stroke" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Stroke, Converter={StaticResource XColorValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="4" Text="StrokeThickness" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding StrokeThickness}" Margin="1"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:WpfBezier}">
+            <Grid Margin="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Text="Bezier" FontWeight="Bold" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Start" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Start, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Point1" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Point1, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" Text="Point2"  Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Point2, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="4" Text="Point3" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Point3, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="5" Text="Stroke" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Stroke, Converter={StaticResource XColorValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="6" Text="StrokeThickness" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding StrokeThickness}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="7" Text="Fill" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding Fill, Converter={StaticResource XColorValueConverter}}" Margin="1"/>
+                <CheckBox Grid.Column="1" Grid.Row="8" Content="IsFilled" IsChecked="{Binding IsFilled}" Margin="1"/>
+                <CheckBox Grid.Column="1" Grid.Row="9" Content="IsClosed" IsChecked="{Binding IsClosed}" Margin="1"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:WpfQuadraticBezier}">
+            <Grid Margin="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Text="QuadraticBezier" FontWeight="Bold" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Start" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Start, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Point1" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Point1, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" Text="Point2"  Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Point2, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="4" Text="Stroke" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Stroke, Converter={StaticResource XColorValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="5" Text="StrokeThickness" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding StrokeThickness}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="6" Text="Fill" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding Fill, Converter={StaticResource XColorValueConverter}}" Margin="1"/>
+                <CheckBox Grid.Column="1" Grid.Row="7" Content="IsFilled" IsChecked="{Binding IsFilled}" Margin="1"/>
+                <CheckBox Grid.Column="1" Grid.Row="8" Content="IsClosed" IsChecked="{Binding IsClosed}" Margin="1"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:WpfArc}">
+            <Grid Margin="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Text="Arc" FontWeight="Bold" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Point1" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Point1, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Point2"  Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Point2, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" Text="StartAngle" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding StartAngle}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="4" Text="SweepAngle" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding SweepAngle}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="5" Text="Stroke" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Stroke, Converter={StaticResource XColorValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="6" Text="StrokeThickness" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding StrokeThickness}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="7" Text="Fill" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding Fill, Converter={StaticResource XColorValueConverter}}" Margin="1"/>
+                <CheckBox Grid.Column="1" Grid.Row="8" Content="IsFilled" IsChecked="{Binding IsFilled}" Margin="1"/>
+                <CheckBox Grid.Column="1" Grid.Row="9" Content="IsClosed" IsChecked="{Binding IsClosed}" Margin="1"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:WpfRectangle}">
+            <Grid Margin="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Text="Rectangle" FontWeight="Bold" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Point1" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Point1, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Point2"  Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Point2, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" Text="Stroke" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Stroke, Converter={StaticResource XColorValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="4" Text="StrokeThickness" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding StrokeThickness}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="5" Text="Fill" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Fill, Converter={StaticResource XColorValueConverter}}" Margin="1"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:WpfEllipse}">
+            <Grid Margin="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Text="Ellipse" FontWeight="Bold" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Point1" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Point1, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Point2"  Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Point2, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" Text="Stroke" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Stroke, Converter={StaticResource XColorValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="4" Text="StrokeThickness" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding StrokeThickness}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="5" Text="Fill" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Fill, Converter={StaticResource XColorValueConverter}}" Margin="1"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:WpfText}">
+            <Grid Margin="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" Text="Text" FontWeight="Bold" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" Text="Point1" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Point1, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Point2"  Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Point2, Converter={StaticResource XPointValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" Text="HAlignment" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding HorizontalAlignment}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="4" Text="VAlignment" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding VerticalAlignment}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="5" Text="Size" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Size}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="6" Text="Text" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding Text}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="7" Text="Foreground" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding Foreground, Converter={StaticResource XColorValueConverter}}" Margin="1"/>
+                <TextBlock Grid.Column="0" Grid.Row="8" Text="Backgroud" Margin="1,1,4,1"/>
+                <TextBox Grid.Column="1" Grid.Row="8" Text="{Binding Backgroud, Converter={StaticResource XColorValueConverter}}" Margin="1"/>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+    <ContentControl Content="{Binding FallbackValue={x:Null}}"/>
+</UserControl>
