@@ -1,0 +1,330 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EF836EFF-B45E-410F-8754-EF8770A45D69}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CanvasDiagram.WPF</RootNamespace>
+    <AssemblyName>CanvasDiagram.WPF</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ReachFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Printing" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DiagramCanvas.cs" />
+    <Compile Include="Controls\ElementThumb.cs" />
+    <Compile Include="Controls\LineEx.cs" />
+    <Compile Include="Controls\PinThumb.cs" />
+    <Compile Include="Controls\SelectionAdorner.cs" />
+    <Compile Include="Controls\SolutionTreeView.cs" />
+    <Compile Include="Controls\SolutionTreeViewItem.cs" />
+    <Compile Include="Controls\TableGrid.cs" />
+    <Compile Include="Core\DiagramProperties.cs" />
+    <Compile Include="Core\ICanvas.cs" />
+    <Compile Include="Core\IClipboard.cs" />
+    <Compile Include="Core\IData.cs" />
+    <Compile Include="Core\IdCounter.cs" />
+    <Compile Include="Core\IElement.cs" />
+    <Compile Include="Core\ILine.cs" />
+    <Compile Include="Core\IMargin.cs" />
+    <Compile Include="Core\IPoint.cs" />
+    <Compile Include="Core\IRect.cs" />
+    <Compile Include="Core\ISelected.cs" />
+    <Compile Include="Core\ITag.cs" />
+    <Compile Include="Core\IThumb.cs" />
+    <Compile Include="Core\ITree.cs" />
+    <Compile Include="Core\ITreeItem.cs" />
+    <Compile Include="Core\IUid.cs" />
+    <Compile Include="Core\MarginEx.cs" />
+    <Compile Include="Core\ParseOptions.cs" />
+    <Compile Include="Core\PointEx.cs" />
+    <Compile Include="Core\RectEx.cs" />
+    <Compile Include="Core\Tag.cs" />
+    <Compile Include="Core\TreeItemType.cs" />
+    <Compile Include="Dxf\Blocks\DxfBlock.cs" />
+    <Compile Include="Dxf\Blocks\DxfBlocks.cs" />
+    <Compile Include="Dxf\Classes\DxfClass.cs" />
+    <Compile Include="Dxf\Classes\DxfClasses.cs" />
+    <Compile Include="Dxf\Core\CodeName.cs" />
+    <Compile Include="Dxf\Core\DxfObject.cs" />
+    <Compile Include="Dxf\Core\DxfRawTag.cs" />
+    <Compile Include="Dxf\Core\DxfUtil.cs" />
+    <Compile Include="Dxf\Core\SubclassMarker.cs" />
+    <Compile Include="Dxf\Core\Vector2.cs" />
+    <Compile Include="Dxf\Core\Vector3.cs" />
+    <Compile Include="Dxf\DxfFile.cs" />
+    <Compile Include="Dxf\DxfHeader.cs" />
+    <Compile Include="Dxf\DxfInspect.cs" />
+    <Compile Include="Dxf\Entities\Dxf3Dface.cs" />
+    <Compile Include="Dxf\Entities\DxfArc.cs" />
+    <Compile Include="Dxf\Entities\DxfAttdef.cs" />
+    <Compile Include="Dxf\Entities\DxfAttrib.cs" />
+    <Compile Include="Dxf\Entities\DxfCircle.cs" />
+    <Compile Include="Dxf\Entities\DxfDimension.cs" />
+    <Compile Include="Dxf\Entities\DxfEllipse.cs" />
+    <Compile Include="Dxf\Entities\DxfEntities.cs" />
+    <Compile Include="Dxf\Entities\DxfInsert.cs" />
+    <Compile Include="Dxf\Entities\DxfLine.cs" />
+    <Compile Include="Dxf\Entities\DxfLwpolyline.cs" />
+    <Compile Include="Dxf\Entities\DxfPoint.cs" />
+    <Compile Include="Dxf\Entities\DxfPolyline.cs" />
+    <Compile Include="Dxf\Entities\DxfShape.cs" />
+    <Compile Include="Dxf\Entities\DxfSolid.cs" />
+    <Compile Include="Dxf\Entities\DxfText.cs" />
+    <Compile Include="Dxf\Entities\DxfTrace.cs" />
+    <Compile Include="Dxf\Entities\DxfVertex.cs" />
+    <Compile Include="Dxf\Entities\DxfViewport.cs" />
+    <Compile Include="Dxf\Enums\DxfAcadVer.cs" />
+    <Compile Include="Dxf\Enums\DxfAppidStandardFlags.cs" />
+    <Compile Include="Dxf\Enums\DxfAttributeFlags.cs" />
+    <Compile Include="Dxf\Enums\DxfBlockTypeFlags.cs" />
+    <Compile Include="Dxf\Enums\DxfDefaultColors.cs" />
+    <Compile Include="Dxf\Enums\DxfDimstyleStandardFlags.cs" />
+    <Compile Include="Dxf\Enums\DxfDuplicateRecordCloningFlags.cs" />
+    <Compile Include="Dxf\Enums\DxfHorizontalTextJustification.cs" />
+    <Compile Include="Dxf\Enums\DxfLayerStandardFlags.cs" />
+    <Compile Include="Dxf\Enums\DxfLineWeight.cs" />
+    <Compile Include="Dxf\Enums\DxfLtypeStandardFlags.cs" />
+    <Compile Include="Dxf\Enums\DxfLwpolylineFlags.cs" />
+    <Compile Include="Dxf\Enums\DxfOrthographicType.cs" />
+    <Compile Include="Dxf\Enums\DxfOrthographicViewType.cs" />
+    <Compile Include="Dxf\Enums\DxfProxyCapabilitiesFlags.cs" />
+    <Compile Include="Dxf\Enums\DxfStyleFlags.cs" />
+    <Compile Include="Dxf\Enums\DxfTableStandardFlags.cs" />
+    <Compile Include="Dxf\Enums\DxfTextGenerationFlags.cs" />
+    <Compile Include="Dxf\Enums\DxfVerticalTextJustification.cs" />
+    <Compile Include="Dxf\Enums\DxfViewStandardFlags.cs" />
+    <Compile Include="Dxf\Enums\DxfVportStandardFlags.cs" />
+    <Compile Include="Dxf\Objects\DxfDictionary.cs" />
+    <Compile Include="Dxf\Objects\DxfObjects.cs" />
+    <Compile Include="Dxf\Tables\DxfAppid.cs" />
+    <Compile Include="Dxf\Tables\DxfBlockRecord.cs" />
+    <Compile Include="Dxf\Tables\DxfDimstyle.cs" />
+    <Compile Include="Dxf\Tables\DxfLayer.cs" />
+    <Compile Include="Dxf\Tables\DxfLtype.cs" />
+    <Compile Include="Dxf\Tables\DxfStyle.cs" />
+    <Compile Include="Dxf\Tables\DxfTables.cs" />
+    <Compile Include="Dxf\Tables\DxfUcs.cs" />
+    <Compile Include="Dxf\Tables\DxfView.cs" />
+    <Compile Include="Dxf\Tables\DxfVport.cs" />
+    <Compile Include="Editor\Constants.cs" />
+    <Compile Include="Editor\Context.cs" />
+    <Compile Include="Editor\DiagramEditor.cs" />
+    <Compile Include="Editor\HistoryEditor.cs" />
+    <Compile Include="Editor\Insert.cs" />
+    <Compile Include="Editor\LineUtil.cs" />
+    <Compile Include="Editor\ModelEditor.cs" />
+    <Compile Include="Editor\Parser.cs" />
+    <Compile Include="Editor\Table.cs" />
+    <Compile Include="Editor\Tags.cs" />
+    <Compile Include="Editor\TreeEditor.cs" />
+    <Compile Include="Editor\WireEditor.cs" />
+    <Compile Include="Core\Model\Child.cs" />
+    <Compile Include="Core\Model\Connection.cs" />
+    <Compile Include="Core\Model\Diagram.cs" />
+    <Compile Include="Core\Model\IDiagramCreator.cs" />
+    <Compile Include="Core\Model\IDiagramParser.cs" />
+    <Compile Include="Core\Model\Pin.cs" />
+    <Compile Include="Core\Model\Solution.cs" />
+    <Compile Include="Core\Model\TreeDiagram.cs" />
+    <Compile Include="Core\Model\TreeDiagrams.cs" />
+    <Compile Include="Core\Model\TreeProject.cs" />
+    <Compile Include="Core\Model\TreeProjects.cs" />
+    <Compile Include="Core\Model\TreeSolution.cs" />
+    <Compile Include="Core\Model\UndoRedo.cs" />
+    <Compile Include="Core\Model\Wire.cs" />
+    <Compile Include="Util\DipUtil.cs" />
+    <Compile Include="Util\DxfDiagramCreator.cs" />
+    <Compile Include="Controls\Elements\AndGateControl.xaml.cs">
+      <DependentUpon>AndGateControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Elements\InputControl.xaml.cs">
+      <DependentUpon>InputControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Elements\OrGateControl.xaml.cs">
+      <DependentUpon>OrGateControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Elements\OutputControl.xaml.cs">
+      <DependentUpon>OutputControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Elements\PageControl.xaml.cs">
+      <DependentUpon>PageControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Elements\PinControl.xaml.cs">
+      <DependentUpon>PinControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Util\PathUtil.cs" />
+    <Compile Include="Util\ResourceConstants.cs" />
+    <Compile Include="Util\SnapUtil.cs" />
+    <Compile Include="Util\StringUtil.cs" />
+    <Compile Include="Views\DiagramControl.xaml.cs">
+      <DependentUpon>DiagramControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ExplorerControl.xaml.cs">
+      <DependentUpon>ExplorerControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\HtmlWindow.xaml.cs">
+      <DependentUpon>HtmlWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TableEditorControl.xaml.cs">
+      <DependentUpon>TableEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TagEditorControl.xaml.cs">
+      <DependentUpon>TagEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Util\WindowsClipboard.cs" />
+    <Compile Include="Util\WpfDiagramCreator.cs" />
+    <Compile Include="Util\WpfDiagramPrinter.cs" />
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="Dictionaries\BaseDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dictionaries\ElementsDictionary.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Elements\AndGateControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Elements\InputControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Elements\OrGateControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Elements\OutputControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Elements\PageControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Elements\PinControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\DiagramControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ExplorerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\HtmlWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TableEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TagEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.manifest" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\TransparentLogo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\WhiteLogo.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
