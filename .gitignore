@@ -134,8 +134,10 @@ publish/
 *.publishproj
 
 # NuGet Packages Directory
-## TODO: If you have NuGet Package Restore enabled, uncomment the next line
 packages/
+
+# Xamarin Components
+Components/
 
 # Windows Azure Build Output
 csx
